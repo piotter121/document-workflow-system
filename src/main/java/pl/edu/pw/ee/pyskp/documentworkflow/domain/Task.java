@@ -12,6 +12,8 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    private String name;
+
     @OneToMany(mappedBy = "task")
     private List<FileMetadata> files;
 
@@ -69,5 +71,13 @@ public class Task {
 
     public void setParticipants(List<User> participants) {
         this.participants = participants;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
