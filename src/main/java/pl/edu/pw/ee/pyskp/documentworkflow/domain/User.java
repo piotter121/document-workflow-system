@@ -3,6 +3,7 @@ package pl.edu.pw.ee.pyskp.documentworkflow.domain;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by piotr on 11.12.16.
@@ -30,6 +31,9 @@ public class User {
 
     @OneToOne(mappedBy = "user")
     private UserDetails userDetails;
+
+    @ManyToMany(mappedBy = "participants", cascade = CascadeType.ALL)
+    private List<Task> taskList;
 
     public long getId() {
         return id;
@@ -93,5 +97,13 @@ public class User {
 
     public void setActivated(boolean activated) {
         this.activated = activated;
+    }
+
+    public List<Task> getTaskList() {
+        return taskList;
+    }
+
+    public void setTaskList(List<Task> taskList) {
+        this.taskList = taskList;
     }
 }
