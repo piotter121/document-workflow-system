@@ -18,7 +18,7 @@ public class UserDetails {
     private String name;
     private String surname;
 
-    @OneToOne
+    @OneToOne(optional = false, cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private User user;
 

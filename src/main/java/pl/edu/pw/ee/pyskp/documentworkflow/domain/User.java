@@ -29,7 +29,7 @@ public class User {
     private Date lastLogin;
     private boolean activated;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, optional = false)
     private UserDetails userDetails;
 
     @ManyToMany(mappedBy = "participants", cascade = CascadeType.ALL)
