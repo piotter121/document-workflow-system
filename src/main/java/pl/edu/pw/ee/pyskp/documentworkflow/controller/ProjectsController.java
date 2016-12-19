@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 /**
  * Created by piotr on 16.12.16.
  */
-@Controller("/projects")
+@Controller
 public class ProjectsController {
-    @RequestMapping
+    @RequestMapping("/projects")
     public String getUserProjects(Model model) {
         return "projects";
     }

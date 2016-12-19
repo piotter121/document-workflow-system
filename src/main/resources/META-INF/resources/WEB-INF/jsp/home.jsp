@@ -17,5 +17,6 @@
     <div class="container">
         <a href="<spring:url value="/login"/>">Zaloguj się</a>
     </div>
+    <script type="text/javascript" src="<c:url value="/js/myjs.js" />"></script>
 </body>
 </html>
