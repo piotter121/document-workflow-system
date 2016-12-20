@@ -1,6 +1,8 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 import pl.edu.pw.ee.pyskp.documentworkflow.domain.User;
 import pl.edu.pw.ee.pyskp.documentworkflow.dto.CreateUserForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.repository.UserRepository;
@@ -12,12 +14,15 @@ import java.util.Optional;
 /**
  * Created by piotr on 14.12.16.
  */
+@Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -36,11 +41,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User create(CreateUserForm form) {
+    public User createUserFromForm(CreateUserForm form) {
         User user = new User();
         user.setLogin(form.getLogin());
         user.setEmail(form.getEmail());
-        user.setPassword(form.getPassword());
+        user.setPassword(passwordEncoder.encode(form.getPassword()));
         user.setRole(form.getRole());
         return userRepository.save(user);
     }

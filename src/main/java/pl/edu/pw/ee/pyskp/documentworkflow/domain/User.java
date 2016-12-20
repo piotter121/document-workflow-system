@@ -1,7 +1,6 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.domain;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
@@ -28,22 +27,13 @@ public class User {
     private boolean activated;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private Principals role;
+    private Role role;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private UserDetails userDetails;
+    private PersonalData personalData;
 
     @ManyToMany(mappedBy = "participants", cascade = CascadeType.ALL)
     private List<Task> taskList;
-
-    public User() {}
-
-    public User(String login, String password, String email, Principals role) {
-        this.login = login;
-        this.password = password;
-        this.email = email;
-        this.role = role;
-    }
 
     public long getId() {
         return id;
@@ -93,12 +83,12 @@ public class User {
         this.lastLogin = lastLogin;
     }
 
-    public UserDetails getUserDetails() {
-        return userDetails;
+    public PersonalData getPersonalData() {
+        return personalData;
     }
 
-    public void setUserDetails(UserDetails userDetails) {
-        this.userDetails = userDetails;
+    public void setPersonalData(PersonalData personalData) {
+        this.personalData = personalData;
     }
 
     public boolean isActivated() {
@@ -117,11 +107,11 @@ public class User {
         this.taskList = taskList;
     }
 
-    public Principals getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(Principals role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 }

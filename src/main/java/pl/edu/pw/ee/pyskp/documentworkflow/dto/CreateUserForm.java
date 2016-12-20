@@ -1,28 +1,36 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.dto;
 
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
-import pl.edu.pw.ee.pyskp.documentworkflow.domain.Principals;
+import pl.edu.pw.ee.pyskp.documentworkflow.domain.Role;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 /**
  * Created by piotr on 14.12.16.
  */
 public class CreateUserForm {
-    @NotEmpty
+
+    @Length(min = 5)
     private String login = "";
 
     @NotEmpty
+    @Pattern(regexp = "[a-zA-z]+@[a-zA-z]+\\.[a-zA-Z]+")
     private String email = "";
 
-    @NotEmpty
+    private String firstName = "";
+
+    private String lastName = "";
+
+    @Length(min = 6)
     private String password = "";
 
-    @NotEmpty
+    @Length(min = 6)
     private String passwordRepeated = "";
 
     @NotNull
-    private Principals role = Principals.USER;
+    private Role role = Role.USER;
 
     public String getLogin() {
         return login;
@@ -56,11 +64,27 @@ public class CreateUserForm {
         this.passwordRepeated = passwordRepeated;
     }
 
-    public Principals getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(Principals role) {
+    public void setRole(Role role) {
         this.role = role;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 }

@@ -30,20 +30,21 @@
                             <br/>
                         </div>
                     </c:if>
-                    <form action="<c:url value="/login"></c:url>" method="post">
+                    <form action="<c:url value="/login"/>" method="post">
                         <fieldset>
                             <div class="form-group">
-                                <input class="form-control" placeholder="Nazwa użytkownika" name='username'
+                                <input class="form-control" placeholder="Nazwa użytkownika" firstName='username'
                                        type="text">
                             </div>
                             <div class="form-group">
-                                <input class="form-control" placeholder="Hasło" name='password' type="password"
+                                <input class="form-control" placeholder="Hasło" firstName='password' type="password"
                                        value="">
                             </div>
+                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                             <input class="btn btn-lg btn-success btn-block" type="submit" value="Zaloguj się">
                         </fieldset>
-                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                     </form>
+                    <a href="<c:url value="/register" />" class="btn btn-lg btn-success btn-block">Rejestracja</a>
                 </div>
             </div>
         </div>

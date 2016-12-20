@@ -17,5 +17,5 @@ public interface UserService {
 
     List<User> getAllUsers();
 
-    User create(CreateUserForm form);
+    User createUserFromForm(CreateUserForm form);
 }

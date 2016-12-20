@@ -8,15 +8,15 @@ import org.hibernate.annotations.Parameter;
  * Created by piotr on 11.12.16.
  */
 @Entity
-public class UserDetails {
+public class PersonalData {
     @Id
     @GenericGenerator(name = "userGen", strategy = "foreign",
     parameters = @Parameter(name = "property", value = "user"))
     @GeneratedValue(generator = "userGen")
     private long id;
 
-    private String name;
-    private String surname;
+    private String firstName;
+    private String lastName;
 
     @OneToOne(optional = false, cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
@@ -30,20 +30,20 @@ public class UserDetails {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getSurname() {
-        return surname;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public User getUser() {
