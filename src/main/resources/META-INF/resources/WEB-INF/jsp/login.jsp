@@ -33,11 +33,11 @@
                     <form action="<c:url value="/login"/>" method="post">
                         <fieldset>
                             <div class="form-group">
-                                <input class="form-control" placeholder="Nazwa użytkownika" firstName='username'
+                                <input class="form-control" placeholder="Nazwa użytkownika" name='username'
                                        type="text">
                             </div>
                             <div class="form-group">
-                                <input class="form-control" placeholder="Hasło" firstName='password' type="password"
+                                <input class="form-control" placeholder="Hasło" name='password' type="password"
                                        value="">
                             </div>
                             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
