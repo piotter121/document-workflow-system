@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
-import pl.edu.pw.ee.pyskp.documentworkflow.dto.CreateUserForm;
+import pl.edu.pw.ee.pyskp.documentworkflow.dto.CreateUserFormDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.service.UserService;
 
 /**
@@ -21,12 +21,12 @@ public class CreateUserFormValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return CreateUserForm.class.isAssignableFrom(clazz);
+        return CreateUserFormDTO.class.isAssignableFrom(clazz);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        CreateUserForm form = (CreateUserForm) target;
+        CreateUserFormDTO form = (CreateUserFormDTO) target;
 
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "login", "NotEmpty");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "email", "NotEmpty");

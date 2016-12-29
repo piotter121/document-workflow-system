@@ -25,7 +25,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserService userService;
 
-    @Autowired
     public UserDetailsServiceImpl(UserService userService) {
         this.userService = userService;
     }
@@ -34,14 +33,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         logger.debug("Wyszukuję użytkownika o nazwie " + username);
         Optional<User> userOptional = userService.getUserByLogin(username);
-        if (!userOptional.isPresent()) {
+        if (!userOptional.isPresent())
             throw new UsernameNotFoundException("Nie znaleziono użytkownika o nazwie " + username);
-        }
         User user = userOptional.get();
         Collection<GrantedAuthority> authorities
                 = Collections.singleton(new SimpleGrantedAuthority(user.getRole().name()));
         return new org.springframework.security.core.userdetails.User(
-                user.getLogin(), user.getPassword(), authorities
-        );
+                user.getLogin(), user.getPassword(), authorities);
     }
 }

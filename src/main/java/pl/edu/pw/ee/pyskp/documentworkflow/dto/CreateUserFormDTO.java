@@ -10,7 +10,7 @@ import javax.validation.constraints.Pattern;
 /**
  * Created by piotr on 14.12.16.
  */
-public class CreateUserForm {
+public class CreateUserFormDTO {
 
     @Length(min = 5)
     private String login = "";
@@ -28,9 +28,6 @@ public class CreateUserForm {
 
     @Length(min = 6)
     private String passwordRepeated = "";
-
-    @NotNull
-    private Role role = Role.USER;
 
     public String getLogin() {
         return login;
@@ -62,14 +59,6 @@ public class CreateUserForm {
 
     public void setPasswordRepeated(String passwordRepeated) {
         this.passwordRepeated = passwordRepeated;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
     }
 
     public String getFirstName() {

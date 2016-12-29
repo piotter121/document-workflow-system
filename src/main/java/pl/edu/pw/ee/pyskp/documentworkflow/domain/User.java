@@ -3,6 +3,8 @@ package pl.edu.pw.ee.pyskp.documentworkflow.domain;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by piotr on 11.12.16.
@@ -16,15 +18,21 @@ public class User {
 
     @Column(unique = true, nullable = false)
     private String login;
+
     @Column(nullable = false)
     private String password;
+
     @Column(unique = true, nullable = false)
     private String email;
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date creationDate;
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastLogin;
+
     private boolean activated;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -34,6 +42,16 @@ public class User {
 
     @ManyToMany(mappedBy = "participants", cascade = CascadeType.ALL)
     private List<Task> taskList;
+
+    @OneToMany(mappedBy = "administrator")
+    private List<Project> administratedProjects;
+
+    @Transient
+    public Set<Project> getParticipatedProjects() {
+        return taskList.stream()
+                .map(task -> task.getProject())
+                .collect(Collectors.toSet());
+    }
 
     public long getId() {
         return id;
@@ -113,5 +131,13 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public List<Project> getAdministratedProjects() {
+        return administratedProjects;
+    }
+
+    public void setAdministratedProjects(List<Project> administratedProjects) {
+        this.administratedProjects = administratedProjects;
     }
 }

@@ -5,8 +5,8 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
-    <title>System obiegu dokumentów</title>
+    <%@ include file="header.html" %>
+    <title>System obiegu dokumentów - projekty</title>
 </head>
 <body>
 <section>
@@ -21,11 +21,19 @@
         </form>
     </div>
 </section>
-<section>
-    <p>Tu będą widoczne projekty</p>
+<section class="container">
+    <div class="row">
+        <c:forEach items="${projects}" var="project">
+            <div class="caption">
+                <h3>
+                    <a href="<spring:url value="/projects/${project.name}"/>">
+                            ${project.name}
+                    </a>
+                </h3>
+                <p>${project.description}</p>
+            </div>
+        </c:forEach>
+    </div>
 </section>
-<div class="container">
-
-</div>
 </body>
 </html>

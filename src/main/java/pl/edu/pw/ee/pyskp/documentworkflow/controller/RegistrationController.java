@@ -6,7 +6,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import pl.edu.pw.ee.pyskp.documentworkflow.dto.CreateUserForm;
+import pl.edu.pw.ee.pyskp.documentworkflow.dto.CreateUserFormDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.service.SecurityService;
 import pl.edu.pw.ee.pyskp.documentworkflow.service.UserService;
 import pl.edu.pw.ee.pyskp.documentworkflow.validator.CreateUserFormValidator;
@@ -30,19 +30,18 @@ public class RegistrationController {
     }
 
     @GetMapping("/register")
-    public String getRegistrationForm(@ModelAttribute("newUser") CreateUserForm newUser) {
+    public String getRegistrationForm(@ModelAttribute CreateUserFormDTO newUser) {
         return "register";
     }
 
     @PostMapping("/register")
     public String processRegistrationOfNewUser(
-            @ModelAttribute("newUser") CreateUserForm newUser,
+            @ModelAttribute CreateUserFormDTO newUser,
             BindingResult bindingResult,
             Model model) {
         createUserFormValidator.validate(newUser, bindingResult);
-        if (bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors())
             return "register";
-        }
         userService.createUserFromForm(newUser);
         securityService.autologin(newUser.getLogin(), newUser.getPassword());
         return "redirect:/projects";

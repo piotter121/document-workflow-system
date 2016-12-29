@@ -4,10 +4,7 @@
 <%@page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <%@ include file="header.html" %>
     <title>Zarejestruj się</title>
 </head>
 <body>
@@ -44,7 +41,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label col-lg-2 col-lg-2" for="email">
+                <label class="control-label col-lg-2 col-lg-2" for="firstName">
                     <spring:message code="register.form.firstName.label"/>
                 </label>
                 <div class="col-lg-10">
@@ -53,7 +50,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label col-lg-2 col-lg-2" for="email">
+                <label class="control-label col-lg-2 col-lg-2" for="lastName">
                     <spring:message code="register.form.lastName.label"/>
                 </label>
                 <div class="col-lg-10">

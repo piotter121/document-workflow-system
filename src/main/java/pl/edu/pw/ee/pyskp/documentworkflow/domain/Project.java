@@ -1,6 +1,7 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.domain;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -12,9 +13,16 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(nullable = false, unique = true)
     private String name;
 
-    @OneToOne
+    @Column(length = 1024)
+    private String description;
+
+    @Temporal(TemporalType.DATE)
+    private Date creationDate;
+
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "administratorId")
     private User administrator;
 
@@ -51,5 +59,21 @@ public class Project {
 
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 }
