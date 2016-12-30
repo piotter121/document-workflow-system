@@ -31,6 +31,7 @@ public class ProjectsController {
     public String getUserProjects(Model model, Principal principal) {
         String login = principal.getName();
         // TODO zrobić filtr projektów
+
         return "projects";
     }
 
@@ -41,7 +42,7 @@ public class ProjectsController {
 
     @PostMapping("/add")
     public String processCreationOfNewProject(
-            @ModelAttribute CreateProjectFormDTO newProject,
+            @ModelAttribute("newProject") CreateProjectFormDTO newProject,
             BindingResult bindingResult,
             Model model,
             Principal principal) {

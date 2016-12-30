@@ -8,19 +8,19 @@
     <title>System obiegu dokumentów - stwórz projekt</title>
 </head>
 <body>
-<section>
-    <div class="jumbotron">
-        <div class="container">
-            <h1>System obiegu dokumentów</h1>
-            <p>Stwórz projekt</p>
-        </div>
+
+<div class="jumbotron">
+    <div class="container">
+        <h1>System obiegu dokumentów</h1>
+        <p>Stwórz projekt</p>
         <form action="<c:url value="/logout" />" method="post">
             <input type="submit" value="Wyloguj" class="btn btn-danger btn-mini pull-right"/>
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         </form>
     </div>
-</section>
-<section class="container">
+</div>
+
+<div class="container">
     <form:form modelAttribute="newProject" class="form-horizontal">
         <fieldset>
             <legend>
@@ -28,21 +28,21 @@
             </legend>
 
             <div class="form-group">
-                <label class="control-label col-lg-2 col-lg-2" for="name">
+                <label class="control-label col-md-2" for="name">
                     <spring:message code="addProject.form.name.label"/>
                 </label>
-                <div class="col-lg-10">
-                    <form:input path="name" id="name" type="text" class="form:input-large"/>
+                <div class="col-md-5">
+                    <form:input path="name" id="name" type="text" class="form-control"/>
                     <p><form:errors path="name" cssClass="text-danger"/></p>
                 </div>
             </div>
 
             <div class="form-group">
-                <label class="control-label col-lg-2 col-lg-2" for="description">
+                <label class="control-label col-md-2" for="description">
                     <spring:message code="addProject.form.description.label"/>
                 </label>
-                <div class="col-lg-10">
-                    <form:textarea path="description" id="description" rows="4"/>
+                <div class="col-lg-5">
+                    <form:textarea path="description" id="description" rows="4" cssClass="form-control"/>
                     <p><form:errors path="name" cssClass="text-danger"/></p>
                 </div>
             </div>
@@ -55,6 +55,7 @@
             </div>
         </fieldset>
     </form:form>
-</section>
+</div>
+
 </body>
 </html>

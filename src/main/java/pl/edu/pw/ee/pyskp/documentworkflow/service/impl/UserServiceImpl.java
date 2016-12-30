@@ -56,6 +56,7 @@ public class UserServiceImpl implements UserService {
         personalData.setFirstName(form.getFirstName());
         personalData.setLastName(form.getLastName());
         user.setPersonalData(personalData);
+        personalData.setUser(user);
         return userRepository.save(user);
     }
 }

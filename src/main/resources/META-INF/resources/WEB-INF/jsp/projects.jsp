@@ -9,31 +9,39 @@
     <title>System obiegu dokumentów - projekty</title>
 </head>
 <body>
-<section>
-    <div class="jumbotron">
-        <div class="container">
-            <h1>System obiegu dokumentów</h1>
-            <p>Projekty</p>
-        </div>
+
+<header class="jumbotron">
+    <div class="container">
+        <h1>System obiegu dokumentów</h1>
+        <p>
+            Projekty
+        </p>
         <form action="<c:url value="/logout" />" method="post">
             <input type="submit" value="Wyloguj" class="btn btn-danger btn-mini pull-right"/>
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         </form>
     </div>
-</section>
-<section class="container">
+</header>
+
+<div class="container-fluid">
     <div class="row">
-        <c:forEach items="${projects}" var="project">
-            <div class="caption">
-                <h3>
-                    <a href="<spring:url value="/projects/${project.name}"/>">
-                            ${project.name}
-                    </a>
-                </h3>
-                <p>${project.description}</p>
-            </div>
-        </c:forEach>
+        <div class="col-md-4">
+
+        </div>
+        <div class="col-md-8">
+            <c:forEach items="${projects}" var="project">
+                <div class="caption">
+                    <h3>
+                        <a href="<spring:url value="/projects/${project.name}"/>">
+                                ${project.name}
+                        </a>
+                    </h3>
+                    <p>${project.description}</p>
+                </div>
+            </c:forEach>
+        </div>
     </div>
-</section>
+</div>
+
 </body>
 </html>

@@ -30,13 +30,13 @@ public class RegistrationController {
     }
 
     @GetMapping("/register")
-    public String getRegistrationForm(@ModelAttribute CreateUserFormDTO newUser) {
+    public String getRegistrationForm(@ModelAttribute("newUser") CreateUserFormDTO newUser) {
         return "register";
     }
 
     @PostMapping("/register")
     public String processRegistrationOfNewUser(
-            @ModelAttribute CreateUserFormDTO newUser,
+            @ModelAttribute("newUser") CreateUserFormDTO newUser,
             BindingResult bindingResult,
             Model model) {
         createUserFormValidator.validate(newUser, bindingResult);
