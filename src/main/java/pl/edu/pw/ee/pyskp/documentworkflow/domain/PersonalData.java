@@ -22,6 +22,11 @@ public class PersonalData {
     @PrimaryKeyJoinColumn
     private User user;
 
+    @Transient
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
+
     public long getId() {
         return id;
     }

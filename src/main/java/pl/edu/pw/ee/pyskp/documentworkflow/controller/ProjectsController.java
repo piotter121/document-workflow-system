@@ -6,10 +6,14 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pw.ee.pyskp.documentworkflow.dto.CreateProjectFormDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dto.ProjectInfoDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.service.ProjectService;
 import pl.edu.pw.ee.pyskp.documentworkflow.validator.CreateProjectFormValidator;
 
 import java.security.Principal;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by piotr on 16.12.16.
@@ -28,10 +32,15 @@ public class ProjectsController {
     }
 
     @GetMapping
-    public String getUserProjects(Model model, Principal principal) {
+    public String getUserProjects(Model model,
+                                  @RequestParam(required = false) String onlyOwned,
+                                  Principal principal) {
         String login = principal.getName();
-        // TODO zrobić filtr projektów
-
+        List<ProjectInfoDTO> allAdministratedProjects = projectService.findAllAdministratedProjects(principal.getName());
+        Set<ProjectInfoDTO> projects = new HashSet<>(allAdministratedProjects);
+        if (onlyOwned == null)
+            projects.addAll(projectService.findAllProjectsWhereUserIsParticipant(principal.getName()));
+        model.addAttribute("projects", projects);
         return "projects";
     }
 

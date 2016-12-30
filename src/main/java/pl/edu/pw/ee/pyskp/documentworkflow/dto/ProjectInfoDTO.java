@@ -6,10 +6,10 @@ import java.util.Date;
  * Created by piotr on 29.12.16.
  */
 public class ProjectInfoDTO {
-    private String name;
-    private String description;
-    private int numberOfTasks;
-    private String administratorName;
+    private String name = "";
+    private String description = "";
+    private int numberOfTasks = 0;
+    private String administratorName = "";
     private Date creationDate;
     private Date lastModified;
 

@@ -2,6 +2,7 @@ package pl.edu.pw.ee.pyskp.documentworkflow.domain;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by piotr on 11.12.16.
@@ -23,6 +24,15 @@ public class FileMetadata {
 
     @OneToMany(mappedBy = "fileMetadata", cascade = CascadeType.ALL)
     private List<Version> versions;
+
+    @Transient
+    public Optional<Version> getLatestVersion() {
+        Version latestVersion = null;
+        for (Version version : versions)
+            if (latestVersion == null || version.getSaveDate().after(latestVersion.getSaveDate()))
+                latestVersion = version;
+        return Optional.ofNullable(latestVersion);
+    }
 
     public long getId() {
         return id;

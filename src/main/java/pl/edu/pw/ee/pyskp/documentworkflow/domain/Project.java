@@ -3,6 +3,7 @@ package pl.edu.pw.ee.pyskp.documentworkflow.domain;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by piotr on 11.12.16.
@@ -20,6 +21,7 @@ public class Project {
     private String description;
 
     @Temporal(TemporalType.DATE)
+    @Column(updatable = false, nullable = false)
     private Date creationDate;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
@@ -28,6 +30,20 @@ public class Project {
 
     @OneToMany(mappedBy = "project")
     private List<Task> tasks;
+
+    @Transient
+    public Optional<Date> getLastModified() {
+        Date lastModified = null;
+        for (Task task : tasks) {
+            Optional<Date> taskModificationDate = task.getModificationDate();
+            if (taskModificationDate.isPresent()) {
+                Date modificationDate = taskModificationDate.get();
+                if (lastModified == null || modificationDate.after(lastModified))
+                    lastModified = modificationDate;
+            }
+        }
+        return Optional.ofNullable(lastModified);
+    }
 
     public long getId() {
         return id;

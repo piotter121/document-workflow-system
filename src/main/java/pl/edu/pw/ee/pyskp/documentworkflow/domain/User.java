@@ -26,6 +26,7 @@ public class User {
     private String email;
 
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false, updatable = false)
     private Date creationDate;
 
     @Temporal(TemporalType.TIMESTAMP)

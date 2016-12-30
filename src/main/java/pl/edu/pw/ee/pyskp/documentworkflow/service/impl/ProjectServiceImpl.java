@@ -2,6 +2,7 @@ package pl.edu.pw.ee.pyskp.documentworkflow.service.impl;
 
 import org.springframework.stereotype.Service;
 import pl.edu.pw.ee.pyskp.documentworkflow.domain.Project;
+import pl.edu.pw.ee.pyskp.documentworkflow.domain.Task;
 import pl.edu.pw.ee.pyskp.documentworkflow.domain.User;
 import pl.edu.pw.ee.pyskp.documentworkflow.dto.CreateProjectFormDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.dto.ProjectInfoDTO;
@@ -10,10 +11,7 @@ import pl.edu.pw.ee.pyskp.documentworkflow.repository.ProjectRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.service.ProjectService;
 import pl.edu.pw.ee.pyskp.documentworkflow.service.UserService;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -58,14 +56,13 @@ public class ProjectServiceImpl implements ProjectService {
         project.setName(formDTO.getName());
         project.setDescription(formDTO.getDescription());
         project.setAdministrator(userService.getUserByLogin(formDTO.getAdministratorLogin()).get());
+        project.setCreationDate(new Date());
         return projectRepository.save(project);
     }
 
     private static List<ProjectInfoDTO> mapAllToProjectInfoDTO(Collection<Project> projects) {
         return projects != null
-                ? projects.parallelStream()
-                .map(ProjectServiceImpl::mapToProjectInfoDTO)
-                .collect(Collectors.toList())
+                ? projects.parallelStream().map(ProjectServiceImpl::mapToProjectInfoDTO).collect(Collectors.toList())
                 : Collections.emptyList();
     }
 
@@ -73,6 +70,13 @@ public class ProjectServiceImpl implements ProjectService {
         ProjectInfoDTO dto = new ProjectInfoDTO();
         dto.setName(project.getName());
         dto.setDescription(project.getDescription());
+        dto.setCreationDate(project.getCreationDate());
+        dto.setAdministratorName(project.getAdministrator().getPersonalData().getFullName());
+        Optional<Date> lastModified = project.getLastModified();
+        if (lastModified.isPresent())
+            dto.setLastModified(lastModified.get());
+        List<Task> tasks = project.getTasks();
+        dto.setNumberOfTasks(tasks == null ? 0 : tasks.size());
         return dto;
     }
 }

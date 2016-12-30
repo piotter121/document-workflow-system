@@ -1,7 +1,9 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.domain;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by piotr on 11.12.16.
@@ -32,6 +34,22 @@ public class Task {
             @JoinColumn(name = "userId", nullable = false)
     })
     private List<User> participants;
+
+    @Transient
+    public Optional<Date> getModificationDate() {
+        Date lastModifiedVersion = null;
+        for (FileMetadata fileMetadata : files) {
+            Optional<Version> latestVersion = fileMetadata.getLatestVersion();
+            if (latestVersion.isPresent()) {
+                Date latestVersionSaveDate = latestVersion.get().getSaveDate();
+                if (lastModifiedVersion == null
+                        || latestVersionSaveDate.after(lastModifiedVersion)) {
+                    lastModifiedVersion = latestVersionSaveDate;
+                }
+            }
+        }
+        return Optional.ofNullable(lastModifiedVersion);
+    }
 
     public long getId() {
         return id;
