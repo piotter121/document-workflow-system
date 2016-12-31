@@ -64,7 +64,9 @@ public class ProjectsController {
     }
 
     @GetMapping("/{projectName}")
-    public String showProjectInfo(@PathVariable String projectName) {
+    public String showProjectInfo(@PathVariable String projectName,
+                                  Model model) {
+        model.addAttribute("project", projectService.getOneByName(projectName));
         return "project";
     }
 }

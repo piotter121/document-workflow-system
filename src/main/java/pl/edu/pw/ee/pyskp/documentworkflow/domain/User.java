@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -50,8 +51,13 @@ public class User {
     @Transient
     public Set<Project> getParticipatedProjects() {
         return taskList.stream()
-                .map(task -> task.getProject())
+                .map(Task::getProject)
                 .collect(Collectors.toSet());
+    }
+
+    @Transient
+    public String getFullName() {
+        return personalData.getFullName();
     }
 
     public long getId() {

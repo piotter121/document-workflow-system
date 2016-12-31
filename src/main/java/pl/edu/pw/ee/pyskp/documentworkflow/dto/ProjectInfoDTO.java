@@ -1,6 +1,7 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.dto;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by piotr on 29.12.16.
@@ -8,10 +9,10 @@ import java.util.Date;
 public class ProjectInfoDTO {
     private String name = "";
     private String description = "";
-    private int numberOfTasks = 0;
     private String administratorName = "";
     private Date creationDate;
     private Date lastModified;
+    private List<TaskInfoDTO> tasks;
 
     public String getName() {
         return name;
@@ -30,11 +31,7 @@ public class ProjectInfoDTO {
     }
 
     public int getNumberOfTasks() {
-        return numberOfTasks;
-    }
-
-    public void setNumberOfTasks(int numberOfTasks) {
-        this.numberOfTasks = numberOfTasks;
+        return tasks == null ? 0 : tasks.size();
     }
 
     public String getAdministratorName() {
@@ -59,5 +56,13 @@ public class ProjectInfoDTO {
 
     public void setLastModified(Date lastModified) {
         this.lastModified = lastModified;
+    }
+
+    public List<TaskInfoDTO> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<TaskInfoDTO> tasks) {
+        this.tasks = tasks;
     }
 }

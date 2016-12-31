@@ -1,6 +1,7 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.domain;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,14 +9,22 @@ import java.util.Optional;
  * Created by piotr on 11.12.16.
  */
 @Entity
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"name", "taskId"})
+})
 public class FileMetadata {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(nullable = false)
     private String name;
 
+    @Column(length = 1024)
+    private String description;
+
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private ContentType contentType;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -72,5 +81,13 @@ public class FileMetadata {
 
     public void setVersions(List<Version> versions) {
         this.versions = versions;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
