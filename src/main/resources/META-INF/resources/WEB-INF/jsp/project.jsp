@@ -41,7 +41,7 @@
                     <tr>
                         <td>${task.name}</td>
                         <td>${task.description}</td>
-                        <td>${task.administratorName}</td>
+                        <td>${task.administrator.fullName}</td>
                         <td>${task.numberOfFiles}</td>
                     </tr>
                 </c:forEach>
@@ -63,7 +63,7 @@
                         </div>
                         <div class="list-group-item">
                             <p class="list-group-item-text">Administrator</p>
-                            <h4 class="list-group-item-heading">${project.administratorName}</h4>
+                            <h4 class="list-group-item-heading">${project.administrator.fullName}</h4>
                         </div>
                         <div class="list-group-item">
                             <p class="list-group-item-text">Data utworzenia</p>

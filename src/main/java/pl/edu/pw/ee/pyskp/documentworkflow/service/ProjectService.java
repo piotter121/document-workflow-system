@@ -3,21 +3,23 @@ package pl.edu.pw.ee.pyskp.documentworkflow.service;
 import pl.edu.pw.ee.pyskp.documentworkflow.domain.Project;
 import pl.edu.pw.ee.pyskp.documentworkflow.dto.CreateProjectFormDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.dto.ProjectInfoDTO;
-import pl.edu.pw.ee.pyskp.documentworkflow.exception.ProjectNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exception.UserNotFoundException;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
  * Created by piotr on 29.12.16.
  */
 public interface ProjectService {
-    ProjectInfoDTO getOneByName(String name) throws ProjectNotFoundException;
+    Optional<Project> getOneByName(String name);
 
-    List<ProjectInfoDTO> findAllAdministratedProjects(String username) throws UserNotFoundException;
+    List<Project> findAllAdministratedProjects(String username) throws UserNotFoundException;
 
-    List<ProjectInfoDTO> findAllProjectsWhereUserIsParticipant(String username) throws UserNotFoundException;
+    List<Project> findAllProjectsWhereUserIsParticipant(String username) throws UserNotFoundException;
 
     Project createNewProjectFromForm(CreateProjectFormDTO formDTO);
 
@@ -32,7 +34,7 @@ public interface ProjectService {
         dto.setName(project.getName());
         dto.setDescription(project.getDescription());
         dto.setCreationDate(project.getCreationDate());
-        dto.setAdministratorName(project.getAdministrator().getFullName());
+        dto.setAdministrator(UserService.mapToUserInfoDTO(project.getAdministrator()));
         project.getLastModified().ifPresent(dto::setLastModified);
         dto.setTasks(TaskService.mapAllToTaskInfoDTO(project.getTasks()));
         return dto;

@@ -5,14 +5,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import pl.edu.pw.ee.pyskp.documentworkflow.domain.Project;
 import pl.edu.pw.ee.pyskp.documentworkflow.dto.CreateProjectFormDTO;
-import pl.edu.pw.ee.pyskp.documentworkflow.dto.ProjectInfoDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.exception.ProjectNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.service.ProjectService;
+import pl.edu.pw.ee.pyskp.documentworkflow.service.UserService;
 import pl.edu.pw.ee.pyskp.documentworkflow.validator.CreateProjectFormValidator;
 
 import java.security.Principal;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -24,10 +26,14 @@ public class ProjectsController {
     private static final Logger logger = Logger.getLogger(ProjectsController.class);
 
     private final ProjectService projectService;
+    private final UserService userService;
     private final CreateProjectFormValidator createProjectFormValidator;
 
-    public ProjectsController(ProjectService projectService, CreateProjectFormValidator createProjectFormValidator) {
+    public ProjectsController(ProjectService projectService,
+                              UserService userService,
+                              CreateProjectFormValidator createProjectFormValidator) {
         this.projectService = projectService;
+        this.userService = userService;
         this.createProjectFormValidator = createProjectFormValidator;
     }
 
@@ -36,11 +42,10 @@ public class ProjectsController {
                                   @RequestParam(required = false) String onlyOwned,
                                   Principal principal) {
         String login = principal.getName();
-        List<ProjectInfoDTO> allAdministratedProjects = projectService.findAllAdministratedProjects(principal.getName());
-        Set<ProjectInfoDTO> projects = new HashSet<>(allAdministratedProjects);
+        Set<Project> projects = new HashSet<>(projectService.findAllAdministratedProjects(login));
         if (onlyOwned == null)
-            projects.addAll(projectService.findAllProjectsWhereUserIsParticipant(principal.getName()));
-        model.addAttribute("projects", projects);
+            projects.addAll(projectService.findAllProjectsWhereUserIsParticipant(login));
+        model.addAttribute("projects", ProjectService.mapAllToProjectInfoDTO(projects));
         return "projects";
     }
 
@@ -52,21 +57,22 @@ public class ProjectsController {
     @PostMapping("/add")
     public String processCreationOfNewProject(
             @ModelAttribute("newProject") CreateProjectFormDTO newProject,
-            BindingResult bindingResult,
-            Model model,
-            Principal principal) {
+            BindingResult bindingResult) {
         createProjectFormValidator.validate(newProject, bindingResult);
         if (bindingResult.hasErrors())
             return "addProject";
-        newProject.setAdministratorLogin(principal.getName());
-        projectService.createNewProjectFromForm(newProject);
-        return String.format("redirect:/projects/%s", newProject.getName());
+        Project createdProject = projectService.createNewProjectFromForm(newProject);
+        return String.format("redirect:/projects/%s", createdProject.getName());
     }
 
     @GetMapping("/{projectName}")
     public String showProjectInfo(@PathVariable String projectName,
                                   Model model) {
-        model.addAttribute("project", projectService.getOneByName(projectName));
+        Optional<Project> projectOpt = projectService.getOneByName(projectName);
+        if (!projectOpt.isPresent()) throw new ProjectNotFoundException(projectName);
+        Project project = projectOpt.get();
+        model.addAttribute("project", ProjectService.mapToProjectInfoDTO(project));
+        model.addAttribute("owned", project.getAdministrator().equals(userService.getCurrentUser()));
         return "project";
     }
 }

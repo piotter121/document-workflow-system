@@ -60,6 +60,26 @@ public class User {
         return personalData.getFullName();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user = (User) o;
+
+        return id == user.id
+                && login.equals(user.login)
+                && email.equals(user.email);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + login.hashCode();
+        result = 31 * result + email.hashCode();
+        return result;
+    }
+
     public long getId() {
         return id;
     }

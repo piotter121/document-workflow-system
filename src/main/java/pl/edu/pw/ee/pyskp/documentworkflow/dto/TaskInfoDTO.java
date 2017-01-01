@@ -8,7 +8,7 @@ import java.util.List;
 public class TaskInfoDTO {
     private String name;
     private String description;
-    private String administratorName;
+    private UserInfoDTO administrator;
     private List<FileMetadataDTO> filesInfo;
 
     public int getNumberOfFiles() {
@@ -31,12 +31,12 @@ public class TaskInfoDTO {
         this.description = description;
     }
 
-    public String getAdministratorName() {
-        return administratorName;
+    public UserInfoDTO getAdministrator() {
+        return administrator;
     }
 
-    public void setAdministratorName(String administratorName) {
-        this.administratorName = administratorName;
+    public void setAdministrator(UserInfoDTO administrator) {
+        this.administrator = administrator;
     }
 
     public List<FileMetadataDTO> getFilesInfo() {

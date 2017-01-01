@@ -15,7 +15,7 @@ public interface TaskService {
         TaskInfoDTO dto = new TaskInfoDTO();
         dto.setName(task.getName());
         dto.setDescription(task.getDescription());
-        dto.setAdministratorName(task.getAdministrator().getFullName());
+        dto.setAdministrator(UserService.mapToUserInfoDTO(task.getAdministrator()));
         return dto;
     }
 

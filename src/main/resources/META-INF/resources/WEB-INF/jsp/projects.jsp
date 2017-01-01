@@ -13,9 +13,7 @@
 <header class="jumbotron">
     <div class="container">
         <h1>System obiegu dokumentów</h1>
-        <p>
-            Projekty
-        </p>
+        <p>Projekty</p>
         <form action="<c:url value="/logout" />" method="post">
             <input type="submit" value="Wyloguj" class="btn btn-danger btn-mini pull-right"/>
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
@@ -59,7 +57,7 @@
                     <td>${project.name}</td>
                     <td>${project.description}</td>
                     <td>${project.numberOfTasks}</td>
-                    <td>${project.administratorName}</td>
+                    <td>${project.administrator.fullName}</td>
                     <td>${project.creationDate}</td>
                     <td>${project.lastModified}</td>
                     <td>

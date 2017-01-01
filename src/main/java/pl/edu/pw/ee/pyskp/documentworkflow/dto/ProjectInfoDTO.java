@@ -9,7 +9,7 @@ import java.util.List;
 public class ProjectInfoDTO {
     private String name = "";
     private String description = "";
-    private String administratorName = "";
+    private UserInfoDTO administrator;
     private Date creationDate;
     private Date lastModified;
     private List<TaskInfoDTO> tasks;
@@ -34,12 +34,12 @@ public class ProjectInfoDTO {
         return tasks == null ? 0 : tasks.size();
     }
 
-    public String getAdministratorName() {
-        return administratorName;
+    public UserInfoDTO getAdministrator() {
+        return administrator;
     }
 
-    public void setAdministratorName(String administratorName) {
-        this.administratorName = administratorName;
+    public void setAdministrator(UserInfoDTO administrator) {
+        this.administrator = administrator;
     }
 
     public Date getCreationDate() {
