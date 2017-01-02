@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  */
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public class ProjectNotFoundException extends RuntimeException {
-    public ProjectNotFoundException(String nameOfNonExistingProject) {
-        super(String.format("Nie znaleziono projektu o nazwie %s", nameOfNonExistingProject));
+    public ProjectNotFoundException(long projectId) {
+        super(String.format("Nie znaleziono projektu o identyfikatorze równym %d", projectId));
     }
 }

@@ -11,7 +11,6 @@ import pl.edu.pw.ee.pyskp.documentworkflow.domain.User;
 import pl.edu.pw.ee.pyskp.documentworkflow.dto.CreateUserFormDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exception.UserNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.repository.UserRepository;
-import pl.edu.pw.ee.pyskp.documentworkflow.service.SecurityService;
 import pl.edu.pw.ee.pyskp.documentworkflow.service.UserService;
 
 import java.util.Date;
@@ -44,6 +43,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<User> getUserByEmail(String email) {
+        return userRepository.findOneByEmail(email);
+    }
+
+    @Override
     public User getCurrentUser() throws UserNotFoundException {
         String loggedInUsername = findLoggedInUsername();
         Optional<User> currentUser = userRepository.findOneByLogin(loggedInUsername);
@@ -59,11 +63,6 @@ public class UserServiceImpl implements UserService {
             return ((UserDetails) userDetails).getUsername();
         }
         return null;
-    }
-
-    @Override
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
     }
 
     @Override

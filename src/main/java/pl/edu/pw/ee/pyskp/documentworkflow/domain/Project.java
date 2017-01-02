@@ -14,13 +14,13 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, length = 32)
     private String name;
 
     @Column(length = 1024)
     private String description;
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(updatable = false, nullable = false)
     private Date creationDate;
 
@@ -43,6 +43,21 @@ public class Project {
             }
         }
         return Optional.ofNullable(lastModified);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Project project = (Project) o;
+
+        return id == project.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (id ^ (id >>> 32));
     }
 
     public long getId() {

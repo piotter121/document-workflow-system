@@ -29,6 +29,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public Optional<Project> getOneById(Long id) {
+        return Optional.ofNullable(projectRepository.findOne(id));
+    }
+
+    @Override
     public Optional<Project> getOneByName(String name) {
         return projectRepository.findOneByName(name);
     }
@@ -43,7 +48,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<Project> findAllProjectsWhereUserIsParticipant(String login) throws UserNotFoundException {
+    public List<Project> findAllParticipatedProjects(String login) throws UserNotFoundException {
         Optional<User> user = userService.getUserByLogin(login);
         if (user.isPresent())
             return new ArrayList<>(user.get().getParticipatedProjects());
@@ -59,10 +64,5 @@ public class ProjectServiceImpl implements ProjectService {
         project.setAdministrator(userService.getCurrentUser());
         project.setCreationDate(new Date());
         return projectRepository.save(project);
-    }
-
-    @Override
-    public boolean existsProjectWithName(String name) {
-        return projectRepository.findOneByName(name).isPresent();
     }
 }

@@ -15,11 +15,13 @@ import java.util.stream.Collectors;
  * Created by piotr on 29.12.16.
  */
 public interface ProjectService {
+    Optional<Project> getOneById(Long id);
+
     Optional<Project> getOneByName(String name);
 
     List<Project> findAllAdministratedProjects(String username) throws UserNotFoundException;
 
-    List<Project> findAllProjectsWhereUserIsParticipant(String username) throws UserNotFoundException;
+    List<Project> findAllParticipatedProjects(String username) throws UserNotFoundException;
 
     Project createNewProjectFromForm(CreateProjectFormDTO formDTO);
 
@@ -31,6 +33,7 @@ public interface ProjectService {
 
     static ProjectInfoDTO mapToProjectInfoDTO(Project project) {
         ProjectInfoDTO dto = new ProjectInfoDTO();
+        dto.setId(project.getId());
         dto.setName(project.getName());
         dto.setDescription(project.getDescription());
         dto.setCreationDate(project.getCreationDate());
@@ -40,5 +43,4 @@ public interface ProjectService {
         return dto;
     }
 
-    boolean existsProjectWithName(String name);
 }

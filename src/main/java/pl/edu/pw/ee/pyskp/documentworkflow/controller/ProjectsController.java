@@ -44,7 +44,7 @@ public class ProjectsController {
         String login = principal.getName();
         Set<Project> projects = new HashSet<>(projectService.findAllAdministratedProjects(login));
         if (onlyOwned == null)
-            projects.addAll(projectService.findAllProjectsWhereUserIsParticipant(login));
+            projects.addAll(projectService.findAllParticipatedProjects(login));
         model.addAttribute("projects", ProjectService.mapAllToProjectInfoDTO(projects));
         return "projects";
     }
@@ -62,14 +62,14 @@ public class ProjectsController {
         if (bindingResult.hasErrors())
             return "addProject";
         Project createdProject = projectService.createNewProjectFromForm(newProject);
-        return String.format("redirect:/projects/%s", createdProject.getName());
+        return String.format("redirect:/projects/%d", createdProject.getId());
     }
 
-    @GetMapping("/{projectName}")
-    public String showProjectInfo(@PathVariable String projectName,
+    @GetMapping("/{projectId}")
+    public String showProjectInfo(@PathVariable Long projectId,
                                   Model model) {
-        Optional<Project> projectOpt = projectService.getOneByName(projectName);
-        if (!projectOpt.isPresent()) throw new ProjectNotFoundException(projectName);
+        Optional<Project> projectOpt = projectService.getOneById(projectId);
+        if (!projectOpt.isPresent()) throw new ProjectNotFoundException(projectId);
         Project project = projectOpt.get();
         model.addAttribute("project", ProjectService.mapToProjectInfoDTO(project));
         model.addAttribute("owned", project.getAdministrator().equals(userService.getCurrentUser()));

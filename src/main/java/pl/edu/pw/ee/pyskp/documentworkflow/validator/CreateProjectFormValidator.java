@@ -28,10 +28,7 @@ public class CreateProjectFormValidator implements Validator {
         CreateProjectFormDTO form = (CreateProjectFormDTO) target;
 
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "NotEmpty");
-        String name = form.getName();
-        if (projectService.existsProjectWithName(name))
-            errors.rejectValue("name", "Duplicate.projectForm.name");
-        int nameLength = name.length();
+        int nameLength = form.getName().length();
         if (nameLength < 5 || nameLength > 32)
             errors.rejectValue("name", "Size.projectForm.name");
         if (form.getDescription().length() > 1024)

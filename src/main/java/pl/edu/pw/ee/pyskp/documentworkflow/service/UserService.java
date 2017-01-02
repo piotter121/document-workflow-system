@@ -5,8 +5,11 @@ import pl.edu.pw.ee.pyskp.documentworkflow.dto.CreateUserFormDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.dto.UserInfoDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exception.UserNotFoundException;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Created by piotr on 14.12.16.
@@ -17,9 +20,9 @@ public interface UserService {
 
     Optional<User> getUserByLogin(String login);
 
-    User getCurrentUser() throws UserNotFoundException;
+    Optional<User> getUserByEmail(String email);
 
-    List<User> getAllUsers();
+    User getCurrentUser() throws UserNotFoundException;
 
     User createUserFromForm(CreateUserFormDTO form);
 
@@ -29,5 +32,11 @@ public interface UserService {
         dto.setFirstName(user.getPersonalData().getFirstName());
         dto.setLastName(user.getPersonalData().getLastName());
         return dto;
+    }
+
+    static List<UserInfoDTO> mapAllToUserInfoDTO(Collection<User> users) {
+        return users != null
+                ? users.stream().map(UserService::mapToUserInfoDTO).collect(Collectors.toList())
+                : Collections.emptyList();
     }
 }

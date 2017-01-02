@@ -5,7 +5,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <%@ include file="header.html" %>
+    <%@ include file="head.html" %>
     <title>System obiegu dokumentów - projekty</title>
 </head>
 <body>
@@ -24,6 +24,7 @@
 <div class="container">
     <div class="row">
         <button data-toggle="collapse" class="btn btn-default" data-target="#filter">Opcje filtrowania</button>
+        <a href="<spring:url value="/projects/add"/>" class="btn btn-primary">Stwórz nowy</a>
     </div>
 
     <div id="filter" class="collapse">
@@ -60,11 +61,9 @@
                     <td>${project.administrator.fullName}</td>
                     <td>${project.creationDate}</td>
                     <td>${project.lastModified}</td>
-                    <td>
-                        <a href="<spring:url value="/projects/${project.name}"/>" class="btn btn-info" role="button">
-                            Szczegóły
-                        </a>
-                    </td>
+                    <td><a href="<spring:url value="/projects/${project.id}"/>" class="btn btn-info" role="button">
+                        Szczegóły
+                    </a></td>
                 </tr>
             </c:forEach>
             </tbody>

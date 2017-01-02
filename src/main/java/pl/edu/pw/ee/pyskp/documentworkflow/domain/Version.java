@@ -18,6 +18,13 @@ public class Version {
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     private Date saveDate;
+
+    @Column(nullable = false, length = 20)
+    private String versionString;
+
+    @Column(length = 1024)
+    private String message;
+
     private boolean confirmed;
 
     @ManyToOne
@@ -100,5 +107,21 @@ public class Version {
 
     public void setFileMetadata(FileMetadata fileMetadata) {
         this.fileMetadata = fileMetadata;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getVersionString() {
+        return versionString;
+    }
+
+    public void setVersionString(String versionString) {
+        this.versionString = versionString;
     }
 }

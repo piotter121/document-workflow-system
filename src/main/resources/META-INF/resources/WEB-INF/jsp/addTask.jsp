@@ -5,14 +5,14 @@
 <html>
 <head>
     <%@ include file="head.html" %>
-    <title>System obiegu dokumentów - stwórz projekt</title>
+    <title>System obiegu dokumentów - stwórz zadanie</title>
 </head>
 <body>
 
 <div class="jumbotron">
     <div class="container">
         <h1>System obiegu dokumentów</h1>
-        <p>Stwórz projekt</p>
+        <p>Stwórz zadanie</p>
         <form action="<c:url value="/logout" />" method="post">
             <input type="submit" value="Wyloguj" class="btn btn-danger btn-mini pull-right"/>
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
@@ -21,15 +21,15 @@
 </div>
 
 <div class="container">
-    <form:form modelAttribute="newProject" class="form-horizontal">
+    <form:form modelAttribute="newTask" class="form-horizontal">
         <fieldset>
             <legend>
-                <spring:message code="addProject.form.legend"/>
+                <spring:message code="addTask.form.legend"/>
             </legend>
 
             <div class="form-group">
                 <label class="control-label col-md-2" for="name">
-                    <spring:message code="addProject.form.name.label"/>
+                    <spring:message code="addTask.form.name.label"/>
                 </label>
                 <div class="col-md-5">
                     <form:input path="name" id="name" type="text" class="form-control"/>
@@ -39,11 +39,21 @@
 
             <div class="form-group">
                 <label class="control-label col-md-2" for="description">
-                    <spring:message code="addProject.form.description.label"/>
+                    <spring:message code="addTask.form.description.label"/>
                 </label>
-                <div class="col-lg-5">
+                <div class="col-md-5">
                     <form:textarea path="description" id="description" rows="4" cssClass="form-control"/>
                     <p><form:errors path="name" cssClass="text-danger"/></p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2" for="administratorEmail">
+                    <spring:message code="addTask.form.administrator.label"/>
+                </label>
+                <div class="col-md-5">
+                    <form:input path="administratorEmail" id="administratorEmail" cssClass="form-control"/>
+                    <p><form:errors path="administratorEmail" cssClass="text-danger"/></p>
                 </div>
             </div>
 

@@ -1,10 +1,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <html>
 <head>
-    <%@ include file="header.html" %>
+    <%@ include file="head.html" %>
     <title>System obiegu dokumentów - ${project.name}</title>
 </head>
 <body>
@@ -26,6 +27,11 @@
             <legend>
                 Zadania przypisane do projektu
             </legend>
+            <div class="btn-group btn-group-justified">
+                <a href="<spring:url value="/projects/${project.id}/tasks/add"/>" class="btn btn-primary">
+                    Dodaj nowe zadanie
+                </a>
+            </div>
             <table class="table table-striped table-hover">
                 <thead>
                 <tr>
@@ -67,11 +73,16 @@
                         </div>
                         <div class="list-group-item">
                             <p class="list-group-item-text">Data utworzenia</p>
-                            <h4 class="list-group-item-heading">${project.creationDate}</h4>
+                            <h4 class="list-group-item-heading">
+                                <fmt:formatDate pattern="dd.MM.yyyy K:m"
+                                                value="${project.creationDate}"/>
+                            </h4>
                         </div>
                         <div class="list-group-item">
                             <p class="list-group-item-text">Data ostatniej modyfikacji</p>
-                            <h4 class="list-group-item-heading">${project.lastModified}</h4>
+                            <h4 class="list-group-item-heading">
+                                <fmt:formatDate pattern="dd.MM.yyyy K:m"
+                                                value="${project.lastModified}"/></h4>
                         </div>
                     </div>
                 </div>
