@@ -10,8 +10,8 @@ import pl.edu.pw.ee.pyskp.documentworkflow.dto.CreateProjectFormDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exception.ProjectNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.service.ProjectService;
 import pl.edu.pw.ee.pyskp.documentworkflow.service.UserService;
-import pl.edu.pw.ee.pyskp.documentworkflow.validator.CreateProjectFormValidator;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.HashSet;
 import java.util.Optional;
@@ -27,14 +27,11 @@ public class ProjectsController {
 
     private final ProjectService projectService;
     private final UserService userService;
-    private final CreateProjectFormValidator createProjectFormValidator;
 
     public ProjectsController(ProjectService projectService,
-                              UserService userService,
-                              CreateProjectFormValidator createProjectFormValidator) {
+                              UserService userService) {
         this.projectService = projectService;
         this.userService = userService;
-        this.createProjectFormValidator = createProjectFormValidator;
     }
 
     @GetMapping
@@ -56,11 +53,9 @@ public class ProjectsController {
 
     @PostMapping("/add")
     public String processCreationOfNewProject(
-            @ModelAttribute("newProject") CreateProjectFormDTO newProject,
+            @ModelAttribute("newProject") @Valid CreateProjectFormDTO newProject,
             BindingResult bindingResult) {
-        createProjectFormValidator.validate(newProject, bindingResult);
-        if (bindingResult.hasErrors())
-            return "addProject";
+        if (bindingResult.hasErrors()) return "addProject";
         Project createdProject = projectService.createNewProjectFromForm(newProject);
         return String.format("redirect:/projects/%d", createdProject.getId());
     }

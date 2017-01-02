@@ -1,7 +1,7 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.service;
 
 import pl.edu.pw.ee.pyskp.documentworkflow.domain.Task;
-import pl.edu.pw.ee.pyskp.documentworkflow.dto.CreateTaskFormDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dto.NewTaskForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.dto.TaskInfoDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exception.ProjectNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exception.UserNotFoundException;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public interface TaskService {
     Optional<Task> getTaskById(Long id);
 
-    Task createTaskFromForm(CreateTaskFormDTO formDTO, Long projectId)
+    Task createTaskFromForm(NewTaskForm formDTO, Long projectId)
             throws UserNotFoundException, ProjectNotFoundException;
 
     static TaskInfoDTO mapToTaskInfoDto(Task task) {

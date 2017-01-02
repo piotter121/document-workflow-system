@@ -43,7 +43,7 @@
                 </label>
                 <div class="col-lg-5">
                     <form:textarea path="description" id="description" rows="4" cssClass="form-control"/>
-                    <p><form:errors path="name" cssClass="text-danger"/></p>
+                    <p><form:errors path="description" cssClass="text-danger"/></p>
                 </div>
             </div>
 

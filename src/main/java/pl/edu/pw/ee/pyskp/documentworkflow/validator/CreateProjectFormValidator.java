@@ -5,19 +5,12 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 import pl.edu.pw.ee.pyskp.documentworkflow.dto.CreateProjectFormDTO;
-import pl.edu.pw.ee.pyskp.documentworkflow.service.ProjectService;
 
 /**
  * Created by piotr on 29.12.16.
  */
 @Component
 public class CreateProjectFormValidator implements Validator {
-    private final ProjectService projectService;
-
-    public CreateProjectFormValidator(ProjectService projectService) {
-        this.projectService = projectService;
-    }
-
     @Override
     public boolean supports(Class<?> clazz) {
         return CreateProjectFormDTO.class.isAssignableFrom(clazz);
@@ -29,7 +22,7 @@ public class CreateProjectFormValidator implements Validator {
 
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "NotEmpty");
         int nameLength = form.getName().length();
-        if (nameLength < 5 || nameLength > 32)
+        if (nameLength < 5 || nameLength > 40)
             errors.rejectValue("name", "Size.projectForm.name");
         if (form.getDescription().length() > 1024)
             errors.rejectValue("description", "Size.projectForm.description");

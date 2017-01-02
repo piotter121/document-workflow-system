@@ -19,7 +19,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Constraint(validatedBy = ExistingUserEmailValidator.class)
 @Documented
 public @interface ExistingUserEmail {
-    String message() default "Nie istnieje użytkownik o podanym adresie e-mail";
+    String message() default "{ExistingUserEmail}";
 
     Class<?>[] groups() default {};
 

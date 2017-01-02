@@ -5,7 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pw.ee.pyskp.documentworkflow.domain.Task;
-import pl.edu.pw.ee.pyskp.documentworkflow.dto.CreateTaskFormDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dto.NewTaskForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.exception.TaskNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.service.TaskService;
 
@@ -34,13 +34,13 @@ public class TasksController {
     }
 
     @GetMapping("/add")
-    public String getNewTaskForm(@ModelAttribute("newTask") CreateTaskFormDTO newTask) {
+    public String getNewTaskForm(@ModelAttribute NewTaskForm newTask) {
         return "addTask";
     }
 
     @PostMapping("/add")
     public String processNewTaskForm(@PathVariable Long projectId,
-                                     @ModelAttribute("newTask") @Valid CreateTaskFormDTO newTask,
+                                     @ModelAttribute @Valid NewTaskForm newTask,
                                      BindingResult bindingResult) {
         if (bindingResult.hasErrors()) return "addTask";
         Task task = taskService.createTaskFromForm(newTask, projectId);

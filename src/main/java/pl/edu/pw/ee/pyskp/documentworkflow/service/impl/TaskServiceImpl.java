@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import pl.edu.pw.ee.pyskp.documentworkflow.domain.Project;
 import pl.edu.pw.ee.pyskp.documentworkflow.domain.Task;
 import pl.edu.pw.ee.pyskp.documentworkflow.domain.User;
-import pl.edu.pw.ee.pyskp.documentworkflow.dto.CreateTaskFormDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dto.NewTaskForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.exception.ProjectNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exception.UserNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.repository.TaskRepository;
@@ -35,7 +35,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Task createTaskFromForm(CreateTaskFormDTO formDTO, Long projectId)
+    public Task createTaskFromForm(NewTaskForm formDTO, Long projectId)
             throws UserNotFoundException, ProjectNotFoundException {
         Task task = new Task();
         task.setName(formDTO.getName());

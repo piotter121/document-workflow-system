@@ -1,23 +1,21 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.dto;
 
-import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.NotBlank;
 import pl.edu.pw.ee.pyskp.documentworkflow.validator.ExistingUserEmail;
 
 /**
  * Created by p.pysk on 02.01.2017.
  */
-public class CreateTaskFormDTO {
-    @NotEmpty(message = "NotEmpty")
-    @Length(min = 5, max = 50, message = "Size.taskForm.name")
+public class NewTaskForm {
+    @NotBlank
+    @Length(min = 5, max = 50)
     private String name;
 
-    @Length(max = 1024, message = "Size.taskForm.description")
+    @Length(max = 1024)
     private String description;
 
-    @NotEmpty(message = "NotEmpty")
-    @Email(message = "Pattern.taskForm.administratorEmail")
+    @NotBlank
     @ExistingUserEmail
     private String administratorEmail;
 

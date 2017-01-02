@@ -1,10 +1,17 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.dto;
 
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
+
 /**
  * Created by piotr on 29.12.16.
  */
 public class CreateProjectFormDTO {
+    @NotBlank
+    @Length(min = 5, max = 40)
     private String name;
+
+    @Length(max = 1024)
     private String description;
 
     public String getName() {
