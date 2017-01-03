@@ -2,9 +2,7 @@ package pl.edu.pw.ee.pyskp.documentworkflow.dto;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
-import pl.edu.pw.ee.pyskp.documentworkflow.domain.Role;
 
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 /**

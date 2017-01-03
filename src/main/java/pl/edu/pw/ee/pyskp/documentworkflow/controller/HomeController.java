@@ -1,7 +1,6 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**

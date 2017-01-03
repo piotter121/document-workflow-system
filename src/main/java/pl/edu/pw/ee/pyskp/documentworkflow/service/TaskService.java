@@ -26,6 +26,7 @@ public interface TaskService {
         dto.setName(task.getName());
         dto.setDescription(task.getDescription());
         dto.setAdministrator(UserService.mapToUserInfoDTO(task.getAdministrator()));
+        task.getModificationDate().ifPresent(dto::setModificationDate);
         dto.setProjectId(task.getProject().getId());
         dto.setParticipants(UserService.mapAllToUserInfoDTO(task.getParticipants()));
         return dto;

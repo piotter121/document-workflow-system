@@ -14,7 +14,6 @@ import pl.edu.pw.ee.pyskp.documentworkflow.repository.UserRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.service.UserService;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 /**

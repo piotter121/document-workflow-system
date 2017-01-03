@@ -14,7 +14,6 @@ import pl.edu.pw.ee.pyskp.documentworkflow.service.SecurityService;
  */
 @Service
 public class SecurityServiceImpl implements SecurityService {
-
     private static final Logger logger = Logger.getLogger(SecurityServiceImpl.class);
 
     private final AuthenticationManager authenticationManager;

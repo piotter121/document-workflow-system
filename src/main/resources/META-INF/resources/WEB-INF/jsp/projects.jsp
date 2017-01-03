@@ -27,17 +27,19 @@
         <a href="<spring:url value="/projects/add"/>" class="btn btn-primary">Stwórz nowy</a>
     </div>
 
-    <div id="filter" class="collapse">
-        <form action="<c:url value="/projects" />" method="get">
-            <div class="row">
-                <input type="checkbox" name="onlyOwned" value="">
-                Pokaż tylko administrowane projekty
-                </input>
-            </div>
-            <div class="row">
-                <input type="submit" class="btn btn-success" value="Filtruj"/>
-            </div>
-        </form>
+    <div class="row">
+        <div id="filter" class="collapse">
+            <form action="<c:url value="/projects" />" method="get">
+                <div class="col-md-12">
+                    <label>
+                        <input type="checkbox" name="onlyOwned"/>Pokaż tylko administrowane projekty
+                    </label>
+                </div>
+                <div class="col-md-12">
+                    <input type="submit" class="btn btn-success" value="Filtruj"/>
+                </div>
+            </form>
+        </div>
     </div>
 
     <div class="row">
@@ -45,7 +47,6 @@
             <thead>
             <tr>
                 <th>Nazwa projektu</th>
-                <th>Opis projektu</th>
                 <th>Liczba zadań w projekcie</th>
                 <th>Imię i nazwisko właściciela</th>
                 <th>Data utworzenia</th>
@@ -56,7 +57,6 @@
             <c:forEach items="${projects}" var="project">
                 <tr>
                     <td>${project.name}</td>
-                    <td>${project.description}</td>
                     <td>${project.numberOfTasks}</td>
                     <td>${project.administrator.fullName}</td>
                     <td>${project.creationDate}</td>

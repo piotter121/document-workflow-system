@@ -1,5 +1,6 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.dto;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -11,6 +12,7 @@ public class TaskInfoDTO {
     private String description;
     private long projectId;
     private UserInfoDTO administrator;
+    private Date modificationDate;
     private List<UserInfoDTO> participants;
     private List<FileMetadataDTO> filesInfo;
 
@@ -72,5 +74,13 @@ public class TaskInfoDTO {
 
     public void setProjectId(long projectId) {
         this.projectId = projectId;
+    }
+
+    public Date getModificationDate() {
+        return modificationDate;
+    }
+
+    public void setModificationDate(Date modificationDate) {
+        this.modificationDate = modificationDate;
     }
 }

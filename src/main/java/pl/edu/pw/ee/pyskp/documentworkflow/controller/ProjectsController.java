@@ -67,7 +67,7 @@ public class ProjectsController {
         if (!projectOpt.isPresent()) throw new ProjectNotFoundException(projectId);
         Project project = projectOpt.get();
         model.addAttribute("project", ProjectService.mapToProjectInfoDTO(project));
-        model.addAttribute("owned", project.getAdministrator().equals(userService.getCurrentUser()));
+        model.addAttribute("currentUser", UserService.mapToUserInfoDTO(userService.getCurrentUser()));
         return "project";
     }
 }

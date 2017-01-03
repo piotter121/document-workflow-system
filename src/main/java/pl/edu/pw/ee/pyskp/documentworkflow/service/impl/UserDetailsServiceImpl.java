@@ -1,7 +1,6 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.service.impl;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,7 +19,6 @@ import java.util.Optional;
  */
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-
     private static final Logger logger = Logger.getLogger(UserDetailsServiceImpl.class);
 
     private final UserService userService;
