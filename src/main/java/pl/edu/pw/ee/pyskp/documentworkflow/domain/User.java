@@ -1,9 +1,7 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.domain;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -45,13 +43,21 @@ public class User {
     private List<Task> taskList;
 
     @OneToMany(mappedBy = "administrator")
+    private List<Task> administratedTasks;
+
+    @OneToMany(mappedBy = "administrator")
     private List<Project> administratedProjects;
 
     @Transient
+    public boolean hasAccessToProject(Project project) {
+        return this.getAdministratedProjects().contains(project) || this.getParticipatedProjects().contains(project);
+    }
+
+    @Transient
     public Set<Project> getParticipatedProjects() {
-        return taskList.stream()
-                .map(Task::getProject)
-                .collect(Collectors.toSet());
+        Set<Task> tasks = new HashSet<>(taskList);
+        tasks.addAll(administratedTasks);
+        return tasks.stream().map(Task::getProject).collect(Collectors.toSet());
     }
 
     @Transient
@@ -165,5 +171,13 @@ public class User {
 
     public void setAdministratedProjects(List<Project> administratedProjects) {
         this.administratedProjects = administratedProjects;
+    }
+
+    public List<Task> getAdministratedTasks() {
+        return administratedTasks;
+    }
+
+    public void setAdministratedTasks(List<Task> administratedTasks) {
+        this.administratedTasks = administratedTasks;
     }
 }

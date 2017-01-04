@@ -26,6 +26,12 @@ public class FileMetadata {
     @Column(nullable = false)
     private ContentType contentType;
 
+    @Column(nullable = false)
+    private boolean confirmed = false;
+
+    @Column(nullable = false)
+    private boolean markedToConfirm = false;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "taskId", nullable = false)
     private Task task;
@@ -88,5 +94,21 @@ public class FileMetadata {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public boolean isConfirmed() {
+        return confirmed;
+    }
+
+    public void setConfirmed(boolean confirmed) {
+        this.confirmed = confirmed;
+    }
+
+    public boolean isMarkedToConfirm() {
+        return markedToConfirm;
+    }
+
+    public void setMarkedToConfirm(boolean markedToConfirm) {
+        this.markedToConfirm = markedToConfirm;
     }
 }

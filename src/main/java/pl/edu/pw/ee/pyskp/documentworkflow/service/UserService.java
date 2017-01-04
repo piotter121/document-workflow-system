@@ -28,9 +28,10 @@ public interface UserService {
 
     static UserInfoDTO mapToUserInfoDTO(User user) {
         UserInfoDTO dto = new UserInfoDTO();
-        dto.setLogin(user.getLogin());
+        dto.setId(user.getId());
         dto.setFirstName(user.getPersonalData().getFirstName());
         dto.setLastName(user.getPersonalData().getLastName());
+        dto.setEmail(user.getEmail());
         return dto;
     }
 

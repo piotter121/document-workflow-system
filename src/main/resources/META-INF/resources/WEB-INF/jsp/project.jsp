@@ -8,7 +8,10 @@
     <%@ include file="head.html" %>
     <title>System obiegu dokumentów - ${project.name}</title>
 </head>
-<body>
+<body ng-app="app">
+<%--@elvariable id="project" type="pl.edu.pw.ee.pyskp.documentworkflow.dto.ProjectInfoDTO"--%>
+<%--@elvariable id="currentUser" type="pl.edu.pw.ee.pyskp.documentworkflow.dto.UserInfoDTO"--%>
+<%--@elvariable id="_csrf" type="org.springframework.security.web.csrf.DefaultCsrfToken"--%>
 <div class="jumbotron">
     <div class="container">
         <h1>System obiegu dokumentów</h1>
@@ -20,17 +23,20 @@
     </div>
 </div>
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-md-9">
-            <legend>
-                Zadania przypisane do projektu
-            </legend>
-            <c:if test="${currentUser.login eq project.administrator.login}">
+            <c:if test="${currentUser eq project.administrator}">
                 <div class="btn-group">
                     <a href="<spring:url value="/projects/${project.id}/tasks/add"/>" class="btn btn-primary">
                         Dodaj nowe zadanie
                     </a>
+                </div>
+            </c:if>
+            <%--@elvariable id="delete" type="java.lang.String"--%>
+            <c:if test="${delete eq 'success'}">
+                <div class="alert alert-success">
+                    Pomyślnie usunięto zadanie
                 </div>
             </c:if>
             <table class="table table-striped table-hover">
@@ -51,15 +57,17 @@
                         <td>${task.numberOfFiles}</td>
                         <td>${task.modificationDate}</td>
                         <td>
-                            <a href="<spring:url value="/projects/${task.projectId}/tasks/${task.id}"/>"
-                               class="btn btn-info" role="button">
-                                Szczegóły
-                            </a>
-                            <c:if test="${currentUser.login eq project.administrator.login}">
-                                <a href="<spring:url value="/projects/${task.projectId}/tasks/${task.id}/edit"/>"><span
-                                        class="glyphicons glyphicons-edit"></span></a>
+                            <c:if test="${task.participants.contains(currentUser) or task.administrator eq currentUser}">
+                                <a href="<spring:url value="/projects/${task.projectId}/tasks/${task.id}"/>">
+                                    <span class="glyphicon glyphicon-info-sign"></span>
+                                </a>
+                            </c:if>
+                            <c:if test="${currentUser eq project.administrator}">
+                                <a href="<spring:url value="/projects/${task.projectId}/tasks/${task.id}/edit"/>">
+                                    <span class="glyphicon glyphicon-edit"></span>
+                                </a>
                                 <a data-toggle="modal" href="#confirmDelete">
-                                    <span class="glyphicons glyphicons-delete"></span>
+                                    <span class="glyphicon glyphicon-remove"></span>
                                 </a>
                                 <div class="modal fade" id="confirmDelete" role="dialog">
                                     <div class="modal-dialog">
@@ -75,13 +83,16 @@
                                                     wszystkimi plikami?</p>
                                             </div>
                                             <div class="modal-footer">
-                                                <form method="DELETE"
-                                                      action="<c:url value="/projects/${task.projectId}/tasks/${task.id}"/>">
-                                                    <input type="submit" class="btn btn-danger" value="Usuń"/>
+                                                <form method="post"
+                                                      action="<spring:url value="/projects/${project.id}/tasks/${task.id}"/>">
+                                                    <input class="btn btn-danger" type="submit" value="Usuń"/>
+                                                    <input type="hidden" name="${_csrf.parameterName}"
+                                                           value="${_csrf.token}"/>
+                                                    <input type="hidden" name="_method" value="delete"/>
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                                                        Anuluj
+                                                    </button>
                                                 </form>
-                                                <button type="button" class="btn btn-default" data-dismiss="modal">
-                                                    Anuluj
-                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -99,29 +110,31 @@
                 <div class="panel-body">
                     <div class="list-group">
                         <div class="list-group-item">
-                            <p class="list-group-item-text">Nazwa</p>
-                            <h4 class="list-group-item-heading">${project.name}</h4>
+                            <p class="list-group-item-heading">Nazwa</p>
+                            <h4 class="list-group-item-text">${project.name}</h4>
                         </div>
                         <div class="list-group-item">
-                            <p class="list-group-item-text">Opis</p>
-                            <h4 class="list-group-item-heading">${project.description}</h4>
+                            <p class="list-group-item-heading">Opis</p>
+                            <h4 class="list-group-item-text">${project.description}</h4>
                         </div>
                         <div class="list-group-item">
-                            <p class="list-group-item-text">Administrator</p>
-                            <h4 class="list-group-item-heading">${project.administrator.fullName}</h4>
-                        </div>
-                        <div class="list-group-item">
-                            <p class="list-group-item-text">Data utworzenia</p>
-                            <h4 class="list-group-item-heading">
-                                <fmt:formatDate pattern="dd.MM.yyyy K:m"
-                                                value="${project.creationDate}"/>
+                            <p class="list-group-item-heading">Administrator</p>
+                            <h4 class="list-group-item-text">
+                                <span class="glyphicon glyphicon-envelope"></span>
+                                <a href="mailto:${project.administrator.email}">${project.administrator.fullName}</a>
                             </h4>
                         </div>
                         <div class="list-group-item">
-                            <p class="list-group-item-text">Data ostatniej modyfikacji</p>
-                            <h4 class="list-group-item-heading">
-                                <fmt:formatDate pattern="dd.MM.yyyy K:m"
-                                                value="${project.lastModified}"/></h4>
+                            <p class="list-group-item-heading">Data utworzenia</p>
+                            <h4 class="list-group-item-text">
+                                <fmt:formatDate pattern="dd.MM.yyyy K:mm" value="${project.creationDate}"/>
+                            </h4>
+                        </div>
+                        <div class="list-group-item">
+                            <p class="list-group-item-heading">Data ostatniej modyfikacji</p>
+                            <h4 class="list-group-item-text">
+                                <fmt:formatDate pattern="dd.MM.yyyy K:mm" value="${project.lastModified}"/>
+                            </h4>
                         </div>
                     </div>
                 </div>

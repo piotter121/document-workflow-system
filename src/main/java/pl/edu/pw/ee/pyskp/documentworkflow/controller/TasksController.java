@@ -1,5 +1,6 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.controller;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,6 +19,8 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/projects/{projectId}/tasks")
 public class TasksController {
+    private static final Logger logger = Logger.getLogger(TasksController.class);
+
     private final TaskService taskService;
 
     public TasksController(TaskService taskService) {
@@ -31,6 +34,13 @@ public class TasksController {
         if (!taskOpt.isPresent()) throw new TaskNotFoundException(taskId);
         model.addAttribute("task", TaskService.mapToTaskInfoDto(taskOpt.get()));
         return "task";
+    }
+
+    @DeleteMapping("/{taskId}")
+    public String deleteTask(@PathVariable Long taskId, @PathVariable Long projectId) {
+        logger.debug("Received HTTP DELETE request for deletion task of id=" + taskId);
+        taskService.deleteTask(taskId);
+        return String.format("redirect:/projects/%d?deleted", projectId);
     }
 
     @GetMapping("/add")

@@ -23,6 +23,10 @@ public class Task {
     @Column(length = 1024)
     private String description;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false, updatable = false)
+    private Date creationDate;
+
     @OneToMany(mappedBy = "task")
     private List<FileMetadata> files;
 
@@ -112,5 +116,13 @@ public class Task {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 }

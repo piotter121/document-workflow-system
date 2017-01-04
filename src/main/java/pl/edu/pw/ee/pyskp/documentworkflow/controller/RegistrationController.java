@@ -37,8 +37,7 @@ public class RegistrationController {
     @PostMapping("/register")
     public String processRegistrationOfNewUser(
             @ModelAttribute("newUser") CreateUserFormDTO newUser,
-            BindingResult bindingResult,
-            Model model) {
+            BindingResult bindingResult) {
         createUserFormValidator.validate(newUser, bindingResult);
         if (bindingResult.hasErrors())
             return "register";

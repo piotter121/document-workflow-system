@@ -1,6 +1,7 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.service;
 
 import pl.edu.pw.ee.pyskp.documentworkflow.domain.Project;
+import pl.edu.pw.ee.pyskp.documentworkflow.domain.User;
 import pl.edu.pw.ee.pyskp.documentworkflow.dto.CreateProjectFormDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.dto.ProjectInfoDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exception.UserNotFoundException;
@@ -18,10 +19,6 @@ public interface ProjectService {
     Optional<Project> getOneById(Long id);
 
     Optional<Project> getOneByName(String name);
-
-    List<Project> findAllAdministratedProjects(String username) throws UserNotFoundException;
-
-    List<Project> findAllParticipatedProjects(String username) throws UserNotFoundException;
 
     Project createNewProjectFromForm(CreateProjectFormDTO formDTO);
 

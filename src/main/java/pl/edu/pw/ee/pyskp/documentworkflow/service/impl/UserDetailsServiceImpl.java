@@ -29,7 +29,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        logger.debug("Wyszukuję użytkownika o nazwie " + username);
+        logger.debug("Loading user with login: " + username);
         Optional<User> userOptional = userService.getUserByLogin(username);
         if (!userOptional.isPresent())
             throw new UsernameNotFoundException("Nie znaleziono użytkownika o nazwie " + username);

@@ -24,8 +24,6 @@ public class Version {
     @Column(length = 1024)
     private String message;
 
-    private boolean confirmed;
-
     @ManyToOne
     @JoinColumn(name = "authorId", nullable = false)
     private User author;
@@ -58,14 +56,6 @@ public class Version {
 
     public void setSaveDate(Date saveDate) {
         this.saveDate = saveDate;
-    }
-
-    public boolean isConfirmed() {
-        return confirmed;
-    }
-
-    public void setConfirmed(boolean confirmed) {
-        this.confirmed = confirmed;
     }
 
     public FileContent getFileContent() {

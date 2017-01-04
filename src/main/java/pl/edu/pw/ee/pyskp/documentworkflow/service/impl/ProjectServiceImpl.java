@@ -39,24 +39,6 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<Project> findAllAdministratedProjects(String login) throws UserNotFoundException {
-        Optional<User> user = userService.getUserByLogin(login);
-        if (user.isPresent())
-            return user.get().getAdministratedProjects();
-        else
-            throw new UserNotFoundException(login);
-    }
-
-    @Override
-    public List<Project> findAllParticipatedProjects(String login) throws UserNotFoundException {
-        Optional<User> user = userService.getUserByLogin(login);
-        if (user.isPresent())
-            return new ArrayList<>(user.get().getParticipatedProjects());
-        else
-            throw new UserNotFoundException(login);
-    }
-
-    @Override
     public Project createNewProjectFromForm(CreateProjectFormDTO formDTO) {
         Project project = new Project();
         project.setName(formDTO.getName());

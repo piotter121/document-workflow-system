@@ -12,6 +12,8 @@ import pl.edu.pw.ee.pyskp.documentworkflow.service.ProjectService;
 import pl.edu.pw.ee.pyskp.documentworkflow.service.TaskService;
 import pl.edu.pw.ee.pyskp.documentworkflow.service.UserService;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -35,19 +37,33 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public List<Task> getAllByAdministrator(User administrator) {
+        return taskRepository.findByAdministrator(administrator);
+    }
+
+    @Override
     public Task createTaskFromForm(NewTaskForm formDTO, Long projectId)
             throws UserNotFoundException, ProjectNotFoundException {
         Task task = new Task();
         task.setName(formDTO.getName());
         task.setDescription(formDTO.getDescription());
+        task.setCreationDate(new Date());
+
         Optional<Project> projectOpt = projectService.getOneById(projectId);
         if (projectOpt.isPresent()) task.setProject(projectOpt.get());
         else throw new ProjectNotFoundException(projectId);
+
         String administratorEmail = formDTO.getAdministratorEmail();
         Optional<User> userOpt = userService.getUserByEmail(administratorEmail);
         if (userOpt.isPresent()) task.setAdministrator(userOpt.get());
         else throw new UserNotFoundException(administratorEmail);
+
         return taskRepository.save(task);
+    }
+
+    @Override
+    public void deleteTask(Long taskId) {
+        taskRepository.delete(taskId);
     }
 
 }

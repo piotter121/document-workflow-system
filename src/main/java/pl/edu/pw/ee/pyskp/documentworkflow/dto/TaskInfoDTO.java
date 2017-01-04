@@ -12,6 +12,7 @@ public class TaskInfoDTO {
     private String description;
     private long projectId;
     private UserInfoDTO administrator;
+    private Date creationDate;
     private Date modificationDate;
     private List<UserInfoDTO> participants;
     private List<FileMetadataDTO> filesInfo;
@@ -82,5 +83,13 @@ public class TaskInfoDTO {
 
     public void setModificationDate(Date modificationDate) {
         this.modificationDate = modificationDate;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 }
