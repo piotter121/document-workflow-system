@@ -8,7 +8,7 @@
     <%@ include file="head.html" %>
     <title>System obiegu dokumentów - ${project.name}</title>
 </head>
-<body ng-app="app">
+<body>
 <%--@elvariable id="project" type="pl.edu.pw.ee.pyskp.documentworkflow.dto.ProjectInfoDTO"--%>
 <%--@elvariable id="currentUser" type="pl.edu.pw.ee.pyskp.documentworkflow.dto.UserInfoDTO"--%>
 <%--@elvariable id="_csrf" type="org.springframework.security.web.csrf.DefaultCsrfToken"--%>
@@ -26,13 +26,19 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-9">
-            <c:if test="${currentUser eq project.administrator}">
-                <div class="btn-group">
+            <div class="btn-group">
+                <c:if test="${currentUser eq project.administrator}">
                     <a href="<spring:url value="/projects/${project.id}/tasks/add"/>" class="btn btn-primary">
+                        <span class="glyphicon glyphicon-plus"></span>
                         Dodaj nowe zadanie
                     </a>
-                </div>
-            </c:if>
+                </c:if>
+
+                <a href="mailto:${project.administrator.email}" class="btn btn-primary">
+                    <span class="glyphicon glyphicon-envelope"></span>
+                    Wyślij wiadomość do administratora projektu
+                </a>
+            </div>
             <%--@elvariable id="delete" type="java.lang.String"--%>
             <c:if test="${delete eq 'success'}">
                 <div class="alert alert-success">
@@ -57,47 +63,60 @@
                         <td>${task.numberOfFiles}</td>
                         <td>${task.modificationDate}</td>
                         <td>
-                            <c:if test="${task.participants.contains(currentUser) or task.administrator eq currentUser}">
-                                <a href="<spring:url value="/projects/${task.projectId}/tasks/${task.id}"/>">
-                                    <span class="glyphicon glyphicon-info-sign"></span>
-                                </a>
-                            </c:if>
-                            <c:if test="${currentUser eq project.administrator}">
-                                <a href="<spring:url value="/projects/${task.projectId}/tasks/${task.id}/edit"/>">
-                                    <span class="glyphicon glyphicon-edit"></span>
-                                </a>
-                                <a data-toggle="modal" href="#confirmDelete">
-                                    <span class="glyphicon glyphicon-remove"></span>
-                                </a>
-                                <div class="modal fade" id="confirmDelete" role="dialog">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h4 class="modal-title">Potwierdź usunięcie zadania</h4>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div class="alert alert-warning">
-                                                    <strong>Ostrzeżenie!</strong> Usunięcie zadania jest nieodwracalne!
+                            <div class="button-group">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                                        aria-haspopup="true" aria-expanded="false">
+                                    <span class="glyphicon glyphicon-cog"></span> Opcje <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <c:if test="${task.participants.contains(currentUser) or task.administrator eq currentUser}">
+                                        <li><a href="<spring:url value="/projects/${task.projectId}/tasks/${task.id}"/>"
+                                           class="">
+                                            <span class="glyphicon glyphicon-info-sign"></span> Szczegóły
+                                        </a></li>
+                                    </c:if>
+                                    <c:if test="${currentUser eq project.administrator}">
+                                        <li><a href="<spring:url value="/projects/${task.projectId}/tasks/${task.id}/edit"/>">
+                                            <span class="glyphicon glyphicon-edit"></span> Edytuj
+                                        </a></li>
+                                        <li><a data-toggle="modal" href="#confirmDelete">
+                                            <span class="glyphicon glyphicon-remove"></span> Usuń
+                                        </a></li>
+                                        <div class="modal fade" id="confirmDelete" role="dialog">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">Potwierdź usunięcie zadania</h4>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="alert alert-warning">
+                                                            <strong>Ostrzeżenie!</strong> Usunięcie zadania jest
+                                                            nieodwracalne!
+                                                        </div>
+                                                        <p class="text-info">
+                                                            Czy na pewno chcesz usunąć zadanie wraz ze
+                                                            wszystkimi plikami?
+                                                        </p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <form method="post"
+                                                              action="<spring:url value="/projects/${project.id}/tasks/${task.id}"/>">
+                                                            <input class="btn btn-danger" type="submit" value="Usuń"/>
+                                                            <input type="hidden" name="${_csrf.parameterName}"
+                                                                   value="${_csrf.token}"/>
+                                                            <input type="hidden" name="_method" value="delete"/>
+                                                            <button type="button" class="btn btn-default"
+                                                                    data-dismiss="modal">
+                                                                Anuluj
+                                                            </button>
+                                                        </form>
+                                                    </div>
                                                 </div>
-                                                <p class="text-info">Czy na pewno chcesz usunąć zadanie wraz ze
-                                                    wszystkimi plikami?</p>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <form method="post"
-                                                      action="<spring:url value="/projects/${project.id}/tasks/${task.id}"/>">
-                                                    <input class="btn btn-danger" type="submit" value="Usuń"/>
-                                                    <input type="hidden" name="${_csrf.parameterName}"
-                                                           value="${_csrf.token}"/>
-                                                    <input type="hidden" name="_method" value="delete"/>
-                                                    <button type="button" class="btn btn-default" data-dismiss="modal">
-                                                        Anuluj
-                                                    </button>
-                                                </form>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                            </c:if>
+                                    </c:if>
+                                </ul>
+                            </div>
                         </td>
                     </tr>
                 </c:forEach>
@@ -119,10 +138,7 @@
                         </div>
                         <div class="list-group-item">
                             <p class="list-group-item-heading">Administrator</p>
-                            <h4 class="list-group-item-text">
-                                <span class="glyphicon glyphicon-envelope"></span>
-                                <a href="mailto:${project.administrator.email}">${project.administrator.fullName}</a>
-                            </h4>
+                            <h4 class="list-group-item-text">${project.administrator.fullName}</h4>
                         </div>
                         <div class="list-group-item">
                             <p class="list-group-item-heading">Data utworzenia</p>

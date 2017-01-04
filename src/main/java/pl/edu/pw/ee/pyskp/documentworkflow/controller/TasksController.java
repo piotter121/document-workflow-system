@@ -27,6 +27,11 @@ public class TasksController {
         this.taskService = taskService;
     }
 
+    @GetMapping
+    public String redirectToProject(@PathVariable Long projectId) {
+        return String.format("redirect:/projects/%d", projectId);
+    }
+
     @GetMapping("/{taskId}")
     public String getTaskInfo(@PathVariable Long taskId,
                               Model model) {

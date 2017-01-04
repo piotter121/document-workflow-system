@@ -13,7 +13,7 @@
 </head>
 <body>
 
-<header class="jumbotron">
+<div class="jumbotron">
     <div class="container">
         <h1>System obiegu dokumentów</h1>
         <p>Projekty</p>
@@ -22,27 +22,28 @@
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         </form>
     </div>
-</header>
+</div>
 
-<div class="container-fluid">
+<div class="container">
     <div class="row">
-        <div class="btn-group">
-            <button data-toggle="collapse" class="btn btn-default" data-target="#filter">Opcje filtrowania</button>
-            <a href="<spring:url value="/projects/add"/>" class="btn btn-primary">Stwórz nowy</a>
+        <div class="toolbar" role="toolbar">
+            <div class="btn-group" role="group">
+                <button data-toggle="collapse" class="btn btn-default" data-target="#filter">
+                    Opcje filtrowania
+                </button>
+            </div>
+            <div class="btn-group" role="group">
+                <a href="<spring:url value="/projects/add"/>" class="btn btn-primary">
+                    <span class="glyphicon glyphicon-plus"></span> Stwórz nowy
+                </a>
+            </div>
         </div>
-    </div>
-
-    <div class="row">
         <div id="filter" class="collapse">
             <form action="<spring:url value="/projects"/>" method="get">
-                <div class="col-md-12">
-                    <label>
-                        <input type="checkbox" name="onlyOwned"/>Pokaż tylko administrowane projekty
-                    </label>
-                </div>
-                <div class="col-md-12">
-                    <input type="submit" class="btn btn-success" value="Filtruj"/>
-                </div>
+                <label>
+                    <input type="checkbox" name="onlyOwned"/>Pokaż tylko administrowane projekty
+                </label>
+                <input type="submit" class="btn btn-success" value="Filtruj"/>
             </form>
         </div>
     </div>
@@ -50,34 +51,28 @@
     <div class="row">
         <c:choose>
             <c:when test="${not empty projects}">
-                <table class="table table-striped table-hover">
-                    <thead>
-                    <tr>
-                        <th>Nazwa projektu</th>
-                        <th>Liczba zadań w projekcie</th>
-                        <th>Imię i nazwisko właściciela</th>
-                        <th>Data utworzenia</th>
-                        <th>Data ostatniej zmiany</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <c:forEach items="${projects}" var="project">
-                        <tr>
-                            <td>${project.name}</td>
-                            <td>${project.numberOfTasks}</td>
-                            <td>${project.administrator.fullName}</td>
-                            <td><fmt:formatDate value="${project.creationDate}" pattern="dd.MM.yyyy KK:mm"/></td>
-                            <td><fmt:formatDate value="${project.lastModified}" pattern="dd.MM.yyyy KK:mm"/></td>
-                            <td>
-                                <a href="<spring:url value="/projects/${project.id}"/>" class="btn btn-info"
-                                   role="button">
-                                    Szczegóły
-                                </a>
-                            </td>
-                        </tr>
-                    </c:forEach>
-                    </tbody>
-                </table>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Projekty w których bierzesz udział
+                    </div>
+                    <div class="list-group">
+                        <c:forEach items="${projects}" var="project">
+                            <a href="<spring:url value="/projects/${project.id}"/>" class="list-group-item">
+                                <span class="badge">Liczba zadań: ${project.numberOfTasks}</span>
+                                <h4 class="list-group-item-heading">${project.name}</h4>
+                                <p class="list-group-item-text">${project.description}</p>
+                                <p class="list-group-item-text">
+                                    <strong>Data utworzenia:</strong>
+                                    <fmt:formatDate value="${project.creationDate}" pattern="dd.MM.yyyy KK:mm"/>
+                                </p>
+                                <p class="list-group-item-text">
+                                    <strong>Data modyfikacji:</strong>
+                                    <fmt:formatDate value="${project.lastModified}" pattern="dd.MM.yyyy KK:mm"/>
+                                </p>
+                            </a>
+                        </c:forEach>
+                    </div>
+                </div>
             </c:when>
             <c:otherwise>
                 <div class="alert alert-info text-center">
