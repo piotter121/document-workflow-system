@@ -8,7 +8,7 @@
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <html>
 <head>
-    <%@ include file="head.html" %>
+    <%@ include file="bootstrap.jsp" %>
     <title>System obiegu dokumentów - ${task.name}</title>
 </head>
 <body>
@@ -35,7 +35,7 @@
             <div class="tab-content">
                 <div id="pliki" class="tab-pane fade in active">
                     <div class="btn-group">
-                        <a href="<spring:url value="/projects/${project.id}/tasks/${task.id}/files/add"/>"
+                        <a href="<spring:url value="/projects/${task.projectId}/tasks/${task.id}/files/add"/>"
                            class="btn btn-primary">
                             Dodaj nowy plik
                         </a>
@@ -58,6 +58,8 @@
                                     <tr>
                                         <td>${fileInfo.name}</td>
                                         <td>${fileInfo.contentType}</td>
+                                        <td><fmt:formatDate value="${fileInfo.modificationDate}"
+                                                            pattern="dd.MM.yyyy KK:mm"/></td>
                                         <td>${fileInfo.confirmed ? 'tak' : 'nie'}</td>
                                         <td>
                                             <a href="<spring:url value="/projects/${task.projectId}/tasks/${task.id}/files/${fileInfo.id}"/>">

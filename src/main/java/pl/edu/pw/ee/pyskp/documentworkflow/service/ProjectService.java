@@ -1,10 +1,8 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.service;
 
 import pl.edu.pw.ee.pyskp.documentworkflow.domain.Project;
-import pl.edu.pw.ee.pyskp.documentworkflow.domain.User;
-import pl.edu.pw.ee.pyskp.documentworkflow.dto.CreateProjectFormDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dto.NewProjectForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.dto.ProjectInfoDTO;
-import pl.edu.pw.ee.pyskp.documentworkflow.exception.UserNotFoundException;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -20,7 +18,7 @@ public interface ProjectService {
 
     Optional<Project> getOneByName(String name);
 
-    Project createNewProjectFromForm(CreateProjectFormDTO formDTO);
+    Project createNewProjectFromForm(NewProjectForm form);
 
     static List<ProjectInfoDTO> mapAllToProjectInfoDTO(Collection<Project> projects) {
         return projects != null

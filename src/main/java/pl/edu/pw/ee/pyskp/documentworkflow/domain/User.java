@@ -50,7 +50,14 @@ public class User {
 
     @Transient
     public boolean hasAccessToProject(Project project) {
-        return this.getAdministratedProjects().contains(project) || this.getParticipatedProjects().contains(project);
+        return this.getAdministratedProjects().contains(project)
+                || this.getParticipatedProjects().contains(project);
+    }
+
+    @Transient
+    public boolean hasAccessToTask(Task task) {
+        return getAdministratedTasks().contains(task)
+                || getTaskList().contains(task);
     }
 
     @Transient

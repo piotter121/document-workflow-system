@@ -1,41 +1,71 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.service.impl;
 
-import org.apache.log4j.Logger;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
-import pl.edu.pw.ee.pyskp.documentworkflow.service.SecurityService;
+import pl.edu.pw.ee.pyskp.documentworkflow.domain.Project;
+import pl.edu.pw.ee.pyskp.documentworkflow.domain.Task;
+import pl.edu.pw.ee.pyskp.documentworkflow.domain.User;
+import pl.edu.pw.ee.pyskp.documentworkflow.exception.FileNotFoundException;
+import pl.edu.pw.ee.pyskp.documentworkflow.exception.ProjectNotFoundException;
+import pl.edu.pw.ee.pyskp.documentworkflow.exception.TaskNotFoundException;
+import pl.edu.pw.ee.pyskp.documentworkflow.service.*;
 
 /**
- * Created by piotr on 20.12.16.
+ * Created by piotr on 06.01.17.
  */
-@Service
+@Service("securityService")
 public class SecurityServiceImpl implements SecurityService {
-    private static final Logger logger = Logger.getLogger(SecurityServiceImpl.class);
+    private final UserService userService;
+    private final TaskService taskService;
+    private final ProjectService projectService;
+    private final FilesMetadataService filesMetadataService;
 
-    private final AuthenticationManager authenticationManager;
-    private final UserDetailsService userDetailsService;
-
-    public SecurityServiceImpl(AuthenticationManager authenticationManager,
-                               UserDetailsService userDetailsService) {
-        this.authenticationManager = authenticationManager;
-        this.userDetailsService = userDetailsService;
+    public SecurityServiceImpl(UserService userService,
+                               TaskService taskService,
+                               ProjectService projectService,
+                               FilesMetadataService filesMetadataService) {
+        this.userService = userService;
+        this.taskService = taskService;
+        this.projectService = projectService;
+        this.filesMetadataService = filesMetadataService;
     }
 
     @Override
-    public void autologin(String username, String password) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken
-                = new UsernamePasswordAuthenticationToken(
-                userDetails, password,
-                userDetails.getAuthorities());
-        authenticationManager.authenticate(usernamePasswordAuthenticationToken);
-        if (usernamePasswordAuthenticationToken.isAuthenticated()) {
-            SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-            logger.debug(String.format("Auto login for user %s", username));
-        }
+    public boolean canAddTask(long projectId) {
+        return userService.getCurrentUser().equals(
+                projectService.getOneById(projectId)
+                .map(Project::getAdministrator)
+                .orElseThrow(() -> new ProjectNotFoundException(projectId)));
+    }
+
+    @Override
+    public boolean canDeleteTask(long taskId) {
+        return taskService.getTaskById(taskId)
+                .map(Task::getProject)
+                .orElseThrow(() -> new TaskNotFoundException(taskId))
+                .getAdministrator().equals(userService.getCurrentUser());
+    }
+
+    @Override
+    public boolean hasAccessToProject(long projectId) {
+        User currentUser = userService.getCurrentUser();
+        return projectService.getOneById(projectId)
+                .map(currentUser::hasAccessToProject)
+                .orElseThrow(() -> new ProjectNotFoundException(projectId));
+    }
+
+    @Override
+    public boolean hasAccessToTask(long taskId) {
+        User currentUser = userService.getCurrentUser();
+        return taskService.getTaskById(taskId)
+                .map(currentUser::hasAccessToTask)
+                .orElseThrow(() -> new TaskNotFoundException(taskId));
+    }
+
+    @Override
+    public boolean hasAccessToFile(long fileId) {
+        return userService.getCurrentUser().hasAccessToTask(
+                filesMetadataService.getOneById(fileId)
+                .orElseThrow(() -> new FileNotFoundException(fileId))
+                .getTask());
     }
 }

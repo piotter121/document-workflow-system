@@ -34,6 +34,7 @@ public interface TaskService {
         task.getModificationDate().ifPresent(dto::setModificationDate);
         dto.setProjectId(task.getProject().getId());
         dto.setParticipants(UserService.mapAllToUserInfoDTO(task.getParticipants()));
+        dto.setFilesInfo(FilesMetadataService.mapAllToFileMetadataDTO(task.getFiles()));
         return dto;
     }
 

@@ -1,7 +1,6 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.service.impl;
 
 import org.springframework.stereotype.Service;
-import pl.edu.pw.ee.pyskp.documentworkflow.domain.Project;
 import pl.edu.pw.ee.pyskp.documentworkflow.domain.Task;
 import pl.edu.pw.ee.pyskp.documentworkflow.domain.User;
 import pl.edu.pw.ee.pyskp.documentworkflow.dto.NewTaskForm;
@@ -42,21 +41,19 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Task createTaskFromForm(NewTaskForm formDTO, Long projectId)
+    public Task createTaskFromForm(NewTaskForm form, Long projectId)
             throws UserNotFoundException, ProjectNotFoundException {
         Task task = new Task();
-        task.setName(formDTO.getName());
-        task.setDescription(formDTO.getDescription());
+        task.setName(form.getName());
+        task.setDescription(form.getDescription());
         task.setCreationDate(new Date());
 
-        Optional<Project> projectOpt = projectService.getOneById(projectId);
-        if (projectOpt.isPresent()) task.setProject(projectOpt.get());
-        else throw new ProjectNotFoundException(projectId);
+        task.setProject(projectService.getOneById(projectId)
+                .orElseThrow(() -> new ProjectNotFoundException(projectId)));
 
-        String administratorEmail = formDTO.getAdministratorEmail();
-        Optional<User> userOpt = userService.getUserByEmail(administratorEmail);
-        if (userOpt.isPresent()) task.setAdministrator(userOpt.get());
-        else throw new UserNotFoundException(administratorEmail);
+        String administratorEmail = form.getAdministratorEmail();
+        task.setAdministrator(userService.getUserByEmail(administratorEmail)
+                .orElseThrow(() -> new UserNotFoundException(administratorEmail)));
 
         return taskRepository.save(task);
     }

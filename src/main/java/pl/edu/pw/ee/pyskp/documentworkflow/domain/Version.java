@@ -24,16 +24,16 @@ public class Version {
     @Column(length = 1024)
     private String message;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "authorId", nullable = false)
     private User author;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "fileMetadataId", nullable = false)
     private FileMetadata fileMetadata;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "content", nullable = false)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "contentId", nullable = false)
     private FileContent fileContent;
 
     @Column(nullable = false, length = 64)

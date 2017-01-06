@@ -11,12 +11,16 @@ public class Difference {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private long position;
+    private long previousSectionStart;
+    private long previousSectionSize;
+    private long newSectionStart;
+    private long newSectionSize;
 
     @Enumerated(value = EnumType.STRING)
+    @Column(nullable = false)
     private DifferenceType differenceType;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "versionId", nullable = false)
     private Version version;
 
@@ -28,12 +32,12 @@ public class Difference {
         this.id = id;
     }
 
-    public long getPosition() {
-        return position;
+    public long getPreviousSectionStart() {
+        return previousSectionStart;
     }
 
-    public void setPosition(long position) {
-        this.position = position;
+    public void setPreviousSectionStart(long previousSectionStart) {
+        this.previousSectionStart = previousSectionStart;
     }
 
     public DifferenceType getDifferenceType() {
@@ -50,5 +54,29 @@ public class Difference {
 
     public void setVersion(Version version) {
         this.version = version;
+    }
+
+    public long getPreviousSectionSize() {
+        return previousSectionSize;
+    }
+
+    public void setPreviousSectionSize(long previousSectionSize) {
+        this.previousSectionSize = previousSectionSize;
+    }
+
+    public long getNewSectionStart() {
+        return newSectionStart;
+    }
+
+    public void setNewSectionStart(long newSectionStart) {
+        this.newSectionStart = newSectionStart;
+    }
+
+    public long getNewSectionSize() {
+        return newSectionSize;
+    }
+
+    public void setNewSectionSize(long newSectionSize) {
+        this.newSectionSize = newSectionSize;
     }
 }

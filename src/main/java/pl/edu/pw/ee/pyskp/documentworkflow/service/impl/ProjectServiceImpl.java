@@ -2,16 +2,12 @@ package pl.edu.pw.ee.pyskp.documentworkflow.service.impl;
 
 import org.springframework.stereotype.Service;
 import pl.edu.pw.ee.pyskp.documentworkflow.domain.Project;
-import pl.edu.pw.ee.pyskp.documentworkflow.domain.User;
-import pl.edu.pw.ee.pyskp.documentworkflow.dto.CreateProjectFormDTO;
-import pl.edu.pw.ee.pyskp.documentworkflow.exception.UserNotFoundException;
+import pl.edu.pw.ee.pyskp.documentworkflow.dto.NewProjectForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.repository.ProjectRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.service.ProjectService;
 import pl.edu.pw.ee.pyskp.documentworkflow.service.UserService;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -39,7 +35,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Project createNewProjectFromForm(CreateProjectFormDTO formDTO) {
+    public Project createNewProjectFromForm(NewProjectForm formDTO) {
         Project project = new Project();
         project.setName(formDTO.getName());
         project.setDescription(formDTO.getDescription());

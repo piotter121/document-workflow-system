@@ -6,7 +6,7 @@ import org.hibernate.validator.constraints.NotBlank;
 /**
  * Created by piotr on 29.12.16.
  */
-public class CreateProjectFormDTO {
+public class NewProjectForm {
     @NotBlank
     @Length(min = 5, max = 40)
     private String name;

@@ -8,7 +8,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <%@ include file="head.html" %>
+    <%@ include file="bootstrap.jsp" %>
     <title>System obiegu dokumentów - projekty</title>
 </head>
 <body>

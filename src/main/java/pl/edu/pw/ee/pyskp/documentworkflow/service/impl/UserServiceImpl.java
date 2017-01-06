@@ -49,11 +49,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getCurrentUser() throws UserNotFoundException {
         String loggedInUsername = findLoggedInUsername();
-        Optional<User> currentUser = userRepository.findOneByLogin(loggedInUsername);
-        if (currentUser.isPresent())
-            return currentUser.get();
-        else
-            throw new UserNotFoundException(loggedInUsername);
+        return userRepository.findOneByLogin(loggedInUsername)
+                .orElseThrow(() -> new UserNotFoundException(loggedInUsername));
     }
 
     private String findLoggedInUsername() {

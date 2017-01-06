@@ -32,7 +32,7 @@ public class FileMetadata {
     @Column(nullable = false)
     private boolean markedToConfirm = false;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "taskId", nullable = false)
     private Task task;
 

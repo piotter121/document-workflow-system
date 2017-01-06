@@ -1,17 +1,26 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.service;
 
 import pl.edu.pw.ee.pyskp.documentworkflow.domain.FileMetadata;
+import pl.edu.pw.ee.pyskp.documentworkflow.domain.Task;
 import pl.edu.pw.ee.pyskp.documentworkflow.dto.FileMetadataDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dto.NewFileForm;
+import pl.edu.pw.ee.pyskp.documentworkflow.exception.UnknownContentType;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
  * Created by p.pysk on 04.01.2017.
  */
 public interface FilesMetadataService {
+
+    FileMetadata createNewFileFromForm(NewFileForm formData, Task task) throws UnknownContentType;
+
+    Optional<FileMetadata> getOneById(long id);
+
     static FileMetadataDTO mapToFileMetadataDTO(FileMetadata fileMetadata) {
         FileMetadataDTO dto = new FileMetadataDTO();
         dto.setId(fileMetadata.getId());
@@ -27,7 +36,9 @@ public interface FilesMetadataService {
 
     static List<FileMetadataDTO> mapAllToFileMetadataDTO(Collection<FileMetadata> collection) {
         return collection != null
-                ? collection.stream().map(FilesMetadataService::mapToFileMetadataDTO).collect(Collectors.toList())
+                ? collection.stream()
+                .map(FilesMetadataService::mapToFileMetadataDTO)
+                .collect(Collectors.toList())
                 : Collections.emptyList();
     }
 }
