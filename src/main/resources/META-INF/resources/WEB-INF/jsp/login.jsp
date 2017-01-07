@@ -1,3 +1,4 @@
+<%--@elvariable id="_csrf" type="org.springframework.security.web.csrf.DefaultCsrfToken"--%>
 <%--@elvariable id="error" type="java.lang.String"--%>
 <%@page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -6,7 +7,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <%@ include file="bootstrap.jsp" %>
+    <%@ include file="css.jsp" %>
     <title>Zaloguj się</title>
 </head>
 <body>
@@ -45,7 +46,7 @@
                             <input class="btn btn-lg btn-success btn-block" type="submit" value="Zaloguj się">
                         </fieldset>
                     </form>
-                    <a href="<c:url value="/register" />" class="btn btn-lg btn-success btn-block">Rejestracja</a>
+                    <a href="<spring:url value="/register" />" class="btn btn-lg btn-success btn-block">Rejestracja</a>
                 </div>
             </div>
         </div>

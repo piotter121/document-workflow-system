@@ -4,7 +4,7 @@
 <%@page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <html>
 <head>
-    <%@ include file="bootstrap.jsp" %>
+    <%@ include file="css.jsp" %>
     <title>Zarejestruj się</title>
 </head>
 <body>

@@ -9,7 +9,7 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-    <%@ include file="bootstrap.jsp" %>
+    <%@ include file="css.jsp" %>
     <title>System obiegu dokumentów - dodaj nowy plik</title>
 </head>
 <body>
