@@ -6,19 +6,20 @@
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <%@ include file="css.jsp" %>
-    <title>Zaloguj się</title>
+    <title>System obiegu dokumentów - Logowanie</title>
 </head>
 <body>
-<section>
-    <div class="jumbotron">
-        <div class="container">
-            <h1>System obiegu dokumentów</h1>
-        </div>
-    </div>
-</section>
-<div class="container">
+
+<div class="page-header text-center">
+    <h1>
+        <img src="<spring:url value="/images/logo.png"/>" width="40px" height="40px">
+        System obiegu dokumentów
+        <small>Logowanie</small>
+    </h1>
+</div>
+
+<div class="container-fluid">
     <div class="row">
         <div class="col-md-4 col-md-offset-4">
             <div class="panel panel-default">
@@ -43,10 +44,10 @@
                                        value="">
                             </div>
                             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                            <input class="btn btn-lg btn-success btn-block" type="submit" value="Zaloguj się">
+                            <input class="btn btn-lg btn-primary btn-block" type="submit" value="Zaloguj się">
                         </fieldset>
                     </form>
-                    <a href="<spring:url value="/register" />" class="btn btn-lg btn-success btn-block">Rejestracja</a>
+                    <a href="<spring:url value="/register" />" class="btn btn-info btn-block">Rejestracja</a>
                 </div>
             </div>
         </div>

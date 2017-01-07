@@ -1,8 +1,8 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.domain;
 
 import javax.persistence.*;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Created by piotr on 11.12.16.
@@ -40,12 +40,10 @@ public class FileMetadata {
     private List<Version> versions;
 
     @Transient
-    public Optional<Version> getLatestVersion() {
-        Version latestVersion = null;
-        for (Version version : versions)
-            if (latestVersion == null || version.getSaveDate().after(latestVersion.getSaveDate()))
-                latestVersion = version;
-        return Optional.ofNullable(latestVersion);
+    public Version getLatestVersion() {
+        return versions.stream()
+                .max(Comparator.comparing(Version::getSaveDate))
+                .orElseThrow(() -> new RuntimeException("Cannot find latest Version of FileMetadata!"));
     }
 
     public long getId() {

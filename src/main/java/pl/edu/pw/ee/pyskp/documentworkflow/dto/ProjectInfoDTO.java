@@ -1,7 +1,6 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.dto;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by piotr on 29.12.16.
@@ -12,8 +11,18 @@ public class ProjectInfoDTO {
     private String description = "";
     private UserInfoDTO administrator;
     private Date creationDate;
-    private Date lastModified;
+    private TaskInfoDTO lastModifiedTask;
     private List<TaskInfoDTO> tasks;
+
+    public int getNumberOfParticipants() {
+        Set<UserInfoDTO> users = new HashSet<>();
+        tasks.forEach(taskInfoDTO -> {
+            users.addAll(taskInfoDTO.getParticipants());
+            users.add(taskInfoDTO.getAdministrator());
+        });
+        users.add(getAdministrator());
+        return users.size();
+    }
 
     public long getId() {
         return id;
@@ -59,12 +68,12 @@ public class ProjectInfoDTO {
         this.creationDate = creationDate;
     }
 
-    public Date getLastModified() {
-        return lastModified;
+    public TaskInfoDTO getLastModifiedTask() {
+        return lastModifiedTask;
     }
 
-    public void setLastModified(Date lastModified) {
-        this.lastModified = lastModified;
+    public void setLastModifiedTask(TaskInfoDTO lastModifiedTask) {
+        this.lastModifiedTask = lastModifiedTask;
     }
 
     public List<TaskInfoDTO> getTasks() {

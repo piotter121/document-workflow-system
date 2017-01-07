@@ -43,4 +43,9 @@ public class ProjectServiceImpl implements ProjectService {
         project.setCreationDate(new Date());
         return projectRepository.save(project);
     }
+
+    @Override
+    public void deleteProject(long projectId) {
+        projectRepository.delete(projectId);
+    }
 }

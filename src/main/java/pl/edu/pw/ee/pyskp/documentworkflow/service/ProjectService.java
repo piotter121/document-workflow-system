@@ -33,9 +33,10 @@ public interface ProjectService {
         dto.setDescription(project.getDescription());
         dto.setCreationDate(project.getCreationDate());
         dto.setAdministrator(UserService.mapToUserInfoDTO(project.getAdministrator()));
-        project.getLastModified().ifPresent(dto::setLastModified);
+        project.getLastModifiedTask().map(TaskService::mapToTaskInfoDto).ifPresent(dto::setLastModifiedTask);
         dto.setTasks(TaskService.mapAllToTaskInfoDTO(project.getTasks()));
         return dto;
     }
 
+    void deleteProject(long projectId);
 }

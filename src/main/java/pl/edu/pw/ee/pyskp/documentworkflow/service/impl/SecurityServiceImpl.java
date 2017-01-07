@@ -33,8 +33,8 @@ public class SecurityServiceImpl implements SecurityService {
     public boolean canAddTask(long projectId) {
         return userService.getCurrentUser().equals(
                 projectService.getOneById(projectId)
-                .map(Project::getAdministrator)
-                .orElseThrow(() -> new ProjectNotFoundException(projectId)));
+                        .map(Project::getAdministrator)
+                        .orElseThrow(() -> new ProjectNotFoundException(projectId)));
     }
 
     @Override
@@ -53,6 +53,7 @@ public class SecurityServiceImpl implements SecurityService {
                 .orElseThrow(() -> new ProjectNotFoundException(projectId));
     }
 
+
     @Override
     public boolean hasAccessToTask(long taskId) {
         User currentUser = userService.getCurrentUser();
@@ -65,7 +66,15 @@ public class SecurityServiceImpl implements SecurityService {
     public boolean hasAccessToFile(long fileId) {
         return userService.getCurrentUser().hasAccessToTask(
                 filesMetadataService.getOneById(fileId)
-                .orElseThrow(() -> new FileNotFoundException(fileId))
-                .getTask());
+                        .orElseThrow(() -> new FileNotFoundException(fileId))
+                        .getTask());
+    }
+
+    @Override
+    public boolean canDeleteProject(long projectId) {
+        return userService.getCurrentUser().equals(
+                projectService.getOneById(projectId)
+                        .orElseThrow(() -> new ProjectNotFoundException(projectId))
+                        .getAdministrator());
     }
 }

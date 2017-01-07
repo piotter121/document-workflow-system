@@ -29,8 +29,8 @@ public interface FilesMetadataService {
         dto.setContentType(fileMetadata.getContentType().name());
         dto.setConfirmed(fileMetadata.isConfirmed());
         dto.setMarkedToConfirm(fileMetadata.isMarkedToConfirm());
-        fileMetadata.getLatestVersion().ifPresent(
-                version -> dto.setModificationDate(version.getSaveDate()));
+        dto.setVersions(VersionService.mapAllToVersionInfoDTO(fileMetadata.getVersions()));
+        dto.setLatestVersion(VersionService.mapToVersionInfoDTO(fileMetadata.getLatestVersion()));
         return dto;
     }
 

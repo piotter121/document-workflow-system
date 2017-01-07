@@ -1,6 +1,7 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.domain;
 
 import javax.persistence.*;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -31,20 +32,6 @@ public class Project {
     @OneToMany(mappedBy = "project")
     private List<Task> tasks;
 
-    @Transient
-    public Optional<Date> getLastModified() {
-        Date lastModified = null;
-        for (Task task : tasks) {
-            Optional<Date> taskModificationDate = task.getModificationDate();
-            if (taskModificationDate.isPresent()) {
-                Date modificationDate = taskModificationDate.get();
-                if (lastModified == null || modificationDate.after(lastModified))
-                    lastModified = modificationDate;
-            }
-        }
-        return Optional.ofNullable(lastModified);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -53,6 +40,16 @@ public class Project {
         Project project = (Project) o;
 
         return id == project.id;
+    }
+
+    @Transient
+    public Optional<Task> getLastModifiedTask() {
+        return tasks.stream()
+                .map(Task::getLastModifiedFile)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .max(Comparator.comparing(f -> f.getLatestVersion().getSaveDate()))
+                .map(FileMetadata::getTask);
     }
 
     @Override

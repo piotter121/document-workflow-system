@@ -1,5 +1,7 @@
+<%--@elvariable id="currentUser" type="pl.edu.pw.ee.pyskp.documentworkflow.dto.UserInfoDTO"--%>
 <%--@elvariable id="_csrf" type="org.springframework.security.web.csrf.DefaultCsrfToken"--%>
 <%--@elvariable id="projects" type="java.util.List"--%>
+<%--@elvariable id="project" type="pl.edu.pw.ee.pyskp.documentworkflow.dto.ProjectInfoDTO"--%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
@@ -7,81 +9,94 @@
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <%@ include file="css.jsp" %>
-    <title>System obiegu dokumentów - projekty</title>
+    <title>System obiegu dokumentów - Projekty</title>
 </head>
 <body>
 
-<div class="jumbotron">
-    <div class="container">
-        <h1>System obiegu dokumentów</h1>
-        <p>Projekty</p>
-        <form action="<c:url value="/logout" />" method="post">
-            <input type="submit" value="Wyloguj" class="btn btn-danger btn-mini pull-right"/>
+<div class="page-header">
+    <h1>
+        <img src="<spring:url value="/images/logo.png"/>" width="40px" height="40px">
+        System obiegu dokumentów
+        <small>Projekty</small>
+    </h1>
+</div>
+
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li><a href="<spring:url value="/"/>"><span class="glyphicon glyphicon-home"></span> Strona główna</a></li>
+            <li class="active"><a href="<spring:url value="/projects"/>"><span
+                    class="glyphicon glyphicon-folder-close"></span> Projekty</a></li>
+            <li><a href="<spring:url value="/tasks"/>"><span class="glyphicon glyphicon-tasks"></span> Zadania</a></li>
+        </ul>
+
+        <p class="navbar-text">Zalogowany jako ${currentUser.fullName}</p>
+
+        <form class="navbar-form navbar-right" action="<c:url value="/logout" />" method="post">
+            <button id="logout" type="submit" class="btn btn-default">
+                <span class="glyphicon glyphicon-log-out"></span> Wyloguj
+            </button>
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         </form>
     </div>
-</div>
+</nav>
 
-<div class="container">
-    <div class="row">
+<div class="container-fluid">
+
+    <div class="col-md-12">
         <div class="toolbar" role="toolbar">
             <div class="btn-group" role="group">
-                <button data-toggle="collapse" class="btn btn-default" data-target="#filter">
-                    Opcje filtrowania
-                </button>
-            </div>
-            <div class="btn-group" role="group">
                 <a href="<spring:url value="/projects/add"/>" class="btn btn-primary">
-                    <span class="glyphicon glyphicon-plus"></span> Stwórz nowy
+                    <span class="glyphicon glyphicon-plus"></span> Stwórz nowy projekt
                 </a>
             </div>
         </div>
-        <div id="filter" class="collapse">
-            <form action="<spring:url value="/projects"/>" method="get">
-                <label>
-                    <input type="checkbox" name="onlyOwned"/>Pokaż tylko administrowane projekty
-                </label>
-                <input type="submit" class="btn btn-success" value="Filtruj"/>
-            </form>
-        </div>
     </div>
 
-    <div class="row">
-        <c:choose>
-            <c:when test="${not empty projects}">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        Projekty w których bierzesz udział
-                    </div>
-                    <div class="list-group">
-                        <c:forEach items="${projects}" var="project">
-                            <a href="<spring:url value="/projects/${project.id}"/>" class="list-group-item">
-                                <span class="badge">Liczba zadań: ${project.numberOfTasks}</span>
-                                <h4 class="list-group-item-heading">${project.name}</h4>
-                                <p class="list-group-item-text">${project.description}</p>
-                                <p class="list-group-item-text">
-                                    <strong>Data utworzenia:</strong>
-                                    <fmt:formatDate value="${project.creationDate}" pattern="dd.MM.yyyy KK:mm"/>
-                                </p>
-                                <p class="list-group-item-text">
-                                    <strong>Data modyfikacji:</strong>
-                                    <fmt:formatDate value="${project.lastModified}" pattern="dd.MM.yyyy KK:mm"/>
-                                </p>
-                            </a>
-                        </c:forEach>
+
+    <c:choose>
+        <c:when test="${not empty projects}">
+            <div class="text-center">
+                <h3>Projekty w których uczestniczysz</h3>
+            </div>
+            <c:forEach items="${projects}" var="project">
+                <div class="col-md-4 col-sm-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                <a href="<spring:url value="/projects/${project.id}"/>">${project.name}</a>
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            Utworzono <fmt:formatDate value="${project.creationDate}" dateStyle="long"/>
+                            <c:if test="${not empty project.lastModifiedTask}">
+                                Ostatnio zmodyfikowany plik ${project.lastModifiedTask.lastModifiedFile.name}
+                                w dniu <fmt:formatDate
+                                    value="${project.lastModifiedTask.lastModifiedFile.latestVersion.saveDate}"
+                                    dateStyle="long"/>
+                                przez ${project.lastModifiedTask.lastModifiedFile.latestVersion.author.fullName}
+                                w zadaniu ${project.lastModifiedTask.name}
+                            </c:if>
+                        </div>
+                        <div class="panel-footer">
+                            <span class="glyphicon glyphicon-user"></span> ${project.numberOfParticipants} ${project.numberOfParticipants eq 1 ? ' uczestnik ' : ' uczestników '}
+                            <span class="glyphicon glyphicon-tasks"></span> ${project.numberOfTasks} ${project.numberOfTasks eq 1 ? ' zadanie ' : ' zadań '}
+                        </div>
                     </div>
                 </div>
-            </c:when>
-            <c:otherwise>
+            </c:forEach>
+        </c:when>
+        <c:otherwise>
+            <div class="col-md-8 col-md-offset-2">
                 <div class="alert alert-info text-center">
-                    <strong>Brak projektów do wyświetlnia.</strong> Utwórz nowy projekt, lub poproś o dodanie do
+                    <strong>Brak projektów do wyświetlania.</strong> Utwórz nowy projekt, lub poproś o dodanie do
                     istniejącego, aby rozpocząć pracę.
                 </div>
-            </c:otherwise>
-        </c:choose>
-    </div>
+            </div>
+        </c:otherwise>
+    </c:choose>
+
 </div>
 
 </body>

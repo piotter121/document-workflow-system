@@ -1,6 +1,7 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.domain;
 
 import javax.persistence.*;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -47,19 +48,9 @@ public class Task {
     private List<User> participants;
 
     @Transient
-    public Optional<Date> getModificationDate() {
-        Date lastModifiedVersion = null;
-        for (FileMetadata fileMetadata : files) {
-            Optional<Version> latestVersion = fileMetadata.getLatestVersion();
-            if (latestVersion.isPresent()) {
-                Date latestVersionSaveDate = latestVersion.get().getSaveDate();
-                if (lastModifiedVersion == null
-                        || latestVersionSaveDate.after(lastModifiedVersion)) {
-                    lastModifiedVersion = latestVersionSaveDate;
-                }
-            }
-        }
-        return Optional.ofNullable(lastModifiedVersion);
+    public Optional<FileMetadata> getLastModifiedFile() {
+        return files.stream()
+                .max(Comparator.comparing(f -> f.getLatestVersion().getSaveDate()));
     }
 
     public long getId() {

@@ -13,4 +13,6 @@ public interface SecurityService {
     boolean hasAccessToTask(long taskId);
 
     boolean hasAccessToFile(long fileId);
+
+    boolean canDeleteProject(long projectId);
 }

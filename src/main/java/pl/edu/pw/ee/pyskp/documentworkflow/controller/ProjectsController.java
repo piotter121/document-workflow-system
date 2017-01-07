@@ -44,19 +44,19 @@ public class ProjectsController {
         if (onlyOwned == null) {
             projects.addAll(currentUser.getParticipatedProjects());
         }
+        model.addAttribute("currentUser", UserService.mapToUserInfoDTO(currentUser));
         model.addAttribute("projects", ProjectService.mapAllToProjectInfoDTO(projects));
         return "projects";
     }
 
     @GetMapping("/add")
-    public String getNewProjectForm(@ModelAttribute("newProject") NewProjectForm newProject) {
+    public String getNewProjectForm(@ModelAttribute NewProjectForm newProject) {
         return "addProject";
     }
 
     @PostMapping("/add")
-    public String processCreationOfNewProject(
-            @ModelAttribute("newProject") @Valid NewProjectForm newProject,
-            BindingResult bindingResult) {
+    public String processCreationOfNewProject(@ModelAttribute @Valid NewProjectForm newProject,
+                                              BindingResult bindingResult) {
         if (bindingResult.hasErrors()) return "addProject";
         Project createdProject = projectService.createNewProjectFromForm(newProject);
         return String.format("redirect:/projects/%d", createdProject.getId());
@@ -74,5 +74,13 @@ public class ProjectsController {
         model.addAttribute("currentUser", UserService.mapToUserInfoDTO(userService.getCurrentUser()));
         if (deleted != null) model.addAttribute("delete", "success");
         return "project";
+    }
+
+    @DeleteMapping("/{projectId}")
+    @PreAuthorize("@securityService.canDeleteProject(#projectId)")
+    public String deleteProject(@PathVariable long projectId) {
+        logger.debug("Received HTTP DELETE request for deletion project of id=" + projectId);
+        projectService.deleteProject(projectId);
+        return "redirect:/";
     }
 }

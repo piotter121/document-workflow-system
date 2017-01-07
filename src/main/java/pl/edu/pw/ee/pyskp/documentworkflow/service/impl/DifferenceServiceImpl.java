@@ -48,8 +48,9 @@ public class DifferenceServiceImpl implements DifferenceService {
 
     private static List<String> extractLines(InputStream inputStream) throws IOException {
         List<String> lines = new ArrayList<>();
+        ParsingReader parsingReader = new ParsingReader(inputStream);
         try (BufferedReader contentReader
-                     = new BufferedReader(new ParsingReader(inputStream))) {
+                     = new BufferedReader(parsingReader)) {
             String line;
             while ((line = contentReader.readLine()) != null) {
                 lines.add(line);

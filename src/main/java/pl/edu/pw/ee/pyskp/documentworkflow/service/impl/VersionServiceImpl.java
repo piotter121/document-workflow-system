@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.apache.tika.exception.TikaException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import pl.edu.pw.ee.pyskp.documentworkflow.domain.Difference;
 import pl.edu.pw.ee.pyskp.documentworkflow.domain.FileContent;
 import pl.edu.pw.ee.pyskp.documentworkflow.domain.Version;
 import pl.edu.pw.ee.pyskp.documentworkflow.dto.NewFileForm;
@@ -16,6 +17,7 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by piotr on 06.01.17.
@@ -44,7 +46,9 @@ public class VersionServiceImpl implements VersionService {
         FileContent fileContent = new FileContent();
         fileContent.setContent(file.getBytes());
         version.setFileContent(fileContent);
-        version.setDifferences(differenceService.createDifferencesForNewFile(file.getInputStream()));
+        List<Difference> differences = differenceService.createDifferencesForNewFile(file.getInputStream());
+        version.setDifferences(differences);
+        differences.forEach(difference -> difference.setVersion(version));
         return version;
     }
 

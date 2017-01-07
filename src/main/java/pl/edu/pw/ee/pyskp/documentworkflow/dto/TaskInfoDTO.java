@@ -2,6 +2,8 @@ package pl.edu.pw.ee.pyskp.documentworkflow.dto;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by piotr on 31.12.16.
@@ -15,7 +17,14 @@ public class TaskInfoDTO {
     private Date creationDate;
     private Date modificationDate;
     private List<UserInfoDTO> participants;
+    private FileMetadataDTO lastModifiedFile;
     private List<FileMetadataDTO> filesInfo;
+
+    public int getNumberOfParticipants() {
+        Set<UserInfoDTO> participants = this.participants.stream().collect(Collectors.toSet());
+        participants.add(administrator);
+        return participants.size();
+    }
 
     public int getNumberOfFiles() {
         return filesInfo == null ? 0 : filesInfo.size();
@@ -91,5 +100,13 @@ public class TaskInfoDTO {
 
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public FileMetadataDTO getLastModifiedFile() {
+        return lastModifiedFile;
+    }
+
+    public void setLastModifiedFile(FileMetadataDTO lastModifiedFile) {
+        this.lastModifiedFile = lastModifiedFile;
     }
 }

@@ -1,6 +1,7 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.dto;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by piotr on 31.12.16.
@@ -13,6 +14,8 @@ public class FileMetadataDTO {
     private boolean confirmed;
     private boolean markedToConfirm;
     private Date modificationDate;
+    private VersionInfoDTO latestVersion;
+    private List<VersionInfoDTO> versions;
 
     @Override
     public boolean equals(Object o) {
@@ -83,5 +86,21 @@ public class FileMetadataDTO {
 
     public void setContentType(String contentType) {
         this.contentType = contentType;
+    }
+
+    public VersionInfoDTO getLatestVersion() {
+        return latestVersion;
+    }
+
+    public void setLatestVersion(VersionInfoDTO latestVersion) {
+        this.latestVersion = latestVersion;
+    }
+
+    public List<VersionInfoDTO> getVersions() {
+        return versions;
+    }
+
+    public void setVersions(List<VersionInfoDTO> versions) {
+        this.versions = versions;
     }
 }

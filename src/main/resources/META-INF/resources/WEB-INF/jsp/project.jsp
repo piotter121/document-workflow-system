@@ -1,127 +1,128 @@
+<%--@elvariable id="project" type="pl.edu.pw.ee.pyskp.documentworkflow.dto.ProjectInfoDTO"--%>
+<%--@elvariable id="currentUser" type="pl.edu.pw.ee.pyskp.documentworkflow.dto.UserInfoDTO"--%>
+<%--@elvariable id="_csrf" type="org.springframework.security.web.csrf.DefaultCsrfToken"--%>
+<%--@elvariable id="delete" type="java.lang.String"--%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
+<!DOCTYPE html>
 <html>
 <head>
     <%@ include file="css.jsp" %>
     <title>System obiegu dokumentów - ${project.name}</title>
 </head>
 <body>
-<%--@elvariable id="project" type="pl.edu.pw.ee.pyskp.documentworkflow.dto.ProjectInfoDTO"--%>
-<%--@elvariable id="currentUser" type="pl.edu.pw.ee.pyskp.documentworkflow.dto.UserInfoDTO"--%>
-<%--@elvariable id="_csrf" type="org.springframework.security.web.csrf.DefaultCsrfToken"--%>
-<div class="jumbotron">
-    <div class="container">
-        <h1>System obiegu dokumentów</h1>
-        <p>Szczegóły projektu</p>
-        <form action="<c:url value="/logout" />" method="post">
-            <input type="submit" value="Wyloguj" class="btn btn-danger btn-mini pull-right"/>
+<div class="page-header">
+    <h1>
+        <img src="<spring:url value="/images/logo.png"/>" width="40px" height="40px">
+        System obiegu dokumentów
+        <small>${project.name}</small>
+    </h1>
+</div>
+
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li><a href="<spring:url value="/"/>"><span class="glyphicon glyphicon-home"></span> Strona główna</a></li>
+            <li class="active"><a href="<spring:url value="/projects"/>"><span
+                    class="glyphicon glyphicon-folder-close"></span> Projekty</a></li>
+            <li><a href="<spring:url value="/tasks"/>"><span class="glyphicon glyphicon-tasks"></span> Zadania</a></li>
+        </ul>
+
+        <p class="navbar-text">Zalogowany jako ${currentUser.fullName}</p>
+
+        <form class="navbar-form navbar-right" action="<c:url value="/logout" />" method="post">
+            <button id="logout" type="submit" class="btn btn-default">
+                <span class="glyphicon glyphicon-log-out"></span> Wyloguj
+            </button>
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         </form>
     </div>
-</div>
+</nav>
 
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-9">
-            <div class="btn-group">
+            <div class="btn-toolbar">
                 <c:if test="${currentUser eq project.administrator}">
-                    <a href="<spring:url value="/projects/${project.id}/tasks/add"/>" class="btn btn-primary">
-                        <span class="glyphicon glyphicon-plus"></span>
-                        Dodaj nowe zadanie
-                    </a>
+                    <div class="btn-group">
+                        <a href="<spring:url value="/projects/${project.id}/tasks/add"/>" class="btn btn-success">
+                            <span class="glyphicon glyphicon-plus"></span>
+                            Dodaj nowe zadanie
+                        </a>
+                        <button class="btn btn-danger" type="submit" form="deleteProject">
+                            <span class="glyphicon glyphicon-remove"></span>
+                            Usuń projekt
+                        </button>
+                    </div>
+                    <form id="deleteProject" method="post" action="<spring:url value="/projects/${project.id}"/>">
+                        <input type="hidden" name="${_csrf.parameterName}"
+                               value="${_csrf.token}"/>
+                        <input type="hidden" name="_method" value="delete"/>
+                    </form>
                 </c:if>
 
-                <a href="mailto:${project.administrator.email}" class="btn btn-primary">
-                    <span class="glyphicon glyphicon-envelope"></span>
-                    Wyślij wiadomość do administratora projektu
-                </a>
+                <c:if test="${currentUser != project.administrator}">
+                    <div class="btn-group">
+                        <a href="mailto:${project.administrator.email}" class="btn btn-info">
+                            <span class="glyphicon glyphicon-envelope"></span>
+                            Wyślij wiadomość do administratora projektu
+                        </a>
+                    </div>
+                </c:if>
             </div>
-            <%--@elvariable id="delete" type="java.lang.String"--%>
+
             <c:if test="${delete eq 'success'}">
-                <div class="alert alert-success">
-                    Pomyślnie usunięto zadanie
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <strong>Pomyślnie usunięto zadanie</strong>
                 </div>
             </c:if>
-            <table class="table table-striped table-hover">
-                <thead>
-                <tr>
-                    <th>Nazwa</th>
-                    <th>Imię i nazwisko administratora</th>
-                    <th>Liczba przypisanych plików</th>
-                    <th>Data modyfikacji</th>
-                </tr>
-                </thead>
 
-                <tbody>
-                <c:forEach items="${project.tasks}" var="task">
-                    <tr>
-                        <td>${task.name}</td>
-                        <td>${task.administrator.fullName}</td>
-                        <td>${task.numberOfFiles}</td>
-                        <td>${task.modificationDate}</td>
-                        <td>
-                            <div class="button-group">
-                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
-                                        aria-haspopup="true" aria-expanded="false">
-                                    <span class="glyphicon glyphicon-cog"></span> Opcje <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <c:if test="${task.participants.contains(currentUser) or task.administrator eq currentUser}">
-                                        <li><a href="<spring:url value="/projects/${task.projectId}/tasks/${task.id}"/>"
-                                           class="">
-                                            <span class="glyphicon glyphicon-info-sign"></span> Szczegóły
-                                        </a></li>
+            <c:choose>
+                <c:when test="${empty project.tasks}">
+                    <div class="alert alert-info text-center" role="alert">
+                        <strong>Projekt nie posiada jeszcze żadnych zadań!</strong>
+                        Dodaj nowe zadanie, aby rozpocząć pracę
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <div class="text-center">
+                        <h3>Zadania w projekcie ${project.name}</h3>
+                    </div>
+                    <c:forEach items="${project.tasks}" var="task">
+                        <div class="col-md-4">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">
+                                        <a href="<spring:url value="/projects/${project.id}/tasks/${task.id}"/>">${task.name}</a>
+                                    </h3>
+                                </div>
+                                <div class="panel-body">
+                                    Utworzono <fmt:formatDate value="${task.creationDate}" dateStyle="long"/>
+                                    <c:if test="${not empty task.lastModifiedFile}">
+                                        Ostatnio zmodyfikowany plik ${task.lastModifiedFile.name}
+                                        w dniu <fmt:formatDate
+                                            value="${task.lastModifiedFile.latestVersion.saveDate}"
+                                            dateStyle="long"/>
+                                        przez ${task.lastModifiedFile.latestVersion.author.fullName}
                                     </c:if>
-                                    <c:if test="${currentUser eq project.administrator}">
-                                        <li><a href="<spring:url value="/projects/${task.projectId}/tasks/${task.id}/edit"/>">
-                                            <span class="glyphicon glyphicon-edit"></span> Edytuj
-                                        </a></li>
-                                        <li><a data-toggle="modal" href="#confirmDelete">
-                                            <span class="glyphicon glyphicon-remove"></span> Usuń
-                                        </a></li>
-                                        <div class="modal fade" id="confirmDelete" role="dialog">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h4 class="modal-title">Potwierdź usunięcie zadania</h4>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <div class="alert alert-warning">
-                                                            <strong>Ostrzeżenie!</strong> Usunięcie zadania jest
-                                                            nieodwracalne!
-                                                        </div>
-                                                        <p class="text-info">
-                                                            Czy na pewno chcesz usunąć zadanie wraz ze
-                                                            wszystkimi plikami?
-                                                        </p>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <form method="post"
-                                                              action="<spring:url value="/projects/${project.id}/tasks/${task.id}"/>">
-                                                            <input class="btn btn-danger" type="submit" value="Usuń"/>
-                                                            <input type="hidden" name="${_csrf.parameterName}"
-                                                                   value="${_csrf.token}"/>
-                                                            <input type="hidden" name="_method" value="delete"/>
-                                                            <button type="button" class="btn btn-default"
-                                                                    data-dismiss="modal">
-                                                                Anuluj
-                                                            </button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </c:if>
-                                </ul>
+                                </div>
+                                <div class="panel-footer">
+                                    <span class="glyphicon glyphicon-file"></span>
+                                        ${task.numberOfFiles} ${task.numberOfFiles eq 1 ? 'plik ' : 'plików '}
+                                    <span class="glyphicon glyphicon-user"></span>
+                                        ${task.numberOfParticipants} ${task.numberOfParticipants eq 1 ? 'uczestnik ' : 'uczestrników '}
+                                </div>
                             </div>
-                        </td>
-                    </tr>
-                </c:forEach>
-                </tbody>
-            </table>
+                        </div>
+                    </c:forEach>
+                </c:otherwise>
+            </c:choose>
         </div>
         <div class="col-md-3">
             <div class="panel panel-info">
@@ -149,7 +150,8 @@
                         <div class="list-group-item">
                             <p class="list-group-item-heading">Data ostatniej modyfikacji</p>
                             <h4 class="list-group-item-text">
-                                <fmt:formatDate pattern="dd.MM.yyyy K:mm" value="${project.lastModified}"/>
+                                <fmt:formatDate pattern="dd.MM.yyyy K:mm"
+                                                value="${project.lastModifiedTask.lastModifiedFile.latestVersion.saveDate}"/>
                             </h4>
                         </div>
                     </div>
