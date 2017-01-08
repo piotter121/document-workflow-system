@@ -15,7 +15,10 @@ public class PersonalData {
     @GeneratedValue(generator = "userGen")
     private long id;
 
+    @Column(nullable = false)
     private String firstName;
+
+    @Column(nullable = false)
     private String lastName;
 
     @OneToOne(optional = false, cascade = CascadeType.ALL)
