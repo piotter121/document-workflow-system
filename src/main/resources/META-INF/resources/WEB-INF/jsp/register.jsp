@@ -1,7 +1,7 @@
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <html>
 <head>
     <%@ include file="css.jsp" %>
@@ -9,14 +9,25 @@
 </head>
 <body>
 
-<div class="jumbotron">
-    <div class="container">
-        <h1>System obiegu dokumentów</h1>
-        <p>Rejestracja nowego użytkownika</p>
-    </div>
+<div class="page-header">
+    <h1>
+        <img src="<spring:url value="/images/logo.png"/>" width="40px" height="40px">
+        System obiegu dokumentów
+        <small>Rejestracja nowego użytkownika</small>
+    </h1>
 </div>
 
-<div class="container">
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li><a href="<spring:url value="/login"/>">
+                <span class="glyphicon glyphicon-log-in"></span> Zaloguj się</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container-fluid">
     <form:form modelAttribute="newUser" class="form-horizontal">
         <fieldset>
             <legend>
@@ -78,7 +89,9 @@
             </div>
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" id="btnRegister" class="btn btn-primary" value="Zarejestruj"/>
+                    <button type="submit" id="btnRegister" class="btn btn-primary">
+                        <span class="glyphicon glyphicon-check"></span> Zarejestruj się
+                    </button>
                 </div>
             </div>
         </fieldset>
