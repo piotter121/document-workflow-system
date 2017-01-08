@@ -30,6 +30,8 @@ public class CreateUserFormValidator implements Validator {
 
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "login", "NotEmpty");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "email", "NotEmpty");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "firstName", "NotEmpty");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lastName", "NotEmpty");
         String login = form.getLogin();
         int loginLength = login.length();
         if (loginLength < 5 || loginLength > 32) {
