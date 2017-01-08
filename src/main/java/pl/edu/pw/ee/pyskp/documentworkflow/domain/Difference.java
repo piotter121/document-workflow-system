@@ -11,13 +11,20 @@ public class Difference {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(nullable = false)
     private long previousSectionStart;
+
+    @Column(nullable = false)
     private long previousSectionSize;
+
+    @Column(nullable = false)
     private long newSectionStart;
+
+    @Column(nullable = false)
     private long newSectionSize;
 
     @Enumerated(value = EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 15)
     private DifferenceType differenceType;
 
     @ManyToOne(optional = false)

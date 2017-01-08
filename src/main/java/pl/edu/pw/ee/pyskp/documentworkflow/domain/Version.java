@@ -14,8 +14,8 @@ public class Version {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NotNull
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false, updatable = false)
     private Date saveDate;
 
     @Column(nullable = false, length = 20)

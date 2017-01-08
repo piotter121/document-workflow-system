@@ -29,10 +29,10 @@ public class FileMetadata {
     private ContentType contentType;
 
     @Column(nullable = false)
-    private boolean confirmed = false;
+    private boolean confirmed;
 
     @Column(nullable = false)
-    private boolean markedToConfirm = false;
+    private boolean markedToConfirm;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "taskId", nullable = false)

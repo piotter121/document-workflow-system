@@ -67,11 +67,6 @@ public class User {
         return tasks.stream().map(Task::getProject).collect(Collectors.toSet());
     }
 
-    @Transient
-    public String getFullName() {
-        return personalData.getFullName();
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
