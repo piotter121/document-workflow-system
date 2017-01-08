@@ -10,6 +10,4 @@ import java.util.List;
  * Created by piotr on 13.12.16.
  */
 public interface TaskRepository extends JpaRepository<Task, Long> {
-    List<Task> findByName(String name);
-    List<Task> findByAdministrator(User administrator);
 }

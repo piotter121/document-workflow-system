@@ -18,9 +18,7 @@ import java.util.stream.Collectors;
 public interface TaskService {
     Optional<Task> getTaskById(Long id);
 
-    List<Task> getAllByAdministrator(User administrator);
-
-    Task createTaskFromForm(NewTaskForm formDTO, Long projectId) throws UserNotFoundException, ProjectNotFoundException;
+    Task createTaskFromForm(NewTaskForm formDTO, Long projectId);
 
     void deleteTask(Long taskId);
 
@@ -31,10 +29,12 @@ public interface TaskService {
         dto.setDescription(task.getDescription());
         dto.setAdministrator(UserService.mapToUserInfoDTO(task.getAdministrator()));
         dto.setCreationDate(task.getCreationDate());
+        task.getModificationDate().ifPresent(dto::setModificationDate);
         dto.setProjectId(task.getProject().getId());
         dto.setParticipants(UserService.mapAllToUserInfoDTO(task.getParticipants()));
         task.getLastModifiedFile()
-                .map(FilesMetadataService::mapToFileMetadataDTO).ifPresent(dto::setLastModifiedFile);
+                .map(FilesMetadataService::mapToFileMetadataDTO)
+                .ifPresent(dto::setLastModifiedFile);
         dto.setFilesInfo(FilesMetadataService.mapAllToFileMetadataDTO(task.getFiles()));
         return dto;
     }

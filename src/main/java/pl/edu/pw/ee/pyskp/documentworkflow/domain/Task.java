@@ -1,10 +1,11 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.domain;
 
 import javax.persistence.*;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
+import static java.util.Comparator.comparing;
 
 /**
  * Created by piotr on 11.12.16.
@@ -50,7 +51,7 @@ public class Task {
     @Transient
     public Optional<FileMetadata> getLastModifiedFile() {
         return files.stream()
-                .max(Comparator.comparing(f -> f.getLatestVersion().getSaveDate()));
+                .max(comparing(FileMetadata::getModificationDate));
     }
 
     public long getId() {
@@ -115,5 +116,9 @@ public class Task {
 
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public Optional<Date> getModificationDate() {
+        return getLastModifiedFile().map(FileMetadata::getModificationDate);
     }
 }

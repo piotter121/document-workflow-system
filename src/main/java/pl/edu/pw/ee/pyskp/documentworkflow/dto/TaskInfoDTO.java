@@ -3,7 +3,8 @@ package pl.edu.pw.ee.pyskp.documentworkflow.dto;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toSet;
 
 /**
  * Created by piotr on 31.12.16.
@@ -21,7 +22,7 @@ public class TaskInfoDTO {
     private List<FileMetadataDTO> filesInfo;
 
     public int getNumberOfParticipants() {
-        Set<UserInfoDTO> participants = this.participants.stream().collect(Collectors.toSet());
+        Set<UserInfoDTO> participants = this.participants.stream().collect(toSet());
         participants.add(administrator);
         return participants.size();
     }

@@ -1,6 +1,9 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.dto;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by piotr on 29.12.16.
@@ -82,5 +85,11 @@ public class ProjectInfoDTO {
 
     public void setTasks(List<TaskInfoDTO> tasks) {
         this.tasks = tasks;
+    }
+
+    public int getNumberOfFiles() {
+        return tasks == null
+                ? 0
+                : tasks.stream().mapToInt(TaskInfoDTO::getNumberOfFiles).sum();
     }
 }

@@ -12,7 +12,6 @@ import pl.edu.pw.ee.pyskp.documentworkflow.dto.NewProjectForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.dto.ProjectInfoDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exception.ProjectNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.service.ProjectService;
-import pl.edu.pw.ee.pyskp.documentworkflow.service.TaskService;
 import pl.edu.pw.ee.pyskp.documentworkflow.service.UserService;
 
 import javax.validation.Valid;
@@ -28,12 +27,10 @@ public class ProjectsController {
     private static final Logger logger = Logger.getLogger(ProjectsController.class);
 
     private final ProjectService projectService;
-    private final TaskService taskService;
     private final UserService userService;
 
-    public ProjectsController(ProjectService projectService, TaskService taskService, UserService userService) {
+    public ProjectsController(ProjectService projectService, UserService userService) {
         this.projectService = projectService;
-        this.taskService = taskService;
         this.userService = userService;
     }
 
@@ -44,22 +41,32 @@ public class ProjectsController {
         if (onlyOwned == null) {
             projects.addAll(currentUser.getParticipatedProjects());
         }
-        model.addAttribute("currentUser", UserService.mapToUserInfoDTO(currentUser));
+        addCurrentUserToModel(model);
         model.addAttribute("projects", ProjectService.mapAllToProjectInfoDTO(projects));
         return "projects";
     }
 
+    private void addCurrentUserToModel(Model model) {
+        User currentUser = userService.getCurrentUser();
+        model.addAttribute("currentUser", UserService.mapToUserInfoDTO(currentUser));
+    }
+
     @GetMapping("/add")
-    public String getNewProjectForm(@ModelAttribute NewProjectForm newProject) {
+    public String getNewProjectForm(@ModelAttribute NewProjectForm newProject, Model model) {
+        addCurrentUserToModel(model);
         return "addProject";
     }
 
     @PostMapping("/add")
     public String processCreationOfNewProject(@ModelAttribute @Valid NewProjectForm newProject,
-                                              BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) return "addProject";
-        Project createdProject = projectService.createNewProjectFromForm(newProject);
-        return String.format("redirect:/projects/%d", createdProject.getId());
+                                              BindingResult bindingResult,
+                                              Model model) {
+        if (bindingResult.hasErrors()) {
+            addCurrentUserToModel(model);
+            return "addProject";
+        }
+        long createdProjectId = projectService.createNewProjectFromForm(newProject).getId();
+        return String.format("redirect:/projects/%d", createdProjectId);
     }
 
     @GetMapping("/{projectId}")
@@ -71,7 +78,7 @@ public class ProjectsController {
                 .orElseThrow(() -> new ProjectNotFoundException(projectId));
 
         model.addAttribute("project", project);
-        model.addAttribute("currentUser", UserService.mapToUserInfoDTO(userService.getCurrentUser()));
+        addCurrentUserToModel(model);
         if (deleted != null) model.addAttribute("delete", "success");
         return "project";
     }

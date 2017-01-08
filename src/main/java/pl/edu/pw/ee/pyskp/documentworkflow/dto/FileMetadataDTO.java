@@ -1,5 +1,7 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.dto;
 
+import pl.edu.pw.ee.pyskp.documentworkflow.domain.ContentType;
+
 import java.util.Date;
 import java.util.List;
 
@@ -13,6 +15,7 @@ public class FileMetadataDTO {
     private String contentType = "";
     private boolean confirmed;
     private boolean markedToConfirm;
+    private Date creationDate;
     private Date modificationDate;
     private VersionInfoDTO latestVersion;
     private List<VersionInfoDTO> versions;
@@ -102,5 +105,17 @@ public class FileMetadataDTO {
 
     public void setVersions(List<VersionInfoDTO> versions) {
         this.versions = versions;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public String getExtension() {
+        return ContentType.valueOf(getContentType()).getExtension();
     }
 }

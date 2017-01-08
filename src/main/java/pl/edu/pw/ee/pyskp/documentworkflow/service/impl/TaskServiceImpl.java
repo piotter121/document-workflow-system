@@ -36,13 +36,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<Task> getAllByAdministrator(User administrator) {
-        return taskRepository.findByAdministrator(administrator);
-    }
-
-    @Override
-    public Task createTaskFromForm(NewTaskForm form, Long projectId)
-            throws UserNotFoundException, ProjectNotFoundException {
+    public Task createTaskFromForm(NewTaskForm form, Long projectId) {
         Task task = new Task();
         task.setName(form.getName());
         task.setDescription(form.getDescription());

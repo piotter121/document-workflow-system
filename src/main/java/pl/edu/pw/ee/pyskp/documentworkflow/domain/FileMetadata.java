@@ -1,8 +1,10 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.domain;
 
 import javax.persistence.*;
-import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+
+import static java.util.Comparator.comparing;
 
 /**
  * Created by piotr on 11.12.16.
@@ -40,10 +42,22 @@ public class FileMetadata {
     private List<Version> versions;
 
     @Transient
+    public Date getModificationDate() {
+        return getLatestVersion().getSaveDate();
+    }
+
+    @Transient
     public Version getLatestVersion() {
         return versions.stream()
-                .max(Comparator.comparing(Version::getSaveDate))
+                .max(comparing(Version::getSaveDate))
                 .orElseThrow(() -> new RuntimeException("Cannot find latest Version of FileMetadata!"));
+    }
+
+    @Transient
+    public Date getCreationDate() {
+        return versions.stream().map(Version::getSaveDate).min(Date::compareTo)
+                .orElseThrow(() -> new RuntimeException(
+                        String.format("Could not find creation date of file with id=%d", id)));
     }
 
     public long getId() {
@@ -109,4 +123,5 @@ public class FileMetadata {
     public void setMarkedToConfirm(boolean markedToConfirm) {
         this.markedToConfirm = markedToConfirm;
     }
+
 }

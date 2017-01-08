@@ -46,8 +46,12 @@ public class FilesMetadataController {
                 .map(TaskService::mapToTaskInfoDto)
                 .orElseThrow(() -> new TaskNotFoundException(taskId));
         model.addAttribute("task", taskInfoDTO);
-        model.addAttribute("currentUser", UserService.mapToUserInfoDTO(userService.getCurrentUser()));
+        addCurrentUserToModel(model);
         return "addFile";
+    }
+
+    private void addCurrentUserToModel(Model model) {
+        model.addAttribute("currentUser", UserService.mapToUserInfoDTO(userService.getCurrentUser()));
     }
 
     @PostMapping("/add")
@@ -56,11 +60,15 @@ public class FilesMetadataController {
                                      @ModelAttribute @Valid NewFileForm formData,
                                      @PathVariable long taskId,
                                      @PathVariable long projectId,
-                                     BindingResult bindingResult) {
-        if (file == null || file.isEmpty())
+                                     BindingResult bindingResult,
+                                     Model model) {
+        if (file == null || file.isEmpty()) {
             bindingResult.rejectValue("file", "NotNull");
-        if (bindingResult.hasErrors())
+        }
+        if (bindingResult.hasErrors()) {
+            addCurrentUserToModel(model);
             return "addFile";
+        }
         formData.setFile(file);
         Task task = taskService.getTaskById(taskId)
                 .orElseThrow(() -> new TaskNotFoundException(taskId));

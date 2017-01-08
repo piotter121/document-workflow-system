@@ -28,6 +28,8 @@ public interface FilesMetadataService {
         dto.setDescription(fileMetadata.getDescription());
         dto.setContentType(fileMetadata.getContentType().name());
         dto.setConfirmed(fileMetadata.isConfirmed());
+        dto.setModificationDate(fileMetadata.getModificationDate());
+        dto.setCreationDate(fileMetadata.getCreationDate());
         dto.setMarkedToConfirm(fileMetadata.isMarkedToConfirm());
         dto.setVersions(VersionService.mapAllToVersionInfoDTO(fileMetadata.getVersions()));
         dto.setLatestVersion(VersionService.mapToVersionInfoDTO(fileMetadata.getLatestVersion()));

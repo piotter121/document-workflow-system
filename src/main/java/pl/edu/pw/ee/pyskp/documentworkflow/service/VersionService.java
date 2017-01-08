@@ -22,6 +22,7 @@ public interface VersionService {
         dto.setId(version.getId());
         dto.setAuthor(UserService.mapToUserInfoDTO(version.getAuthor()));
         dto.setSaveDate(version.getSaveDate());
+        dto.setVersionString(version.getVersionString());
         return dto;
     }
 

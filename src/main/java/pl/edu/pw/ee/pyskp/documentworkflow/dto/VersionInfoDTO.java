@@ -9,6 +9,7 @@ public class VersionInfoDTO {
     private long id;
     private UserInfoDTO author;
     private Date saveDate;
+    private String versionString;
 
     public long getId() {
         return id;
@@ -32,5 +33,13 @@ public class VersionInfoDTO {
 
     public Date getSaveDate() {
         return saveDate;
+    }
+
+    public void setVersionString(String versionString) {
+        this.versionString = versionString;
+    }
+
+    public String getVersionString() {
+        return versionString;
     }
 }
