@@ -45,7 +45,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-9">
-            <div class="btn-toolbar">
+            <div class="toolbar" role="toolbar">
                 <c:if test="${currentUser eq project.administrator}">
                     <div class="btn-group">
                         <a href="<spring:url value="/projects/${project.id}/tasks/add"/>" class="btn btn-success">
@@ -99,19 +99,23 @@
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <h3 class="panel-title">
-                                        <a href="<spring:url value="/projects/${project.id}/tasks/${task.id}"/>">${task.name}</a>
+                                        <a href="<spring:url value="/projects/${project.id}/tasks/${task.id}"/>">
+                                                ${task.name}
+                                        </a>
                                     </h3>
                                 </div>
+
                                 <div class="panel-body">
-                                    Utworzono <fmt:formatDate value="${task.creationDate}" dateStyle="long"/>
+                                    <p>Utworzono <fmt:formatDate value="${task.creationDate}" dateStyle="long"/></p>
                                     <c:if test="${not empty task.lastModifiedFile}">
-                                        Ostatnio zmodyfikowany plik ${task.lastModifiedFile.name}
-                                        w dniu <fmt:formatDate
-                                            value="${task.lastModifiedFile.latestVersion.saveDate}"
-                                            dateStyle="long"/>
-                                        przez ${task.lastModifiedFile.latestVersion.author.fullName}
+                                        <p>Ostatnio zmodyfikowany plik ${task.lastModifiedFile.name}
+                                            w dniu <fmt:formatDate
+                                                    value="${task.lastModifiedFile.latestVersion.saveDate}"
+                                                    dateStyle="long"/>
+                                            przez ${task.lastModifiedFile.latestVersion.author.fullName}</p>
                                     </c:if>
                                 </div>
+
                                 <div class="panel-footer">
                                     <span class="glyphicon glyphicon-file"></span>
                                         ${task.numberOfFiles} ${task.numberOfFiles eq 1 ? 'plik ' : 'plików '}

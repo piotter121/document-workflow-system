@@ -44,7 +44,7 @@
 
 <div class="container-fluid">
 
-    <div class="col-md-12">
+    <div class="row col-md-12">
         <div class="toolbar" role="toolbar">
             <div class="btn-group" role="group">
                 <a href="<spring:url value="/projects/add"/>" class="btn btn-primary">
@@ -69,26 +69,27 @@
                             </h3>
                         </div>
                         <div class="panel-body">
-                            Utworzono <fmt:formatDate value="${project.creationDate}" dateStyle="long"/>
+                            <p>Utworzono <fmt:formatDate value="${project.creationDate}" dateStyle="long"/></p>
                             <c:if test="${not empty project.lastModifiedTask}">
-                                Ostatnio zmodyfikowany plik ${project.lastModifiedTask.lastModifiedFile.name}
-                                w dniu <fmt:formatDate
-                                    value="${project.lastModifiedTask.lastModifiedFile.latestVersion.saveDate}"
-                                    dateStyle="long"/>
-                                przez ${project.lastModifiedTask.lastModifiedFile.latestVersion.author.fullName}
-                                w zadaniu ${project.lastModifiedTask.name}
+                                <p>Ostatnio zmodyfikowany plik ${project.lastModifiedTask.lastModifiedFile.name}
+                                    w dniu <fmt:formatDate
+                                            value="${project.lastModifiedTask.lastModifiedFile.latestVersion.saveDate}"
+                                            dateStyle="long"/>
+                                    przez ${project.lastModifiedTask.lastModifiedFile.latestVersion.author.fullName}
+                                    w zadaniu ${project.lastModifiedTask.name}</p>
                             </c:if>
                         </div>
                         <div class="panel-footer">
-                            <span class="glyphicon glyphicon-user"></span> ${project.numberOfParticipants} ${project.numberOfParticipants eq 1 ? ' uczestnik ' : ' uczestników '}
-                            <span class="glyphicon glyphicon-tasks"></span> ${project.numberOfTasks} ${project.numberOfTasks eq 1 ? ' zadanie ' : ' zadań '}
+                            <span class="glyphicon glyphicon-user"></span> ${project.numberOfParticipants} ${project.numberOfParticipants eq 1 ? 'uczestnik ' : 'uczestników '}
+                            <span class="glyphicon glyphicon-tasks"></span> ${project.numberOfTasks} ${project.numberOfTasks eq 1 ? 'zadanie ' : 'zadań '}
+                            <span class="glyphicon glyphicon-file"></span> ${project.numberOfFiles} ${project.numberOfFiles eq 1 ? 'plik ' : 'plików '}
                         </div>
                     </div>
                 </div>
             </c:forEach>
         </c:when>
         <c:otherwise>
-            <div class="col-md-8 col-md-offset-2">
+            <div class="row col-md-8 col-md-offset-2">
                 <div class="alert alert-info text-center">
                     <strong>Brak projektów do wyświetlania.</strong> Utwórz nowy projekt, lub poproś o dodanie do
                     istniejącego, aby rozpocząć pracę.

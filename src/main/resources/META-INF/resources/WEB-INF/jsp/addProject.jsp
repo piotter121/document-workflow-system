@@ -1,3 +1,4 @@
+<%--@elvariable id="currentUser" type="pl.edu.pw.ee.pyskp.documentworkflow.dto.UserInfoDTO"--%>
 <%--@elvariable id="_csrf" type="org.springframework.security.web.csrf.DefaultCsrfToken"--%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
@@ -10,18 +11,46 @@
 </head>
 <body>
 
-<div class="jumbotron">
-    <div class="container">
-        <h1>System obiegu dokumentów</h1>
-        <p>Stwórz projekt</p>
-        <form action="<c:url value="/logout" />" method="post">
-            <input type="submit" value="Wyloguj" class="btn btn-danger btn-mini pull-right"/>
+<div class="page-header">
+    <h1>
+        <img src="<spring:url value="/images/logo.png"/>" width="40px" height="40px">
+        System obiegu dokumentów
+        <small>Dodawanie nowego projektu</small>
+    </h1>
+</div>
+
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li>
+                <a href="<spring:url value="/"/>">
+                    <span class="glyphicon glyphicon-home"></span> Strona główna
+                </a>
+            </li>
+            <li class="active">
+                <a href="<spring:url value="/projects"/>">
+                    <span class="glyphicon glyphicon-folder-close"></span> Projekty
+                </a>
+            </li>
+            <li>
+                <a href="<spring:url value="/tasks"/>">
+                    <span class="glyphicon glyphicon-tasks"></span> Zadania
+                </a>
+            </li>
+        </ul>
+
+        <p class="navbar-text">Zalogowany jako ${currentUser.fullName}</p>
+
+        <form class="navbar-form navbar-right" action="<c:url value="/logout" />" method="post">
+            <button id="logout" type="submit" class="btn btn-default">
+                <span class="glyphicon glyphicon-log-out"></span> Wyloguj
+            </button>
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         </form>
     </div>
-</div>
+</nav>
 
-<div class="container">
+<div class="container-fluid">
     <form:form modelAttribute="newProjectForm" class="form-horizontal">
         <fieldset>
             <legend>

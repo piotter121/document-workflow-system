@@ -44,10 +44,14 @@
                                        value="">
                             </div>
                             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                            <input class="btn btn-lg btn-primary btn-block" type="submit" value="Zaloguj się">
+                            <button class="btn btn-lg btn-primary btn-block" type="submit">
+                                <span class="glyphicon glyphicon-log-in"></span> Zaloguj się
+                            </button>
                         </fieldset>
                     </form>
-                    <a href="<spring:url value="/register" />" class="btn btn-info btn-block">Rejestracja</a>
+                    <a href="<spring:url value="/register" />" class="btn btn-info btn-block">
+                        <span class="glyphicon glyphicon-check"></span> Rejestracja
+                    </a>
                 </div>
             </div>
         </div>
