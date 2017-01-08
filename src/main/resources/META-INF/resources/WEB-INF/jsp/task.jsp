@@ -104,7 +104,7 @@
                                         <div class="panel-heading">
                                             <h3 class="panel-title">
                                                 <img src="<spring:url value="/images/${file.extension}.png"/>"
-                                                     height="25"/>
+                                                     height="20"/>
                                                 <a href="<spring:url value="/projects/${project.id}/tasks/${task.id}/files/${file.id}"/>">
                                                         ${file.name}
                                                 </a>
