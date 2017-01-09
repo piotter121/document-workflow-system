@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import pl.edu.pw.ee.pyskp.documentworkflow.domain.Task;
 import pl.edu.pw.ee.pyskp.documentworkflow.dto.NewFileForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.dto.TaskInfoDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.exception.FileNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exception.TaskNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.service.FilesMetadataService;
 import pl.edu.pw.ee.pyskp.documentworkflow.service.TaskService;
@@ -36,6 +37,18 @@ public class FilesMetadataController {
     @GetMapping
     public String redirectToTask(@PathVariable Long projectId, @PathVariable Long taskId) {
         return String.format("redirect:/projects/%d/tasks/%d", projectId, taskId);
+    }
+
+    @GetMapping("/{fileId}")
+    public String getFileInfo(@PathVariable long fileId, @PathVariable long taskId, Model model) {
+        addCurrentUserToModel(model);
+        model.addAttribute("task", taskService.getTaskById(taskId)
+                .map(TaskService::mapToTaskInfoDto)
+                .orElseThrow(() -> new TaskNotFoundException(taskId)));
+        model.addAttribute("file", filesMetadataService.getOneById(fileId)
+                .map(FilesMetadataService::mapToFileMetadataDTO)
+                .orElseThrow(() -> new FileNotFoundException(fileId)));
+        return "file";
     }
 
     @GetMapping("/add")

@@ -57,7 +57,7 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-9">
+        <div class="col-md-8">
             <ul class="nav nav-pills">
                 <li role="presentation" class="active">
                     <a data-toggle="pill" href="#files">Pliki</a>
@@ -99,7 +99,7 @@
                                 <h3>Pliki w zadaniu ${task.name}</h3>
                             </div>
                             <c:forEach items="${task.filesInfo}" var="file">
-                                <div class="col-md-4 col-sm-6">
+                                <div class="col-md-6">
                                     <div class="panel panel-${file.markedToConfirm ? 'primary' : file.confirmed ? 'success' : 'default'}">
                                         <div class="panel-heading">
                                             <h3 class="panel-title">
@@ -141,7 +141,7 @@
             </div>
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="panel panel-info">
                 <div class="panel-heading">Szczegóły zadania</div>
                 <div class="panel-body">

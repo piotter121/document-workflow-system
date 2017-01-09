@@ -91,7 +91,7 @@
             </div>
 
             <div class="form-group">
-                <div class="col-lg-offset-2 col-lg-10">
+                <div class="col-md-offset-2 col-md-10">
                     <input type="submit" id="btnAdd" class="btn btn-primary" value="Stwórz"/>
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                 </div>

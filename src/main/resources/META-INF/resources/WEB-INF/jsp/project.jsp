@@ -44,7 +44,7 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-9">
+        <div class="col-md-8">
             <div class="toolbar" role="toolbar">
                 <c:if test="${currentUser eq project.administrator}">
                     <div class="btn-group">
@@ -95,7 +95,7 @@
                         <h3>Zadania w projekcie ${project.name}</h3>
                     </div>
                     <c:forEach items="${project.tasks}" var="task">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <h3 class="panel-title">
@@ -128,7 +128,7 @@
                 </c:otherwise>
             </c:choose>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="panel panel-info">
                 <div class="panel-heading">Szczegóły projektu</div>
                 <div class="panel-body">

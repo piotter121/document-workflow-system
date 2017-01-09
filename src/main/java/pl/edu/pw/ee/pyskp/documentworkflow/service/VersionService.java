@@ -23,6 +23,8 @@ public interface VersionService {
         dto.setAuthor(UserService.mapToUserInfoDTO(version.getAuthor()));
         dto.setSaveDate(version.getSaveDate());
         dto.setVersionString(version.getVersionString());
+        dto.setMessage(version.getMessage());
+        dto.setDifferences(DifferenceService.mapAllToDifferenceInfoDTO(version.getDifferences()));
         return dto;
     }
 

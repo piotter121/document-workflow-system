@@ -57,59 +57,63 @@
 
 <div class="container-fluid">
 
-    <div class="col-md-10 col-md-offset-1">
-        <form:form method="post" modelAttribute="newFileForm" class="form-horizontal"
-                   enctype="multipart/form-data">
-            <fieldset>
-                <div class="form-group">
-                    <label class="control-label col-md-2" for="name">
-                        Wyświetlana nazwa pliku
-                    </label>
-                    <div class="col-md-5">
-                        <form:input path="name" id="name" type="text" class="form-control"/>
-                        <p><form:errors path="name" cssClass="text-danger"/></p>
-                    </div>
-                </div>
+    <form:form method="post" modelAttribute="newFileForm" class="form-horizontal" enctype="multipart/form-data">
+        <fieldset>
+            <legend>
+                Proszę wypełnić poniższy formularz aby dodać nowy plik do zadania
+            </legend>
 
-                <div class="form-group">
-                    <label class="control-label col-md-2" for="description">
-                        Dodatkowy opis
-                    </label>
-                    <div class="col-md-5">
-                        <form:textarea path="description" id="description" rows="4" cssClass="form-control"/>
-                        <p><form:errors path="description" cssClass="text-danger"/></p>
-                    </div>
+            <div class="form-group">
+                <label class="control-label col-md-2" for="name">
+                    Wyświetlana nazwa pliku
+                </label>
+                <div class="col-md-5">
+                    <form:input path="name" id="name" type="text" class="form-control"/>
+                    <p><form:errors path="name" cssClass="text-danger"/></p>
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <label class="control-label col-md-2" for="file">
-                        Plik
-                    </label>
-                    <div class="col-md-5">
-                        <input id="file" type="file" name="file">
-                        <p><form:errors path="file" cssClass="text-danger"/></p>
-                    </div>
+            <div class="form-group">
+                <label class="control-label col-md-2" for="description">
+                    Dodatkowy opis
+                </label>
+                <div class="col-md-5">
+                    <form:textarea path="description" id="description" rows="4" cssClass="form-control"/>
+                    <p><form:errors path="description" cssClass="text-danger"/></p>
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <label class="control-label col-md-2" for="versionString">
-                        Numer inicjalnej wersji pliku
-                    </label>
-                    <div class="col-md-5">
-                        <form:input path="versionString" id="versionString" type="text" cssClass="form-control"/>
-                        <p><form:errors path="versionString" cssClass="text-danger"/></p>
-                    </div>
+            <div class="form-group">
+                <label class="control-label col-md-2" for="file">
+                    Plik
+                </label>
+                <div class="col-md-5">
+                    <input id="file" type="file" name="file">
+                    <p><form:errors path="file" cssClass="text-danger"/></p>
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <div class="col-lg-offset-2 col-lg-5">
-                        <input type="submit" id="btnAdd" class="btn btn-primary" value="Dodaj"/>
-                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                    </div>
+            <div class="form-group">
+                <label class="control-label col-md-2" for="versionString">
+                    Numer inicjalnej wersji pliku
+                </label>
+                <div class="col-md-5">
+                    <form:input path="versionString" id="versionString" type="text" cssClass="form-control"/>
+                    <p><form:errors path="versionString" cssClass="text-danger"/></p>
                 </div>
-            </fieldset>
-        </form:form>
-    </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-5">
+                    <input type="submit" id="btnAdd" class="btn btn-primary" value="Dodaj"/>
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                    <a class="btn btn-default" href="<spring:url value="/projects/${task.projectId}/tasks/${task.id}"/>">
+                        Zrezygnuj
+                    </a>
+                </div>
+            </div>
+        </fieldset>
+    </form:form>
 </div>
 
 </body>

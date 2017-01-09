@@ -71,14 +71,14 @@
                 <label class="control-label col-md-2" for="description">
                     <spring:message code="addProject.form.description.label"/>
                 </label>
-                <div class="col-lg-5">
+                <div class="col-md-5">
                     <form:textarea path="description" id="description" rows="4" cssClass="form-control"/>
                     <p><form:errors path="description" cssClass="text-danger"/></p>
                 </div>
             </div>
 
             <div class="form-group">
-                <div class="col-lg-offset-2 col-lg-10">
+                <div class="col-md-offset-2 col-md-10">
                     <input type="submit" id="btnAdd" class="btn btn-primary" value="Stwórz"/>
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                 </div>

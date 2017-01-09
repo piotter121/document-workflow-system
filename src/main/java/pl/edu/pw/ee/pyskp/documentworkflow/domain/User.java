@@ -57,7 +57,8 @@ public class User {
     @Transient
     public boolean hasAccessToTask(Task task) {
         return getAdministratedTasks().contains(task)
-                || getTaskList().contains(task);
+                || getTaskList().contains(task)
+                || equals(task.getProject().getAdministrator());
     }
 
     @Transient

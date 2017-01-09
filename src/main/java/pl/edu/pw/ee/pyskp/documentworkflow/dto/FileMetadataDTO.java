@@ -2,8 +2,13 @@ package pl.edu.pw.ee.pyskp.documentworkflow.dto;
 
 import pl.edu.pw.ee.pyskp.documentworkflow.domain.ContentType;
 
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Created by piotr on 31.12.16.
@@ -117,5 +122,11 @@ public class FileMetadataDTO {
 
     public String getExtension() {
         return ContentType.valueOf(getContentType()).getExtension();
+    }
+
+    public List<VersionInfoDTO> getVersionSortedBySaveDateDESC() {
+        return versions.stream()
+                .sorted(comparing(VersionInfoDTO::getSaveDate).reversed())
+                .collect(toList());
     }
 }

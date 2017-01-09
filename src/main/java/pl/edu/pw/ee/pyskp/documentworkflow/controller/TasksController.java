@@ -73,7 +73,15 @@ public class TasksController {
                                  @PathVariable long projectId,
                                  Model model) {
         addCurrentUserToModel(model);
+        addProjectToModel(projectId, model);
         return "addTask";
+    }
+
+    private void addProjectToModel(long projectId, Model model) {
+        model.addAttribute("project",
+                projectService.getOneById(projectId)
+                        .map(ProjectService::mapToProjectInfoDTO)
+                        .orElseThrow(() -> new ProjectNotFoundException(projectId)));
     }
 
     @PostMapping("/add")
@@ -84,6 +92,7 @@ public class TasksController {
                                      Model model) {
         if (bindingResult.hasErrors()) {
             addCurrentUserToModel(model);
+            addProjectToModel(projectId, model);
             return "addTask";
         }
         long taskId = taskService.createTaskFromForm(newTask, projectId).getId();
@@ -91,7 +100,7 @@ public class TasksController {
     }
 
     private void addCurrentUserToModel(Model model) {
-        model.addAttribute("currentUser", userService.getCurrentUser());
+        model.addAttribute("currentUser", UserService.mapToUserInfoDTO(userService.getCurrentUser()));
     }
 
 }
