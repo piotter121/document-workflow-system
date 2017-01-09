@@ -13,6 +13,10 @@
     text-decoration: none;
 }
 
+.toolbar {
+    padding-bottom: 5px;
+}
+
 .panel {
     box-shadow: 0 2px 2px 0 #555;
 }

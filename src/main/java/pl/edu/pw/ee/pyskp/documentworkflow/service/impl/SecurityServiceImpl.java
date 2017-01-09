@@ -38,6 +38,14 @@ public class SecurityServiceImpl implements SecurityService {
     }
 
     @Override
+    public boolean canAddParticipantToTask(long taskId) {
+        return userService.getCurrentUser().equals(
+                taskService.getTaskById(taskId)
+                        .orElseThrow(() -> new TaskNotFoundException(taskId))
+                        .getAdministrator());
+    }
+
+    @Override
     public boolean canDeleteTask(long taskId) {
         return taskService.getTaskById(taskId)
                 .map(Task::getProject)

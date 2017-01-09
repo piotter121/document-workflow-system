@@ -7,10 +7,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pw.ee.pyskp.documentworkflow.dto.NewTaskForm;
-import pl.edu.pw.ee.pyskp.documentworkflow.dto.ProjectInfoDTO;
-import pl.edu.pw.ee.pyskp.documentworkflow.dto.TaskInfoDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exception.ProjectNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exception.TaskNotFoundException;
+import pl.edu.pw.ee.pyskp.documentworkflow.exception.UserNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.service.ProjectService;
 import pl.edu.pw.ee.pyskp.documentworkflow.service.TaskService;
 import pl.edu.pw.ee.pyskp.documentworkflow.service.UserService;
@@ -47,16 +46,16 @@ public class TasksController {
     public String getTaskInfo(@PathVariable long taskId,
                               @PathVariable long projectId,
                               Model model) {
-        TaskInfoDTO task = taskService.getTaskById(taskId)
-                .map(TaskService::mapToTaskInfoDto)
-                .orElseThrow(() -> new TaskNotFoundException(taskId));
-        ProjectInfoDTO project = projectService.getOneById(projectId)
-                .map(ProjectService::mapToProjectInfoDTO)
-                .orElseThrow(() -> new ProjectNotFoundException(projectId));
+        addTaskToModel(taskId, model);
         addCurrentUserToModel(model);
-        model.addAttribute("task", task);
-        model.addAttribute("project", project);
+        addProjectToModel(projectId, model);
         return "task";
+    }
+
+    private void addTaskToModel(@PathVariable long taskId, Model model) {
+        model.addAttribute("task", taskService.getTaskById(taskId)
+                .map(TaskService::mapToTaskInfoDto)
+                .orElseThrow(() -> new TaskNotFoundException(taskId)));
     }
 
     @DeleteMapping("/{taskId}")
@@ -65,6 +64,27 @@ public class TasksController {
         logger.debug("Received HTTP DELETE request for deletion task of id=" + taskId);
         taskService.deleteTask(taskId);
         return String.format("redirect:/projects/%d?deleted", projectId);
+    }
+
+    @GetMapping("/{taskId}/addParticipant")
+    public String redirectToTask(@PathVariable long projectId, @PathVariable long taskId) {
+        return String.format("redirect:/projects/%d/tasks/%d", projectId, taskId);
+    }
+
+    @PostMapping("/{taskId}/addParticipant")
+    @PreAuthorize("@securityService.canAddParticipantToTask(#taskId)")
+    public String processAddParticipant(@PathVariable long taskId, @PathVariable long projectId,
+                                        @RequestParam(name = "participantEmail") String userEmail,
+                                        Model model) {
+        addCurrentUserToModel(model);
+        try {
+            taskService.addParticipantToTask(userEmail, taskId);
+        } catch (UserNotFoundException ex) {
+            model.addAttribute("addParticipantErrorMessage", "Nie istnieje użytkownik z podanym adresem e-mail");
+        }
+        addProjectToModel(projectId, model);
+        addTaskToModel(taskId, model);
+        return "task";
     }
 
     @GetMapping("/add")

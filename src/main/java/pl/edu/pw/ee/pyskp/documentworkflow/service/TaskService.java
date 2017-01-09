@@ -44,4 +44,6 @@ public interface TaskService {
                 ? tasks.stream().map(TaskService::mapToTaskInfoDto).collect(Collectors.toList())
                 : Collections.emptyList();
     }
+
+    void addParticipantToTask(String userEmail, long taskId);
 }

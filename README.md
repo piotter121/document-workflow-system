@@ -5,7 +5,7 @@
 <p>Celem pracy jest zbudowanie systemu, który pomoże prowadzić dokumentację projektów badawczych. 
 Podstawowymi problemami, które taki system powinien rozwiązywać jest:
 <ul>
-<li>śledzenie, kto wykonał jakie zmiany</li>
+<li>śledzenie, kto i jakie zmiany wykonał,</li>
 <li>śledzenie, która wersja jest aktualna/najnowsza.</li>
 </ul>
 </p>

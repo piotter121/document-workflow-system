@@ -12,7 +12,6 @@ import pl.edu.pw.ee.pyskp.documentworkflow.service.TaskService;
 import pl.edu.pw.ee.pyskp.documentworkflow.service.UserService;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -55,6 +54,15 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void deleteTask(Long taskId) {
         taskRepository.delete(taskId);
+    }
+
+    @Override
+    public void addParticipantToTask(String userEmail, long taskId) {
+        User user = userService.getUserByEmail(userEmail)
+                .orElseThrow(() -> new UserNotFoundException(userEmail));
+        Task task = taskRepository.getOne(taskId);
+        task.getParticipants().add(user);
+        taskRepository.save(task);
     }
 
 }

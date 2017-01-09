@@ -6,6 +6,8 @@ package pl.edu.pw.ee.pyskp.documentworkflow.service;
 public interface SecurityService {
     boolean canAddTask(long projectId);
 
+    boolean canAddParticipantToTask(long taskId);
+
     boolean canDeleteTask(long taskId);
 
     boolean hasAccessToProject(long projectId);

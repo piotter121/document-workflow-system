@@ -61,7 +61,9 @@
     <div class="row">
         <div class="col-md-8">
             <div class="toolbar" role="toolbar">
+                <div class="btn-group">
 
+                </div>
             </div>
 
             <div class="text-center">
@@ -125,7 +127,8 @@
                     </div>
                     <div class="list-group-item">
                         <h6 class="list-group-item-heading">Data modyfikacji</h6>
-                        <p class="list-group-item-text"><fmt:formatDate value="${file.modificationDate}" type="both" dateStyle="long" timeStyle="long"/> </p>
+                        <p class="list-group-item-text"><fmt:formatDate value="${file.modificationDate}" type="both"
+                                                                        dateStyle="long" timeStyle="long"/></p>
                     </div>
                 </div>
             </div>

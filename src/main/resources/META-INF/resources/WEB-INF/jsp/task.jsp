@@ -1,3 +1,4 @@
+<%--@elvariable id="addParticipantErrorMessage" type="java.lang.String"--%>
 <%--@elvariable id="project" type="pl.edu.pw.ee.pyskp.documentworkflow.dto.ProjectInfoDTO"--%>
 <%--@elvariable id="currentUser" type="pl.edu.pw.ee.pyskp.documentworkflow.dto.UserInfoDTO"--%>
 <%--@elvariable id="task" type="pl.edu.pw.ee.pyskp.documentworkflow.dto.TaskInfoDTO"--%>
@@ -59,16 +60,16 @@
     <div class="row">
         <div class="col-md-8">
             <ul class="nav nav-pills">
-                <li role="presentation" class="active">
+                <li role="presentation" ${empty addParticipantErrorMessage ? 'class="active"' : ''}>
                     <a data-toggle="pill" href="#files">Pliki</a>
                 </li>
-                <li role="presentation">
+                <li role="presentation" ${empty addParticipantErrorMessage ? '' : 'class="active"'}>
                     <a data-toggle="pill" href="#participants">Uczestnicy</a>
                 </li>
             </ul>
 
             <div class="tab-content">
-                <div id="files" class="tab-pane fade in active">
+                <div id="files" class="tab-pane fade ${empty addParticipantErrorMessage ? 'in active' : ''}">
                     <div class="toolbar" role="toolbar">
                         <c:if test="${currentUser != task.administrator}">
                             <div class="btn-group">
@@ -135,8 +136,92 @@
 
                 </div>
 
-                <div id="participants" class="tab-pane fade">
+                <div id="participants" class="tab-pane fade ${empty addParticipantErrorMessage ? '' : 'in active'}">
+                    <div class="toolbar" role="toolbar">
+                        <c:if test="${currentUser eq task.administrator}">
+                            <div class="btn-group">
+                                <button class="btn btn-primary" type="button" data-toggle="collapse"
+                                        data-target="#addParticipant" aria-expanded="false"
+                                        aria-controls="addParticipant">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                    Dodaj uczestnika do zadania
+                                </button>
+                            </div>
+                        </c:if>
+                    </div>
 
+                    <c:if test="${currentUser eq task.administrator}">
+                        <div class="collapse" id="addParticipant">
+                            <div class="well">
+                                <form method="post"
+                                      action="<spring:url value="/projects/${project.id}/tasks/${task.id}/addParticipant"/>">
+                                    <fieldset>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-2" for="participantEmail">
+                                                Adres e-mail użytkownika
+                                            </label>
+                                            <div class="col-md-5">
+                                                <input id="participantEmail" name="participantEmail"
+                                                       class="form-control"
+                                                       type="email"/>
+                                                <input type="hidden" name="${_csrf.parameterName}"
+                                                       value="${_csrf.token}"/>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                    <button class="btn btn-primary" type="submit">
+                                        Dodaj
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        <c:if test="${not empty addParticipantErrorMessage}">
+                            <div class="alert alert-danger alert-dismissible" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <span class="glyphicon glyphicon-exclamation-sign"></span> ${addParticipantErrorMessage}
+                            </div>
+                        </c:if>
+                    </c:if>
+
+                    <c:choose>
+                        <c:when test="${empty task.participants}">
+                            <div class="alert alert-info">
+                                <strong>Brak uczestników zadania!</strong>
+                            </div>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="text-center">
+                                <h3>Uczestnicy biorący udział w zadaniu</h3>
+                            </div>
+                            <div class="list-group">
+                                <c:forEach items="${task.participants}" var="participant">
+                                    <c:if test="${currentUser != participant}">
+                                        <div class="list-group-item">
+                                            <h3 class="list-group-item-heading">
+                                                    ${participant.fullName}
+                                            </h3>
+                                            <div class="list-group-item-text">
+                                                <div class="row">
+                                                    <div class="col-md-8">
+                                                        <strong>Adres e-mail:</strong> ${participant.email}
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <a class="btn btn-info pull-right"
+                                                           href="mailto:${participant.email}">
+                                                            <span class="glyphicon glyphicon-envelope"></span>
+                                                            Wyślij wiadomość e-mail
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </c:if>
+                                </c:forEach>
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
             </div>
         </div>
