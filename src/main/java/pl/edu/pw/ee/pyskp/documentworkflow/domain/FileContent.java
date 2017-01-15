@@ -11,7 +11,6 @@ public class FileContent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Lob
     @Basic(fetch = FetchType.LAZY)
     @Column(nullable = false)
     private byte[] content;

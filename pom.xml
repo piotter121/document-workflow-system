@@ -32,10 +32,6 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jersey</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
@@ -76,26 +72,6 @@
             <artifactId>tika-parsers</artifactId>
             <version>${tika.version}</version>
         </dependency>
-        <!--<dependency>
-            <groupId>org.apache.tika</groupId>
-            <artifactId>tika</artifactId>
-            <version>1.14</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.tika</groupId>
-            <artifactId>tika-serialization</artifactId>
-            <version>1.14</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.tika</groupId>
-            <artifactId>tika-app</artifactId>
-            <version>1.14</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.tika</groupId>
-            <artifactId>tika-bundle</artifactId>
-            <version>1.14</version>
-        </dependency>-->
 
         <dependency>
             <groupId>com.googlecode.java-diff-utils</groupId>

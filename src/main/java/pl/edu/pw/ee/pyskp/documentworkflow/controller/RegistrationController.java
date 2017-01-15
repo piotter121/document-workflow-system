@@ -5,6 +5,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import pl.edu.pw.ee.pyskp.documentworkflow.dto.CreateUserFormDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.service.AuthenticationService;
 import pl.edu.pw.ee.pyskp.documentworkflow.service.UserService;
@@ -14,6 +15,7 @@ import pl.edu.pw.ee.pyskp.documentworkflow.validator.CreateUserFormValidator;
  * Created by piotr on 20.12.16.
  */
 @Controller
+@RequestMapping("/register")
 public class RegistrationController {
 
     private final UserService userService;
@@ -28,12 +30,12 @@ public class RegistrationController {
         this.createUserFormValidator = createUserFormValidator;
     }
 
-    @GetMapping("/register")
+    @GetMapping
     public String getRegistrationForm(@ModelAttribute("newUser") CreateUserFormDTO newUser) {
         return "register";
     }
 
-    @PostMapping("/register")
+    @PostMapping
     public String processRegistrationOfNewUser(
             @ModelAttribute("newUser") CreateUserFormDTO newUser,
             BindingResult bindingResult) {
