@@ -153,26 +153,26 @@
                     <c:if test="${currentUser eq task.administrator}">
                         <div class="collapse" id="addParticipant">
                             <div class="well">
-                                <form method="post"
-                                      action="<spring:url value="/projects/${project.id}/tasks/${task.id}/addParticipant"/>">
-                                    <fieldset>
+                                <div class="row">
+                                    <form method="post"
+                                          action="<spring:url value="/projects/${project.id}/tasks/${task.id}/addParticipant"/>">
                                         <div class="form-group">
                                             <label class="control-label col-md-2" for="participantEmail">
                                                 Adres e-mail użytkownika
                                             </label>
                                             <div class="col-md-5">
                                                 <input id="participantEmail" name="participantEmail"
-                                                       class="form-control"
+                                                       class="form-control col-md-5"
                                                        type="email"/>
                                                 <input type="hidden" name="${_csrf.parameterName}"
                                                        value="${_csrf.token}"/>
                                             </div>
                                         </div>
-                                    </fieldset>
-                                    <button class="btn btn-primary" type="submit">
-                                        Dodaj
-                                    </button>
-                                </form>
+                                        <button class="btn btn-primary" type="submit">
+                                            Dodaj
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                         <c:if test="${not empty addParticipantErrorMessage}">

@@ -8,6 +8,7 @@ import pl.edu.pw.ee.pyskp.documentworkflow.domain.Difference;
 import pl.edu.pw.ee.pyskp.documentworkflow.domain.FileContent;
 import pl.edu.pw.ee.pyskp.documentworkflow.domain.Version;
 import pl.edu.pw.ee.pyskp.documentworkflow.dto.NewFileForm;
+import pl.edu.pw.ee.pyskp.documentworkflow.repository.VersionRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.service.DifferenceService;
 import pl.edu.pw.ee.pyskp.documentworkflow.service.UserService;
 import pl.edu.pw.ee.pyskp.documentworkflow.service.VersionService;
@@ -18,6 +19,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by piotr on 06.01.17.
@@ -28,10 +30,14 @@ public class VersionServiceImpl implements VersionService {
 
     private final UserService userService;
     private final DifferenceService differenceService;
+    private final VersionRepository versionRepository;
 
-    public VersionServiceImpl(UserService userService, DifferenceService differenceService) {
+    public VersionServiceImpl(UserService userService,
+                              DifferenceService differenceService,
+                              VersionRepository versionRepository) {
         this.userService = userService;
         this.differenceService = differenceService;
+        this.versionRepository = versionRepository;
     }
 
     @Override
@@ -50,6 +56,11 @@ public class VersionServiceImpl implements VersionService {
         version.setDifferences(differences);
         differences.forEach(difference -> difference.setVersion(version));
         return version;
+    }
+
+    @Override
+    public Optional<Version> getOneById(long versionId) {
+        return Optional.ofNullable(versionRepository.findOne(versionId));
     }
 
     private static String calculateCheckSum(byte[] bytes) {

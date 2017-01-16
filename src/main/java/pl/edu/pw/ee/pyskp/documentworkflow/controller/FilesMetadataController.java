@@ -40,6 +40,7 @@ public class FilesMetadataController {
     }
 
     @GetMapping("/{fileId}")
+    @PreAuthorize("@securityService.hasAccessToFile(#fileId)")
     public String getFileInfo(@PathVariable long fileId, @PathVariable long taskId, Model model) {
         addCurrentUserToModel(model);
         model.addAttribute("task", taskService.getTaskById(taskId)
@@ -52,7 +53,7 @@ public class FilesMetadataController {
     }
 
     @GetMapping("/add")
-    @PreAuthorize("@securityService.hasAccessToTask(#taskId)")
+    @PreAuthorize("@securityService.isTaskParticipant(#taskId)")
     public String getNewFileForm(Model model, @PathVariable long taskId,
                                  @ModelAttribute NewFileForm formData) {
         TaskInfoDTO taskInfoDTO = taskService.getTaskById(taskId)
@@ -68,7 +69,7 @@ public class FilesMetadataController {
     }
 
     @PostMapping("/add")
-    @PreAuthorize("@securityService.hasAccessToTask(#taskId)")
+    @PreAuthorize("@securityService.isTaskParticipant(#taskId)")
     public String processNewFileForm(@RequestParam MultipartFile file,
                                      @ModelAttribute @Valid NewFileForm formData,
                                      @PathVariable long taskId,

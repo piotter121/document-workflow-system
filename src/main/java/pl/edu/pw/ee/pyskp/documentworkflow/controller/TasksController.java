@@ -42,7 +42,7 @@ public class TasksController {
     }
 
     @GetMapping("/{taskId}")
-    @PreAuthorize("@securityService.hasAccessToTask(#taskId)")
+    @PreAuthorize("@securityService.isTaskParticipant(#taskId)")
     public String getTaskInfo(@PathVariable long taskId,
                               @PathVariable long projectId,
                               Model model) {

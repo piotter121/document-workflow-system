@@ -124,4 +124,8 @@ public class FileMetadata {
         this.markedToConfirm = markedToConfirm;
     }
 
+    @Transient
+    public String getFileName() {
+        return String.format("%s.%s", name, contentType.getExtension());
+    }
 }

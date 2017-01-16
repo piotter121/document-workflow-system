@@ -69,4 +69,19 @@ public class VersionInfoDTO {
     public long getNumberOfChangedLines() {
         return differences.stream().mapToLong(DifferenceInfoDTO::getNewSectionSize).sum();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        VersionInfoDTO that = (VersionInfoDTO) o;
+
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (id ^ (id >>> 32));
+    }
 }

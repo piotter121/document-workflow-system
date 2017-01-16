@@ -92,4 +92,19 @@ public class ProjectInfoDTO {
                 ? 0
                 : tasks.stream().mapToInt(TaskInfoDTO::getNumberOfFiles).sum();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ProjectInfoDTO that = (ProjectInfoDTO) o;
+
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (id ^ (id >>> 32));
+    }
 }

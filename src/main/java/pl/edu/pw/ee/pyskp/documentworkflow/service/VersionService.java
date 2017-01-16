@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -16,6 +17,8 @@ import java.util.stream.Collectors;
  */
 public interface VersionService {
     Version createUnmanagedInitVersionOfFile(NewFileForm form) throws IOException, TikaException;
+
+    Optional<Version> getOneById(long versionId);
 
     static VersionInfoDTO mapToVersionInfoDTO(Version version) {
         VersionInfoDTO dto = new VersionInfoDTO();

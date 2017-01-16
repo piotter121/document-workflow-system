@@ -63,7 +63,7 @@ public class SecurityServiceImpl implements SecurityService {
 
 
     @Override
-    public boolean hasAccessToTask(long taskId) {
+    public boolean isTaskParticipant(long taskId) {
         User currentUser = userService.getCurrentUser();
         return taskService.getTaskById(taskId)
                 .map(currentUser::hasAccessToTask)

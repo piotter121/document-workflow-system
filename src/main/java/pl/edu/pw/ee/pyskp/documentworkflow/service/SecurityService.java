@@ -12,7 +12,7 @@ public interface SecurityService {
 
     boolean hasAccessToProject(long projectId);
 
-    boolean hasAccessToTask(long taskId);
+    boolean isTaskParticipant(long taskId);
 
     boolean hasAccessToFile(long fileId);
 

@@ -64,6 +64,9 @@
                 <div class="btn-group">
 
                 </div>
+                <form id="markToConfirm" method="post" action="<spring:url value="/projects/${task.projectId}/tasks/${task.id}/files/"/>">
+
+                </form>
             </div>
 
             <div class="text-center">
@@ -71,8 +74,7 @@
             </div>
             <div id="versions" class="list-group">
                 <c:forEach items="${file.versionSortedBySaveDateDESC}" var="version">
-                <a href="<spring:url value="/projects/{$task.projectId}/tasks/${task.id}/files/${file.id}/versions/${version.id}"/>"
-                   class="list-group-item">
+                <div class="list-group-item">
                     <span class="badge">Wersja ${version.versionString}</span>
                     <c:if test="${version eq file.latestVersion}">
                         <span class="badge">Najnowsza wersja</span>
@@ -95,10 +97,18 @@
                                                                                           timeStyle="long"/>
                                 </footer>
                             </blockquote>
+                            <div class="toolbar col-md-12" role="toolbar">
+                                <div class="btn-group">
+                                    <a class="btn btn-primary" target="_blank"
+                                       href="<spring:url value="/projects/${task.projectId}/tasks/${task.id}/files/${file.id}/versions/${version.id}/content"/>">
+                                        <span class="glyphicon glyphicon-download"></span> Pobierz plik
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     </c:forEach>
-                </a>
+                </div>
             </div>
         </div>
 
