@@ -30,11 +30,6 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Optional<Project> getOneByName(String name) {
-        return projectRepository.findOneByName(name);
-    }
-
-    @Override
     public Project createNewProjectFromForm(NewProjectForm formDTO) {
         Project project = new Project();
         project.setName(formDTO.getName());

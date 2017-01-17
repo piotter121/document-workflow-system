@@ -9,5 +9,4 @@ import java.util.Optional;
  * Created by piotr on 13.12.16.
  */
 public interface ProjectRepository extends JpaRepository<Project, Long> {
-    Optional<Project> findOneByName(String name);
 }

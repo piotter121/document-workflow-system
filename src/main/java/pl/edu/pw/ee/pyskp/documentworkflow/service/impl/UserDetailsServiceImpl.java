@@ -30,10 +30,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         logger.debug("Loading user with login: " + username);
-        Optional<User> userOptional = userService.getUserByLogin(username);
-        if (!userOptional.isPresent())
-            throw new UsernameNotFoundException("Nie znaleziono użytkownika o nazwie " + username);
-        User user = userOptional.get();
+        User user = userService.getUserByLogin(username)
+                .orElseThrow(() -> new UsernameNotFoundException(
+                        "Nie znaleziono użytkownika o nazwie " + username));
         Collection<GrantedAuthority> authorities
                 = Collections.singleton(new SimpleGrantedAuthority(user.getRole().name()));
         return new org.springframework.security.core.userdetails.User(

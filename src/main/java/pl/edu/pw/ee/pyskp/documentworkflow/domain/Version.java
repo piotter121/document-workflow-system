@@ -1,7 +1,6 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.domain;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
@@ -9,6 +8,9 @@ import java.util.List;
  * Created by piotr on 11.12.16.
  */
 @Entity
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"versionString", "fileMetadataId"})
+})
 public class Version {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

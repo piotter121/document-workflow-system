@@ -16,6 +16,9 @@ import java.util.stream.Collectors;
 public interface DifferenceService {
     List<Difference> createDifferencesForNewFile(InputStream inputStream) throws IOException;
 
+    List<Difference> getDifferencesBetweenTwoFiles(
+            InputStream inputStream, InputStream anotherInputStream) throws IOException;
+
     static DifferenceInfoDTO mapToDifferenceInfoDTO(Difference difference) {
         DifferenceInfoDTO dto = new DifferenceInfoDTO();
         dto.setDifferenceType(difference.getDifferenceType());

@@ -8,7 +8,10 @@ import java.util.stream.Collectors;
  * Created by piotr on 11.12.16.
  */
 @Entity
-@Table(name = "Users")
+@Table(name = "Users", indexes = {
+        @Index(columnList = "id", name = "user_id_hidx"),
+        @Index(columnList = "login", name = "user_login_hidx")
+})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,11 +29,6 @@ public class User {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, updatable = false)
     private Date creationDate;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date lastLogin;
-
-    private boolean activated;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -128,28 +126,12 @@ public class User {
         this.creationDate = creationDate;
     }
 
-    public Date getLastLogin() {
-        return lastLogin;
-    }
-
-    public void setLastLogin(Date lastLogin) {
-        this.lastLogin = lastLogin;
-    }
-
     public PersonalData getPersonalData() {
         return personalData;
     }
 
     public void setPersonalData(PersonalData personalData) {
         this.personalData = personalData;
-    }
-
-    public boolean isActivated() {
-        return activated;
-    }
-
-    public void setActivated(boolean activated) {
-        this.activated = activated;
     }
 
     public List<Task> getTaskList() {

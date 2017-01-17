@@ -16,8 +16,6 @@ import java.util.stream.Collectors;
 public interface ProjectService {
     Optional<Project> getOneById(Long id);
 
-    Optional<Project> getOneByName(String name);
-
     Project createNewProjectFromForm(NewProjectForm form);
 
     static List<ProjectInfoDTO> mapAllToProjectInfoDTO(Collection<Project> projects) {

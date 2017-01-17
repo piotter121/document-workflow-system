@@ -45,6 +45,8 @@ public class Task {
             @JoinColumn(name = "taskId", nullable = false)
     }, inverseJoinColumns = {
             @JoinColumn(name = "userId", nullable = false)
+    }, uniqueConstraints = {
+            @UniqueConstraint(columnNames = {"taskId", "userId"})
     })
     private List<User> participants;
 

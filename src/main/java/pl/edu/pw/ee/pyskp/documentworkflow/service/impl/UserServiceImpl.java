@@ -32,11 +32,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> getUserById(long id) {
-        return Optional.ofNullable(userRepository.findOne(id));
-    }
-
-    @Override
     public Optional<User> getUserByLogin(String login) {
         return userRepository.findOneByLogin(login);
     }
@@ -68,7 +63,6 @@ public class UserServiceImpl implements UserService {
         user.setEmail(form.getEmail());
         user.setPassword(passwordEncoder.encode(form.getPassword()));
         user.setRole(Role.USER);
-        user.setActivated(false);
         user.setCreationDate(new Date());
         PersonalData personalData = new PersonalData();
         personalData.setFirstName(form.getFirstName());
