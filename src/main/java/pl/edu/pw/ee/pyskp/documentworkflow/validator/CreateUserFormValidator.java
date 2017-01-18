@@ -1,5 +1,6 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.validator;
 
+import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
@@ -39,6 +40,9 @@ public class CreateUserFormValidator implements Validator {
         }
         if (userService.getUserByLogin(login).isPresent()) {
             errors.rejectValue("login", "Duplicate.userForm.username");
+        }
+        if (userService.getUserByEmail(form.getEmail()).isPresent()) {
+            errors.rejectValue("email", "Duplicate.userForm.email");
         }
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "NotEmpty");
         String password = form.getPassword();

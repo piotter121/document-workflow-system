@@ -43,4 +43,6 @@ public interface FilesMetadataService {
                 .collect(Collectors.toList())
                 : Collections.emptyList();
     }
+
+    void markFileToConfirm(long fileId);
 }

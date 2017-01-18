@@ -109,6 +109,12 @@
                                                 <a href="<spring:url value="/projects/${project.id}/tasks/${task.id}/files/${file.id}"/>">
                                                         ${file.name}
                                                 </a>
+                                                <c:if test="${file.markedToConfirm}">
+                                                    <span class="badge">DO ZATWIERDZENIA</span>
+                                                </c:if>
+                                                <c:if test="${file.confirmed}">
+                                                    <span class="badge">ZATWIERDZONY</span>
+                                                </c:if>
                                             </h3>
                                         </div>
 

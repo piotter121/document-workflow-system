@@ -1,30 +1,15 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.dto;
 
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotEmpty;
-
-import javax.validation.constraints.Pattern;
-
 /**
  * Created by piotr on 14.12.16.
  */
 public class CreateUserFormDTO {
 
-    @Length(min = 5)
     private String login = "";
-
-    @NotEmpty
-    @Pattern(regexp = "[a-zA-z]+@[a-zA-z]+\\.[a-zA-Z]+")
     private String email = "";
-
     private String firstName = "";
-
     private String lastName = "";
-
-    @Length(min = 6)
     private String password = "";
-
-    @Length(min = 6)
     private String passwordRepeated = "";
 
     public String getLogin() {

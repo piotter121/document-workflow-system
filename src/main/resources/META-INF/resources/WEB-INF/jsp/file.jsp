@@ -26,46 +26,29 @@
     </h1>
 </div>
 
-<nav class="navbar navbar-inverse">
-    <div class="container-fluid">
-        <ul class="nav navbar-nav">
-            <li>
-                <a href="<spring:url value="/"/>">
-                    <span class="glyphicon glyphicon-home"></span> Strona główna
-                </a>
-            </li>
-            <li>
-                <a href="<spring:url value="/projects"/>">
-                    <span class="glyphicon glyphicon-folder-close"></span> Projekty
-                </a>
-            </li>
-            <li class="active">
-                <a href="<spring:url value="/tasks"/>">
-                    <span class="glyphicon glyphicon-tasks"></span> Zadania
-                </a>
-            </li>
-        </ul>
-
-        <p class="navbar-text">Zalogowany jako ${currentUser.fullName}</p>
-
-        <form class="navbar-form navbar-right" action="<c:url value="/logout" />" method="post">
-            <button id="logout" type="submit" class="btn btn-default">
-                <span class="glyphicon glyphicon-log-out"></span> Wyloguj
-            </button>
-            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-        </form>
-    </div>
-</nav>
+<%@ include file="navbarTaskActive.jsp" %>
 
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-8">
             <div class="toolbar" role="toolbar">
                 <div class="btn-group">
-
+                    <button form="markToConfirm" type="submit"
+                            class="btn btn-success" ${file.markedToConfirm ? 'disabled': ''}>
+                        <span class="glyphicon glyphicon-ok-sign"></span>
+                        Zaznacz do zatwierdzenia
+                    </button>
+                    <a href="<spring:url value="/projects/${task.projectId}/tasks/${task.id}/files/${file.id}/versions/add"/>"
+                       class="btn btn-primary">
+                        <span class="glyphicon glyphicon-plus"></span>
+                        Dodaj nową wersję
+                    </a>
                 </div>
-                <form id="markToConfirm" method="post" action="<spring:url value="/projects/${task.projectId}/tasks/${task.id}/files/"/>">
-
+                <form id="markToConfirm" method="post"
+                      action="<spring:url value="/projects/${task.projectId}/tasks/${task.id}/files/${file.id}/markToConfirm"/>">
+                    <input type="hidden" name="${_csrf.parameterName}"
+                           value="${_csrf.token}"/>
+                    <input type="hidden" name="_method" value="put"/>
                 </form>
             </div>
 
@@ -101,7 +84,13 @@
                                 <div class="btn-group">
                                     <a class="btn btn-primary" target="_blank"
                                        href="<spring:url value="/projects/${task.projectId}/tasks/${task.id}/files/${file.id}/versions/${version.id}/content"/>">
-                                        <span class="glyphicon glyphicon-download"></span> Pobierz plik
+                                        <span class="glyphicon glyphicon-download"></span>
+                                        Pobierz plik
+                                    </a>
+                                    <a class="btn btn-info"
+                                       href="<spring:url value="/projects/${task.projectId}/tasks/${task.id}/files/${file.id}/versions/${version.id}"/>">
+                                        <span class="glyphicon glyphicon-info-sign"></span>
+                                        Szczegóły
                                     </a>
                                 </div>
                             </div>

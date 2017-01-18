@@ -10,6 +10,7 @@ import pl.edu.pw.ee.pyskp.documentworkflow.domain.FileMetadata;
 import pl.edu.pw.ee.pyskp.documentworkflow.domain.Task;
 import pl.edu.pw.ee.pyskp.documentworkflow.domain.Version;
 import pl.edu.pw.ee.pyskp.documentworkflow.dto.NewFileForm;
+import pl.edu.pw.ee.pyskp.documentworkflow.exception.FileNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exception.UnknownContentType;
 import pl.edu.pw.ee.pyskp.documentworkflow.repository.FileMetadataRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.service.FilesMetadataService;
@@ -61,6 +62,13 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
     @Override
     public Optional<FileMetadata> getOneById(long id) {
         return Optional.ofNullable(fileMetadataRepository.findOne(id));
+    }
+
+    @Override
+    public void markFileToConfirm(long fileId) {
+        FileMetadata file = getOneById(fileId).orElseThrow(() -> new FileNotFoundException(fileId));
+        file.setMarkedToConfirm(true);
+        fileMetadataRepository.saveAndFlush(file);
     }
 
     private static ContentType getContentType(MultipartFile multipartFile)

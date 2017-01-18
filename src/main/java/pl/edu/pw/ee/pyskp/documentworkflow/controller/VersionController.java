@@ -50,8 +50,16 @@ public class VersionController {
                 .getFileContent();
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        httpHeaders.setContentDispositionFormData("attachment", fileContent.getVersion().getFileMetadata().getFileName());
+        httpHeaders.setContentDispositionFormData("attachment",
+                fileContent.getVersion().getFileMetadata().getFileName());
         return new ResponseEntity<>(fileContent.getContent(), httpHeaders, HttpStatus.OK);
+    }
+
+    @GetMapping("/add")
+    @PreAuthorize("@securityService.hasAccessToFile(#fileId)")
+    public String getNewVersionForm(Model model, @PathVariable long fileId) {
+        addCurrentUserToModel(model);
+        return "addVersion";
     }
 
     private void addCurrentUserToModel(Model model) {

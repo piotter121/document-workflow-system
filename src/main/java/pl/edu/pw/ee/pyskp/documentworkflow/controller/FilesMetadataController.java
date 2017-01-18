@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import pl.edu.pw.ee.pyskp.documentworkflow.domain.FileMetadata;
 import pl.edu.pw.ee.pyskp.documentworkflow.domain.Task;
 import pl.edu.pw.ee.pyskp.documentworkflow.dto.NewFileForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.dto.TaskInfoDTO;
@@ -90,5 +91,14 @@ public class FilesMetadataController {
 
         return String.format("redirect:/projects/%d/tasks/%d/files/%d",
                 projectId, taskId, fileId);
+    }
+
+    @PutMapping("/{fileId}/markToConfirm")
+    @PreAuthorize("@securityService.hasAccessToFile(#fileId)")
+    public String markFileToConfirm(@PathVariable long fileId,
+                                    @PathVariable long projectId,
+                                    @PathVariable long taskId) {
+        filesMetadataService.markFileToConfirm(fileId);
+        return String.format("redirect:/projects/%d/tasks/%d/files/%d", projectId, taskId, fileId);
     }
 }
