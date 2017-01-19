@@ -71,6 +71,19 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
         fileMetadataRepository.saveAndFlush(file);
     }
 
+    @Override
+    public boolean hasContentTypeAs(long fileId, MultipartFile file) {
+        FileMetadata fileMetadata = getOneById(fileId).orElseThrow(() -> new FileNotFoundException(fileId));
+        ContentType contentType;
+        try {
+            contentType = getContentType(file);
+        } catch (IOException | UnknownContentType e) {
+            logger.error(e.getLocalizedMessage(), e);
+            return false;
+        }
+        return contentType.equals(fileMetadata.getContentType());
+    }
+
     private static ContentType getContentType(MultipartFile multipartFile)
             throws UnknownContentType, IOException {
         Tika tika = new Tika();

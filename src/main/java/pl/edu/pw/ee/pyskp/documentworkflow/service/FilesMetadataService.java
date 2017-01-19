@@ -1,5 +1,6 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.service;
 
+import org.springframework.web.multipart.MultipartFile;
 import pl.edu.pw.ee.pyskp.documentworkflow.domain.FileMetadata;
 import pl.edu.pw.ee.pyskp.documentworkflow.domain.Task;
 import pl.edu.pw.ee.pyskp.documentworkflow.dto.FileMetadataDTO;
@@ -45,4 +46,6 @@ public interface FilesMetadataService {
     }
 
     void markFileToConfirm(long fileId);
+
+    boolean hasContentTypeAs(long fileId, MultipartFile file);
 }

@@ -7,14 +7,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import pl.edu.pw.ee.pyskp.documentworkflow.domain.FileContent;
-import pl.edu.pw.ee.pyskp.documentworkflow.domain.Version;
+import pl.edu.pw.ee.pyskp.documentworkflow.dto.NewVersionForm;
+import pl.edu.pw.ee.pyskp.documentworkflow.dto.TaskInfoDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.exception.FileNotFoundException;
+import pl.edu.pw.ee.pyskp.documentworkflow.exception.TaskNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exception.VersionNotFoundException;
+import pl.edu.pw.ee.pyskp.documentworkflow.service.FilesMetadataService;
+import pl.edu.pw.ee.pyskp.documentworkflow.service.TaskService;
 import pl.edu.pw.ee.pyskp.documentworkflow.service.UserService;
 import pl.edu.pw.ee.pyskp.documentworkflow.service.VersionService;
+import pl.edu.pw.ee.pyskp.documentworkflow.validator.NewVersionFormValidator;
+
+import java.io.IOException;
 
 /**
  * Created by p.pysk on 16.01.2017.
@@ -24,22 +31,44 @@ import pl.edu.pw.ee.pyskp.documentworkflow.service.VersionService;
 public class VersionController {
     private final VersionService versionService;
     private final UserService userService;
+    private final TaskService taskService;
+    private final FilesMetadataService filesMetadataService;
+    private final NewVersionFormValidator newVersionFormValidator;
 
-    public VersionController(VersionService versionService, UserService userService) {
+    public VersionController(VersionService versionService,
+                             UserService userService,
+                             TaskService taskService,
+                             FilesMetadataService filesMetadataService,
+                             NewVersionFormValidator newVersionFormValidator) {
         this.versionService = versionService;
         this.userService = userService;
+        this.taskService = taskService;
+        this.filesMetadataService = filesMetadataService;
+        this.newVersionFormValidator = newVersionFormValidator;
     }
 
     @GetMapping("/{versionId}")
     @PreAuthorize("@securityService.hasAccessToFile(#fileId)")
-    public String getVersionInfo(Model model, @PathVariable long versionId, @PathVariable long fileId) {
+    public String getVersionInfo(Model model,
+                                 @PathVariable long versionId,
+                                 @PathVariable long fileId,
+                                 @PathVariable long taskId) {
         model.addAttribute("version",
                 versionService.getOneById(versionId)
                         .map(VersionService::mapToVersionInfoDTO)
                         .orElseThrow(() -> new VersionNotFoundException(versionId)));
         addCurrentUserToModel(model);
+        addTaskToModel(model, taskId);
+        addFileToModel(model, fileId);
 
         return "version";
+    }
+
+    private void addFileToModel(Model model, long fileId) {
+        model.addAttribute("file",
+                filesMetadataService.getOneById(fileId)
+                        .map(FilesMetadataService::mapToFileMetadataDTO)
+                        .orElseThrow(() -> new FileNotFoundException(fileId)));
     }
 
     @GetMapping("/{versionId}/content")
@@ -57,9 +86,43 @@ public class VersionController {
 
     @GetMapping("/add")
     @PreAuthorize("@securityService.hasAccessToFile(#fileId)")
-    public String getNewVersionForm(Model model, @PathVariable long fileId) {
+    public String getNewVersionForm(Model model,
+                                    @ModelAttribute NewVersionForm form,
+                                    @PathVariable long fileId,
+                                    @PathVariable long taskId) {
         addCurrentUserToModel(model);
+        addTaskToModel(model, taskId);
         return "addVersion";
+    }
+
+    @PostMapping("/add")
+    @PreAuthorize("@securityService.hasAccessToFile(#fileId)")
+    public String processAddingNewVersion(@PathVariable long fileId,
+                                          @PathVariable long taskId,
+                                          @PathVariable long projectId,
+                                          @ModelAttribute NewVersionForm form,
+                                          BindingResult bindingResult,
+                                          Model model)
+            throws IOException {
+        form.setFileId(fileId);
+        newVersionFormValidator.validate(form, bindingResult);
+        if (bindingResult.hasErrors()) {
+            addCurrentUserToModel(model);
+            addTaskToModel(model, taskId);
+            return "addVersion";
+        }
+
+        long versionId = versionService.addNewVersionOfFile(form).getId();
+
+        return String.format("redirect:/projects/%d/tasks/%d/files/%d/versions/%d",
+                projectId, taskId, fileId, versionId);
+    }
+
+    private void addTaskToModel(Model model, @PathVariable long taskId) {
+        TaskInfoDTO task = taskService.getTaskById(taskId)
+                .map(TaskService::mapToTaskInfoDto)
+                .orElseThrow(() -> new TaskNotFoundException(taskId));
+        model.addAttribute("task", task);
     }
 
     private void addCurrentUserToModel(Model model) {

@@ -6,13 +6,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pl.edu.pw.ee.pyskp.documentworkflow.domain.Difference;
 import pl.edu.pw.ee.pyskp.documentworkflow.domain.FileContent;
+import pl.edu.pw.ee.pyskp.documentworkflow.domain.FileMetadata;
 import pl.edu.pw.ee.pyskp.documentworkflow.domain.Version;
 import pl.edu.pw.ee.pyskp.documentworkflow.dto.NewFileForm;
+import pl.edu.pw.ee.pyskp.documentworkflow.dto.NewVersionForm;
+import pl.edu.pw.ee.pyskp.documentworkflow.exception.FileNotFoundException;
+import pl.edu.pw.ee.pyskp.documentworkflow.repository.FileMetadataRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.repository.VersionRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.service.DifferenceService;
+import pl.edu.pw.ee.pyskp.documentworkflow.service.FilesMetadataService;
 import pl.edu.pw.ee.pyskp.documentworkflow.service.UserService;
 import pl.edu.pw.ee.pyskp.documentworkflow.service.VersionService;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -31,13 +37,16 @@ public class VersionServiceImpl implements VersionService {
     private final UserService userService;
     private final DifferenceService differenceService;
     private final VersionRepository versionRepository;
+    private final FileMetadataRepository fileMetadataRepository;
 
     public VersionServiceImpl(UserService userService,
                               DifferenceService differenceService,
-                              VersionRepository versionRepository) {
+                              VersionRepository versionRepository,
+                              FileMetadataRepository fileMetadataRepository) {
         this.userService = userService;
         this.differenceService = differenceService;
         this.versionRepository = versionRepository;
+        this.fileMetadataRepository = fileMetadataRepository;
     }
 
     @Override
@@ -49,9 +58,7 @@ public class VersionServiceImpl implements VersionService {
         MultipartFile file = form.getFile();
         version.setCheckSum(calculateCheckSum(file.getBytes()));
         version.setSaveDate(new Date());
-        FileContent fileContent = new FileContent();
-        fileContent.setContent(file.getBytes());
-        version.setFileContent(fileContent);
+        version.setFileContent(getFileContent(file));
         List<Difference> differences = differenceService.createDifferencesForNewFile(file.getInputStream());
         version.setDifferences(differences);
         differences.forEach(difference -> difference.setVersion(version));
@@ -61,6 +68,37 @@ public class VersionServiceImpl implements VersionService {
     @Override
     public Optional<Version> getOneById(long versionId) {
         return Optional.ofNullable(versionRepository.findOne(versionId));
+    }
+
+    @Override
+    public Version addNewVersionOfFile(NewVersionForm form) throws IOException {
+        Version newVersion = new Version();
+        MultipartFile file = form.getFile();
+        newVersion.setSaveDate(new Date());
+        newVersion.setAuthor(userService.getCurrentUser());
+        newVersion.setVersionString(form.getVersionString());
+        newVersion.setMessage(form.getMessage());
+        newVersion.setCheckSum(calculateCheckSum(file.getBytes()));
+        newVersion.setFileContent(getFileContent(file));
+        FileMetadata fileMetadata = getFileMetadata(form.getFileId());
+        newVersion.setFileMetadata(fileMetadata);
+        FileContent oldContent = fileMetadata.getLatestVersion().getFileContent();
+        List<Difference> differences = differenceService.getDifferencesBetweenTwoFiles(
+                new ByteArrayInputStream(oldContent.getContent()), file.getInputStream());
+        differences.forEach(difference -> difference.setVersion(newVersion));
+        newVersion.setDifferences(differences);
+        return versionRepository.saveAndFlush(newVersion);
+    }
+
+    private FileMetadata getFileMetadata(long fileId) {
+        return Optional.ofNullable(fileMetadataRepository.findOne(fileId))
+                .orElseThrow(() -> new FileNotFoundException(fileId));
+    }
+
+    private static FileContent getFileContent(MultipartFile file) throws IOException {
+        FileContent fileContent = new FileContent();
+        fileContent.setContent(file.getBytes());
+        return fileContent;
     }
 
     private static String calculateCheckSum(byte[] bytes) {

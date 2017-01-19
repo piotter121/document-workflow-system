@@ -38,7 +38,7 @@ public class Version {
     @JoinColumn(name = "contentId", nullable = false)
     private FileContent fileContent;
 
-    @Column(nullable = false, length = 64)
+    @Column(nullable = false, length = 65)
     private String checkSum;
 
     @OneToMany(mappedBy = "version", cascade = CascadeType.ALL)

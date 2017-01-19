@@ -3,6 +3,7 @@ package pl.edu.pw.ee.pyskp.documentworkflow.service;
 import org.apache.tika.exception.TikaException;
 import pl.edu.pw.ee.pyskp.documentworkflow.domain.Version;
 import pl.edu.pw.ee.pyskp.documentworkflow.dto.NewFileForm;
+import pl.edu.pw.ee.pyskp.documentworkflow.dto.NewVersionForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.dto.VersionInfoDTO;
 
 import java.io.IOException;
@@ -37,4 +38,6 @@ public interface VersionService {
                 .map(VersionService::mapToVersionInfoDTO).collect(Collectors.toList())
                 : Collections.emptyList();
     }
+
+    Version addNewVersionOfFile(NewVersionForm form) throws IOException;
 }

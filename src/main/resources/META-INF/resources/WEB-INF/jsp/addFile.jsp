@@ -24,36 +24,7 @@
     </h1>
 </div>
 
-<nav class="navbar navbar-inverse">
-    <div class="container-fluid">
-        <ul class="nav navbar-nav">
-            <li>
-                <a href="<spring:url value="/"/>">
-                    <span class="glyphicon glyphicon-home"></span> Strona główna
-                </a>
-            </li>
-            <li>
-                <a href="<spring:url value="/projects"/>">
-                    <span class="glyphicon glyphicon-folder-close"></span> Projekty
-                </a>
-            </li>
-            <li class="active">
-                <a href="<spring:url value="/tasks"/>">
-                    <span class="glyphicon glyphicon-tasks"></span> Zadania
-                </a>
-            </li>
-        </ul>
-
-        <p class="navbar-text">Zalogowany jako ${currentUser.fullName}</p>
-
-        <form class="navbar-form navbar-right" action="<c:url value="/logout" />" method="post">
-            <button id="logout" type="submit" class="btn btn-default">
-                <span class="glyphicon glyphicon-log-out"></span> Wyloguj
-            </button>
-            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-        </form>
-    </div>
-</nav>
+<%@ include file="navbarTaskActive.jsp" %>
 
 <div class="container-fluid">
 
@@ -98,7 +69,7 @@
                     Numer inicjalnej wersji pliku
                 </label>
                 <div class="col-md-5">
-                    <form:input path="versionString" id="versionString" type="text" cssClass="form-control"/>
+                    <form:input path="versionString" id="versionString" type="text" rows="4" cssClass="form-control"/>
                     <p><form:errors path="versionString" cssClass="text-danger"/></p>
                 </div>
             </div>
@@ -107,7 +78,8 @@
                 <div class="col-md-offset-2 col-md-5">
                     <input type="submit" id="btnAdd" class="btn btn-primary" value="Dodaj"/>
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                    <a class="btn btn-default" href="<spring:url value="/projects/${task.projectId}/tasks/${task.id}"/>">
+                    <a class="btn btn-default"
+                       href="<spring:url value="/projects/${task.projectId}/tasks/${task.id}"/>">
                         Zrezygnuj
                     </a>
                 </div>

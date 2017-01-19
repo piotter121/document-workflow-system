@@ -25,9 +25,62 @@
     </h1>
 </div>
 
-<%@ include file="navbarTaskActive.jsp"%>
+<%@ include file="navbarTaskActive.jsp" %>
 
+<div class="container-fluid">
 
+    <form:form method="post" modelAttribute="newVersionForm" cssClass="form-horizontal" enctype="multipart/form-data">
+
+        <fieldset>
+
+            <legend>
+                Uzupełnij poniższe pola, aby dodać nową wersję pliku
+            </legend>
+
+            <div class="form-group">
+                <label class="control-label col-md-2" for="file">
+                    Plik
+                </label>
+                <div class="col-md-5">
+                    <input id="file" type="file" name="file">
+                    <p><form:errors path="file" cssClass="text-danger"/></p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2" for="versionString">
+                    Numer wersji pliku
+                </label>
+                <div class="col-md-5">
+                    <form:input path="versionString" id="versionString" type="text" cssClass="form-control"/>
+                    <p><form:errors path="versionString" cssClass="text-danger"/></p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2" for="message">
+                    Wiadomość kontrolna
+                </label>
+                <div class="col-md-5">
+                    <form:textarea path="message" id="message" cssClass="form-control"/>
+                    <p><form:errors path="versionString" cssClass="text-danger"/></p>
+                </div>
+            </div>
+
+        </fieldset>
+
+        <div class="col-md-offset-2 col-md-5">
+            <input type="submit" id="btnAdd" class="btn btn-primary" value="Zapisz"/>
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            <a class="btn btn-default"
+               href="<spring:url value="/projects/${task.projectId}/tasks/${task.id}/files/${file.id}"/>">
+                Zrezygnuj
+            </a>
+        </div>
+
+    </form:form>
+
+</div>
 
 </body>
 </html>

@@ -1,6 +1,8 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.service;
 
+import org.springframework.web.multipart.MultipartFile;
 import pl.edu.pw.ee.pyskp.documentworkflow.domain.Difference;
+import pl.edu.pw.ee.pyskp.documentworkflow.domain.FileContent;
 import pl.edu.pw.ee.pyskp.documentworkflow.dto.DifferenceInfoDTO;
 
 import java.io.IOException;
