@@ -3,6 +3,9 @@ package pl.edu.pw.ee.pyskp.documentworkflow.domain;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+
+import static java.util.Comparator.comparing;
 
 /**
  * Created by piotr on 11.12.16.
@@ -114,5 +117,12 @@ public class Version {
 
     public void setVersionString(String versionString) {
         this.versionString = versionString;
+    }
+
+    public Optional<Version> getPreviousVersion() {
+        List<Version> versions = getFileMetadata().getVersions();
+        return versions.parallelStream()
+                .filter(version -> version.getSaveDate().before(getSaveDate()))
+                .max(comparing(Version::getSaveDate));
     }
 }

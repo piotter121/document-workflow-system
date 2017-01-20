@@ -57,47 +57,52 @@
             </div>
             <div id="versions" class="list-group">
                 <c:forEach items="${file.versionSortedBySaveDateDESC}" var="version">
-                <div class="list-group-item">
-                    <span class="badge">Wersja ${version.versionString}</span>
-                    <c:if test="${version eq file.latestVersion}">
-                        <span class="badge">Najnowsza wersja</span>
-                    </c:if>
-                    <div class="list-group-item-text">
-                        <div class="row">
-                            <div class="col-md-5">
-                                <dl class="dl-horizontal">
-                                    <dt>Ilość zmian:</dt>
-                                    <dd>${version.numberOfDifferences}</dd>
-                                    <dt>Ilość zmienionych linii:</dt>
-                                    <dd>${version.numberOfChangedLines}</dd>
-                                </dl>
-                            </div>
-                            <blockquote class="col-md-7">
-                                <p>${version.message}</p>
-                                <footer>
-                                        ${version.author.fullName} w dniu <fmt:formatDate value="${version.saveDate}"
-                                                                                          type="both" dateStyle="long"
-                                                                                          timeStyle="long"/>
-                                </footer>
-                            </blockquote>
-                            <div class="toolbar col-md-12" role="toolbar">
-                                <div class="btn-group">
-                                    <a class="btn btn-primary" target="_blank"
-                                       href="<spring:url value="/projects/${task.projectId}/tasks/${task.id}/files/${file.id}/versions/${version.id}/content"/>">
-                                        <span class="glyphicon glyphicon-download"></span>
-                                        Pobierz plik
-                                    </a>
-                                    <a class="btn btn-info"
-                                       href="<spring:url value="/projects/${task.projectId}/tasks/${task.id}/files/${file.id}/versions/${version.id}"/>">
-                                        <span class="glyphicon glyphicon-info-sign"></span>
-                                        Szczegóły
-                                    </a>
+                    <div class="list-group-item">
+                        <span class="badge">Wersja ${version.versionString}</span>
+                        <c:if test="${version eq file.latestVersion}">
+                            <span class="badge">Najnowsza wersja</span>
+                        </c:if>
+                        <div class="list-group-item-text">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <dl class="dl-horizontal">
+                                        <dt>Ilość zmian:</dt>
+                                        <dd>${version.numberOfDifferences}</dd>
+                                        <dt>Ilość zmodyfikowanych linii:</dt>
+                                        <dd>${version.numberOfModifiedLines}</dd>
+                                        <dt>Ilość dodanych linii:</dt>
+                                        <dd>${version.numberOfInsertedLines}</dd>
+                                        <dt>Ilość usuniętych linii:</dt>
+                                        <dd>${version.numberOfDeletedLines}</dd>
+                                    </dl>
+                                </div>
+                                <blockquote class="col-md-7">
+                                    <p>${version.message}</p>
+                                    <footer>
+                                            ${version.author.fullName} w dniu <fmt:formatDate
+                                            value="${version.saveDate}"
+                                            type="both" dateStyle="long"
+                                            timeStyle="long"/>
+                                    </footer>
+                                </blockquote>
+                                <div class="toolbar col-md-12" role="toolbar">
+                                    <div class="btn-group">
+                                        <a class="btn btn-primary" target="_blank"
+                                           href="<spring:url value="/projects/${task.projectId}/tasks/${task.id}/files/${file.id}/versions/${version.id}/content"/>">
+                                            <span class="glyphicon glyphicon-download"></span>
+                                            Pobierz plik
+                                        </a>
+                                        <a class="btn btn-info"
+                                           href="<spring:url value="/projects/${task.projectId}/tasks/${task.id}/files/${file.id}/versions/${version.id}"/>">
+                                            <span class="glyphicon glyphicon-info-sign"></span>
+                                            Szczegóły
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    </c:forEach>
-                </div>
+                </c:forEach>
             </div>
         </div>
 

@@ -1,5 +1,6 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.controller;
 
+import org.apache.log4j.Logger;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -10,6 +11,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pw.ee.pyskp.documentworkflow.domain.FileContent;
+import pl.edu.pw.ee.pyskp.documentworkflow.domain.Version;
+import pl.edu.pw.ee.pyskp.documentworkflow.dto.DiffData;
 import pl.edu.pw.ee.pyskp.documentworkflow.dto.NewVersionForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.dto.TaskInfoDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exception.FileNotFoundException;
@@ -22,6 +25,7 @@ import pl.edu.pw.ee.pyskp.documentworkflow.service.VersionService;
 import pl.edu.pw.ee.pyskp.documentworkflow.validator.NewVersionFormValidator;
 
 import java.io.IOException;
+import java.util.Optional;
 
 /**
  * Created by p.pysk on 16.01.2017.
@@ -29,6 +33,8 @@ import java.io.IOException;
 @Controller
 @RequestMapping("/projects/{projectId}/tasks/{taskId}/files/{fileId}/versions")
 public class VersionController {
+    private final static Logger logger = Logger.getLogger(VersionController.class);
+
     private final VersionService versionService;
     private final UserService userService;
     private final TaskService taskService;
@@ -53,10 +59,15 @@ public class VersionController {
                                  @PathVariable long versionId,
                                  @PathVariable long fileId,
                                  @PathVariable long taskId) {
-        model.addAttribute("version",
-                versionService.getOneById(versionId)
-                        .map(VersionService::mapToVersionInfoDTO)
-                        .orElseThrow(() -> new VersionNotFoundException(versionId)));
+
+        Version version = versionService.getOneById(versionId)
+                .orElseThrow(() -> new VersionNotFoundException(versionId));
+        model.addAttribute("version", VersionService.mapToVersionInfoDTO(version));
+        Optional<Version> previousVersionOpt = version.getPreviousVersion();
+        previousVersionOpt.ifPresent(previousVersion ->
+                model.addAttribute("previousVersion", VersionService.mapToVersionInfoDTO(previousVersion)));
+        DiffData diffData = versionService.buildDiffData(versionId);
+        model.addAttribute("diffData", diffData);
         addCurrentUserToModel(model);
         addTaskToModel(model, taskId);
         addFileToModel(model, fileId);

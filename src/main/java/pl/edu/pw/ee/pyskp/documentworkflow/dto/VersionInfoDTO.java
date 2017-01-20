@@ -1,5 +1,7 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.dto;
 
+import pl.edu.pw.ee.pyskp.documentworkflow.domain.DifferenceType;
+
 import java.util.Date;
 import java.util.List;
 
@@ -66,8 +68,25 @@ public class VersionInfoDTO {
         return differences == null ? 0 : differences.size();
     }
 
-    public long getNumberOfChangedLines() {
-        return differences.stream().mapToLong(DifferenceInfoDTO::getNewSectionSize).sum();
+    public long getNumberOfModifiedLines() {
+        return differences.stream()
+                .filter(difference -> difference.getDifferenceType().equals(DifferenceType.MODIFICATION))
+                .mapToLong(DifferenceInfoDTO::getNewSectionSize)
+                .sum();
+    }
+
+    public long getNumberOfInsertedLines() {
+        return differences.stream()
+                .filter(difference -> difference.getDifferenceType().equals(DifferenceType.INSERT))
+                .mapToLong(DifferenceInfoDTO::getNewSectionSize)
+                .sum();
+    }
+
+    public long getNumberOfDeletedLines() {
+        return differences.stream()
+                .filter(difference -> difference.getDifferenceType().equals(DifferenceType.DELETE))
+                .mapToLong(DifferenceInfoDTO::getPreviousSectionSize)
+                .sum();
     }
 
     @Override

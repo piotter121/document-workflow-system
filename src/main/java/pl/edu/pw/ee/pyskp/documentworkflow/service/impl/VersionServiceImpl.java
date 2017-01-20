@@ -8,13 +8,16 @@ import pl.edu.pw.ee.pyskp.documentworkflow.domain.Difference;
 import pl.edu.pw.ee.pyskp.documentworkflow.domain.FileContent;
 import pl.edu.pw.ee.pyskp.documentworkflow.domain.FileMetadata;
 import pl.edu.pw.ee.pyskp.documentworkflow.domain.Version;
+import pl.edu.pw.ee.pyskp.documentworkflow.dto.DiffData;
+import pl.edu.pw.ee.pyskp.documentworkflow.dto.FileContentDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.dto.NewFileForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.dto.NewVersionForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.exception.FileNotFoundException;
+import pl.edu.pw.ee.pyskp.documentworkflow.exception.VersionNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.repository.FileMetadataRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.repository.VersionRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.service.DifferenceService;
-import pl.edu.pw.ee.pyskp.documentworkflow.service.FilesMetadataService;
+import pl.edu.pw.ee.pyskp.documentworkflow.service.FileContentService;
 import pl.edu.pw.ee.pyskp.documentworkflow.service.UserService;
 import pl.edu.pw.ee.pyskp.documentworkflow.service.VersionService;
 
@@ -71,6 +74,15 @@ public class VersionServiceImpl implements VersionService {
     }
 
     @Override
+    public Optional<FileContentDTO> getPreviousVersionContentDTO(long versionId) {
+        return getOneById(versionId)
+                .orElseThrow(() -> new VersionNotFoundException(versionId))
+                .getPreviousVersion()
+                .map(Version::getFileContent)
+                .map(FileContentService::mapToFileContentDTO);
+    }
+
+    @Override
     public Version addNewVersionOfFile(NewVersionForm form) throws IOException {
         Version newVersion = new Version();
         MultipartFile file = form.getFile();
@@ -88,6 +100,19 @@ public class VersionServiceImpl implements VersionService {
         differences.forEach(difference -> difference.setVersion(newVersion));
         newVersion.setDifferences(differences);
         return versionRepository.saveAndFlush(newVersion);
+    }
+
+    @Override
+    public DiffData buildDiffData(long versionId) {
+        Version version = getOneById(versionId).orElseThrow(() -> new VersionNotFoundException(versionId));
+        Optional<Version> previousVersionOpt = version.getPreviousVersion();
+        DiffData diffData = new DiffData();
+        diffData.setDifferences(version.getDifferences());
+        diffData.setNewContent(FileContentService.mapToFileContentDTO(version.getFileContent()));
+        previousVersionOpt.ifPresent(previousVersion ->
+                diffData.setOldContent(
+                        FileContentService.mapToFileContentDTO(previousVersion.getFileContent())));
+        return diffData;
     }
 
     private FileMetadata getFileMetadata(long fileId) {

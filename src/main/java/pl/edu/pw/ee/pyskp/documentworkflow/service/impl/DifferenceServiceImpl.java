@@ -4,28 +4,24 @@ import difflib.Chunk;
 import difflib.Delta;
 import difflib.DiffUtils;
 import difflib.Patch;
-import org.apache.tika.Tika;
 import org.springframework.stereotype.Service;
 import pl.edu.pw.ee.pyskp.documentworkflow.domain.Difference;
 import pl.edu.pw.ee.pyskp.documentworkflow.domain.DifferenceType;
 import pl.edu.pw.ee.pyskp.documentworkflow.service.DifferenceService;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
+import static pl.edu.pw.ee.pyskp.documentworkflow.utils.TikaUtils.extractLines;
 
 /**
  * Created by piotr on 06.01.17.
  */
 @Service
 public class DifferenceServiceImpl implements DifferenceService {
-
-    private final Tika tika = new Tika();
 
     @Override
     public List<Difference> createDifferencesForNewFile(InputStream inputStream) throws IOException {
@@ -57,19 +53,5 @@ public class DifferenceServiceImpl implements DifferenceService {
                 .orElseThrow(() -> new IllegalArgumentException("Delta type is null"));
         difference.setDifferenceType(differenceType);
         return difference;
-    }
-
-    private List<String> extractLines(InputStream inputStream) throws IOException {
-        List<String> lines = new ArrayList<>();
-
-        Reader parsingReader = tika.parse(inputStream);
-        try (BufferedReader contentReader
-                     = new BufferedReader(parsingReader)) {
-            String line;
-            while ((line = contentReader.readLine()) != null) {
-                lines.add(line);
-            }
-        }
-        return lines;
     }
 }

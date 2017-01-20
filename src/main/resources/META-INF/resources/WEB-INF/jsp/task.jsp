@@ -99,44 +99,46 @@
                             <div class="text-center">
                                 <h3>Pliki w zadaniu ${task.name}</h3>
                             </div>
-                            <c:forEach items="${task.filesInfo}" var="file">
-                                <div class="col-md-6">
-                                    <div class="panel panel-${file.markedToConfirm ? 'primary' : file.confirmed ? 'success' : 'default'}">
-                                        <div class="panel-heading">
-                                            <h3 class="panel-title">
-                                                <img src="<spring:url value="/images/${file.extension}.png"/>"
-                                                     height="20"/>
-                                                <a href="<spring:url value="/projects/${project.id}/tasks/${task.id}/files/${file.id}"/>">
-                                                        ${file.name}
-                                                </a>
-                                                <c:if test="${file.markedToConfirm}">
-                                                    <span class="badge">DO ZATWIERDZENIA</span>
-                                                </c:if>
-                                                <c:if test="${file.confirmed}">
-                                                    <span class="badge">ZATWIERDZONY</span>
-                                                </c:if>
-                                            </h3>
-                                        </div>
+                            <div class="row">
+                                <c:forEach items="${task.filesInfo}" var="file">
+                                    <div class="col-md-6">
+                                        <div class="panel panel-${file.markedToConfirm ? 'primary' : file.confirmed ? 'success' : 'default'}">
+                                            <div class="panel-heading">
+                                                <h3 class="panel-title">
+                                                    <img src="<spring:url value="/images/${file.extension}.png"/>"
+                                                         height="20"/>
+                                                    <a href="<spring:url value="/projects/${project.id}/tasks/${task.id}/files/${file.id}"/>">
+                                                            ${file.name}
+                                                    </a>
+                                                    <c:if test="${file.markedToConfirm}">
+                                                        <span class="badge">DO ZATWIERDZENIA</span>
+                                                    </c:if>
+                                                    <c:if test="${file.confirmed}">
+                                                        <span class="badge">ZATWIERDZONY</span>
+                                                    </c:if>
+                                                </h3>
+                                            </div>
 
-                                        <div class="panel-body">
-                                            <p>Utworzono w dniu
-                                                <fmt:formatDate value="${file.creationDate}" dateStyle="long"/></p>
-                                            <p>Aktualny numer wersji to ${file.latestVersion.versionString}</p>
-                                            <c:if test="${file.creationDate != file.latestVersion.saveDate}">
-                                                <p>Ostatnio zmodyfikowany w dniu <fmt:formatDate
-                                                        value="${file.modificationDate}" dateStyle="long"/>
-                                                    przez ${file.latestVersion.author.fullName}</p>
-                                            </c:if>
-                                        </div>
+                                            <div class="panel-body">
+                                                <p>Utworzono w dniu
+                                                    <fmt:formatDate value="${file.creationDate}" dateStyle="long"/></p>
+                                                <p>Aktualny numer wersji to ${file.latestVersion.versionString}</p>
+                                                <c:if test="${file.creationDate != file.latestVersion.saveDate}">
+                                                    <p>Ostatnio zmodyfikowany w dniu <fmt:formatDate
+                                                            value="${file.modificationDate}" dateStyle="long"/>
+                                                        przez ${file.latestVersion.author.fullName}</p>
+                                                </c:if>
+                                            </div>
 
-                                        <div class="panel-footer">
-                                            <span class="glyphicon glyphicon-list-alt"></span>
-                                                ${file.versions.size()} ${file.versions.size() eq 1 ? 'wersja' : 'wersji'}
-                                            pliku
+                                            <div class="panel-footer">
+                                                <span class="glyphicon glyphicon-list-alt"></span>
+                                                    ${file.versions.size()} ${file.versions.size() eq 1 ? 'wersja' : 'wersji'}
+                                                pliku
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </c:forEach>
+                                </c:forEach>
+                            </div>
                         </c:otherwise>
                     </c:choose>
 
@@ -235,32 +237,32 @@
         <div class="col-md-4">
             <div class="panel panel-info">
                 <div class="panel-heading">Szczegóły zadania</div>
-                <div class="panel-body">
-                    <div class="list-group">
-                        <div class="list-group-item">
-                            <p class="list-group-item-heading">Nazwa</p>
-                            <h4 class="list-group-item-text">${task.name}</h4>
-                        </div>
-                        <div class="list-group-item">
-                            <p class="list-group-item-heading">Opis</p>
-                            <h4 class="list-group-item-text">${task.description}</h4>
-                        </div>
-                        <div class="list-group-item">
-                            <p class="list-group-item-heading">Administrator</p>
-                            <h4 class="list-group-item-text">${task.administrator.fullName}</h4>
-                        </div>
-                        <div class="list-group-item">
-                            <p class="list-group-item-heading">Data utworzenia</p>
-                            <h4 class="list-group-item-text">
-                                <fmt:formatDate value="${task.creationDate}" pattern="dd.MM.yyyy K:mm"/>
-                            </h4>
-                        </div>
-                        <div class="list-group-item">
-                            <p class="list-group-item-heading">Data modyfikacji</p>
-                            <h4 class="list-group-item-text">
-                                <fmt:formatDate value="${task.modificationDate}" pattern="dd.MM.yyyy K:mm"/>
-                            </h4>
-                        </div>
+                <div class="list-group">
+                    <div class="list-group-item">
+                        <p class="list-group-item-heading">Nazwa</p>
+                        <h4 class="list-group-item-text">${task.name}</h4>
+                    </div>
+                    <div class="list-group-item">
+                        <p class="list-group-item-heading">Opis</p>
+                        <h4 class="list-group-item-text">${task.description}</h4>
+                    </div>
+                    <div class="list-group-item">
+                        <p class="list-group-item-heading">Administrator</p>
+                        <h4 class="list-group-item-text">${task.administrator.fullName}</h4>
+                    </div>
+                    <div class="list-group-item">
+                        <p class="list-group-item-heading">Data utworzenia</p>
+                        <h4 class="list-group-item-text">
+                            <fmt:formatDate value="${task.creationDate}" type="both" dateStyle="long"
+                                            timeStyle="short"/>
+                        </h4>
+                    </div>
+                    <div class="list-group-item">
+                        <p class="list-group-item-heading">Data modyfikacji</p>
+                        <h4 class="list-group-item-text">
+                            <fmt:formatDate value="${task.modificationDate}" type="both" dateStyle="long"
+                                            timeStyle="short"/>
+                        </h4>
                     </div>
                 </div>
             </div>
