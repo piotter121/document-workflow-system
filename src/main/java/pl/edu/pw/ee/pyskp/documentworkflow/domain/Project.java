@@ -1,5 +1,7 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.domain;
 
+import org.hibernate.validator.constraints.Length;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
@@ -16,7 +18,8 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(nullable = false, length = 40)
+    @Length(min = 5, max = 40)
+    @Column(nullable = false)
     private String name;
 
     @Column(length = 1024)

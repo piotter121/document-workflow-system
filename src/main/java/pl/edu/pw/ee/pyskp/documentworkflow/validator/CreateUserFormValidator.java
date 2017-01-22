@@ -1,6 +1,5 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.validator;
 
-import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;

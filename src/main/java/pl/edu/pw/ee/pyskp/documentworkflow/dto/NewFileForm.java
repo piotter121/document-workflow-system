@@ -17,6 +17,7 @@ public class NewFileForm {
     @Length(max = 1024)
     private String description;
 
+    @NotNull
     private MultipartFile file;
 
     @NotBlank

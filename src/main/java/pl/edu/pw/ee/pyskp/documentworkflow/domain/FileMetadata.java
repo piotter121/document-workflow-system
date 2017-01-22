@@ -1,5 +1,7 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.domain;
 
+import org.hibernate.validator.constraints.Length;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
@@ -18,6 +20,7 @@ public class FileMetadata {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Length(min = 5)
     @Column(nullable = false)
     private String name;
 

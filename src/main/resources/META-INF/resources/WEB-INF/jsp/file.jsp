@@ -68,7 +68,7 @@
                                     <dl class="dl-horizontal">
                                         <dt>Ilość zmian:</dt>
                                         <dd>${version.numberOfDifferences}</dd>
-                                        <dt>Ilość zmodyfikowanych linii:</dt>
+                                        <dt>Ilość zmienionych linii:</dt>
                                         <dd>${version.numberOfModifiedLines}</dd>
                                         <dt>Ilość dodanych linii:</dt>
                                         <dd>${version.numberOfInsertedLines}</dd>
@@ -82,7 +82,7 @@
                                             ${version.author.fullName} w dniu <fmt:formatDate
                                             value="${version.saveDate}"
                                             type="both" dateStyle="long"
-                                            timeStyle="long"/>
+                                            timeStyle="short"/>
                                     </footer>
                                 </blockquote>
                                 <div class="toolbar col-md-12" role="toolbar">

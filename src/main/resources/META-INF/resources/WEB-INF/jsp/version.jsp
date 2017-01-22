@@ -34,60 +34,79 @@
 
     <div class="row">
 
-        <h3 class="text-center">
-            Zmiany wprowadzone w wersji ${version.versionString}
-        </h3>
-
-
-        <div class="col-md-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">
-                        Poprzednia wersja - ${previousVersion.versionString}
-                    </h3>
-                </div>
-
-                <div class="panel-body">
-                    <c:forEach var="i" begin="1" end="${diffData.oldContent.lines.size()}">
-                        <c:set var="diffType" value="${diffData.getDiffTypeForOldVersion(i)}"/>
-                        <c:choose>
-                            <c:when test="${diffType eq 'INSERT'}">
-                                <c:set var="rowColor" value="bg-success"/>
-                            </c:when>
-                            <c:when test="${diffType eq 'DELETE'}">
-                                <c:set var="rowColor" value="bg-danger"/>
-                            </c:when>
-                            <c:when test="${diffType eq 'MODIFICATION'}">
-                                <c:set var="rowColor" value="bg-info"/>
-                            </c:when>
-                            <c:otherwise>
-                                <c:set var="rowColor" value=""/>
-                            </c:otherwise>
-                        </c:choose>
-                        <div class="row ${rowColor}">
-                            <div class="col-md-1">
-                                <b>${i}</b>
-                            </div>
-                            <div class="col-md-11">
-                                <c:choose>
-                                    <c:when test="${diffType eq 'INSERT'}">
-                                        <ins>${diffData.oldContent.getLine(i)}</ins>
-                                    </c:when>
-                                    <c:when test="${diffType eq 'DELETE'}">
-                                        <del>${diffData.oldContent.getLine(i)}</del>
-                                    </c:when>
-                                    <c:otherwise>
-                                        ${diffData.oldContent.getLine(i)}
-                                    </c:otherwise>
-                                </c:choose>
-                            </div>
-                        </div>
-                    </c:forEach>
-                </div>
-            </div>
+        <div class="text-center">
+            <h3>
+                Zmiany wprowadzone w wersji ${version.versionString}
+            </h3>
+            <blockquote>
+                <p>${version.message}</p>
+                <footer>
+                    ${version.author.fullName} w dniu
+                    <fmt:formatDate value="${version.saveDate}" type="both" dateStyle="long" timeStyle="short"/>
+                </footer>
+            </blockquote>
         </div>
 
-        <div class="col-md-6">
+        <c:if test="${not empty previousVersion}">
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            Poprzednia wersja - ${previousVersion.versionString}
+                        </h3>
+                    </div>
+
+                    <div class="panel-body">
+                        <c:forEach var="i" begin="1" end="${diffData.oldContent.lines.size()}">
+                            <c:set var="diffType" value="${diffData.getDiffTypeForOldVersion(i)}"/>
+                            <c:choose>
+                                <c:when test="${diffType eq 'INSERT'}">
+                                    <c:set var="rowColor" value="bg-success"/>
+                                </c:when>
+                                <c:when test="${diffType eq 'DELETE'}">
+                                    <c:set var="rowColor" value="bg-danger"/>
+                                </c:when>
+                                <c:when test="${diffType eq 'MODIFICATION'}">
+                                    <c:set var="rowColor" value="bg-info"/>
+                                </c:when>
+                                <c:otherwise>
+                                    <c:set var="rowColor" value=""/>
+                                </c:otherwise>
+                            </c:choose>
+                            <div class="row ${rowColor}">
+                                <div class="col-md-1">
+                                    <b>${i}</b>
+                                </div>
+                                <div class="col-md-11">
+                                    <c:choose>
+                                        <c:when test="${diffType eq 'INSERT'}">
+                                            <ins>${diffData.oldContent.getLine(i)}</ins>
+                                        </c:when>
+                                        <c:when test="${diffType eq 'DELETE'}">
+                                            <del>${diffData.oldContent.getLine(i)}</del>
+                                        </c:when>
+                                        <c:otherwise>
+                                            ${diffData.oldContent.getLine(i)}
+                                        </c:otherwise>
+                                    </c:choose>
+                                </div>
+                            </div>
+                        </c:forEach>
+                    </div>
+                </div>
+            </div>
+        </c:if>
+
+        <c:choose>
+            <c:when test="${empty previousVersion}">
+                <c:set var="newContentColWidth" value="col-md-offset-1 col-md-10"/>
+            </c:when>
+            <c:otherwise>
+                <c:set var="newContentColWidth" value="col-md-6"/>
+            </c:otherwise>
+        </c:choose>
+
+        <div class="${newContentColWidth}">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">
