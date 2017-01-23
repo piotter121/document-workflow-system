@@ -85,4 +85,22 @@ public class SecurityServiceImpl implements SecurityService {
                         .orElseThrow(() -> new ProjectNotFoundException(projectId))
                         .getAdministrator());
     }
+
+    @Override
+    public boolean canConfirmFile(long fileId) {
+        return isFileTaskAdministrator(fileId);
+    }
+
+    @Override
+    public boolean canDeleteFile(long fileId) {
+        return isFileTaskAdministrator(fileId);
+    }
+
+    private boolean isFileTaskAdministrator(long fileId) {
+        User taskAdministrator = filesMetadataService.getOneById(fileId)
+                .orElseThrow(() -> new FileNotFoundException(fileId))
+                .getTask()
+                .getAdministrator();
+        return userService.getCurrentUser().equals(taskAdministrator);
+    }
 }

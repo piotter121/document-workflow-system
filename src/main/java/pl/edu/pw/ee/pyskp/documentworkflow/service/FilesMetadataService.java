@@ -48,4 +48,10 @@ public interface FilesMetadataService {
     void markFileToConfirm(long fileId);
 
     boolean hasContentTypeAs(long fileId, MultipartFile file);
+
+    void confirmFile(long fileId);
+
+    void deleteFile(long fileId);
+
+    boolean isValidVersionStringForFile(String versionString, long fileId);
 }

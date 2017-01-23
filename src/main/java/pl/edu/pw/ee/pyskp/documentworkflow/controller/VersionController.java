@@ -103,6 +103,7 @@ public class VersionController {
                                     @PathVariable long taskId) {
         addCurrentUserToModel(model);
         addTaskToModel(model, taskId);
+        addFileToModel(model, fileId);
         return "addVersion";
     }
 

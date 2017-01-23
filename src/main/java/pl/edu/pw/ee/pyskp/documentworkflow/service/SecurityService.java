@@ -17,4 +17,8 @@ public interface SecurityService {
     boolean hasAccessToFile(long fileId);
 
     boolean canDeleteProject(long projectId);
+
+    boolean canConfirmFile(long fileId);
+
+    boolean canDeleteFile(long fileId);
 }

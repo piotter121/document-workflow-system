@@ -28,6 +28,9 @@ public class NewVersionFormValidator implements Validator {
         NewVersionForm form = (NewVersionForm) target;
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "versionString", "NotBlank");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "message", "NotBlank");
+        if (!filesMetadataService.isValidVersionStringForFile(form.getVersionString(), form.getFileId())) {
+            errors.rejectValue("versionString", "Duplicate.versionForm.versionString");
+        }
         if (form.getFile().isEmpty()) {
             errors.rejectValue("file", "NotBlank");
         }

@@ -17,7 +17,6 @@ import pl.edu.pw.ee.pyskp.documentworkflow.service.FilesMetadataService;
 import pl.edu.pw.ee.pyskp.documentworkflow.service.VersionService;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -82,6 +81,28 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
             return false;
         }
         return contentType.equals(fileMetadata.getContentType());
+    }
+
+    @Override
+    public void confirmFile(long fileId) {
+        FileMetadata fileToConfirm = getOneById(fileId).orElseThrow(() -> new FileNotFoundException(fileId));
+        fileToConfirm.setConfirmed(true);
+        fileMetadataRepository.saveAndFlush(fileToConfirm);
+    }
+
+    @Override
+    public void deleteFile(long fileId) {
+        fileMetadataRepository.delete(fileId);
+    }
+
+    @Override
+    public boolean isValidVersionStringForFile(String versionString, long fileId) {
+        List<Version> versions = getOneById(fileId)
+                .map(FileMetadata::getVersions)
+                .orElseThrow(() -> new FileNotFoundException(fileId));
+        return versions.parallelStream()
+                .map(Version::getVersionString)
+                .noneMatch(string -> string.equalsIgnoreCase(versionString));
     }
 
     private static ContentType getContentType(MultipartFile multipartFile)

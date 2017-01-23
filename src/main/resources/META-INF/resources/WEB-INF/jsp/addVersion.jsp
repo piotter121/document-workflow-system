@@ -63,7 +63,7 @@
                 </label>
                 <div class="col-md-5">
                     <form:textarea path="message" id="message" cssClass="form-control"/>
-                    <p><form:errors path="versionString" cssClass="text-danger"/></p>
+                    <p><form:errors path="message" cssClass="text-danger"/></p>
                 </div>
             </div>
 

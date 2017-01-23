@@ -32,24 +32,55 @@
     <div class="row">
         <div class="col-md-8">
             <div class="toolbar" role="toolbar">
-                <div class="btn-group">
-                    <button form="markToConfirm" type="submit"
-                            class="btn btn-success" ${file.markedToConfirm ? 'disabled': ''}>
-                        <span class="glyphicon glyphicon-ok-sign"></span>
-                        Zaznacz do zatwierdzenia
-                    </button>
-                    <a href="<spring:url value="/projects/${task.projectId}/tasks/${task.id}/files/${file.id}/versions/add"/>"
-                       class="btn btn-primary">
-                        <span class="glyphicon glyphicon-plus"></span>
-                        Dodaj nową wersję
-                    </a>
-                </div>
-                <form id="markToConfirm" method="post"
-                      action="<spring:url value="/projects/${task.projectId}/tasks/${task.id}/files/${file.id}/markToConfirm"/>">
-                    <input type="hidden" name="${_csrf.parameterName}"
-                           value="${_csrf.token}"/>
-                    <input type="hidden" name="_method" value="put"/>
-                </form>
+                <c:if test="${not file.confirmed}">
+                    <div class="btn-group">
+                        <c:if test="${currentUser != task.administrator and not file.markedToConfirm}">
+                            <button form="markToConfirm" type="submit"
+                                    class="btn btn-success">
+                                <span class="glyphicon glyphicon-ok-sign"></span>
+                                Zaznacz do zatwierdzenia
+                            </button>
+                        </c:if>
+                        <a href="<spring:url value="/projects/${task.projectId}/tasks/${task.id}/files/${file.id}/versions/add"/>"
+                           class="btn btn-primary">
+                            <span class="glyphicon glyphicon-plus"></span>
+                            Dodaj nową wersję
+                        </a>
+                    </div>
+                    <c:if test="${currentUser != task.administrator}">
+                        <form id="markToConfirm" method="post"
+                              action="<spring:url value="/projects/${task.projectId}/tasks/${task.id}/files/${file.id}/markToConfirm"/>">
+                            <input type="hidden" name="${_csrf.parameterName}"
+                                   value="${_csrf.token}"/>
+                            <input type="hidden" name="_method" value="put"/>
+                        </form>
+                    </c:if>
+                </c:if>
+                <c:if test="${currentUser eq task.administrator}">
+                    <div class="btn-group">
+                        <c:if test="${not file.confirmed}">
+                            <button form="confirm" type="submit" class="btn btn-success">
+                                <span class="glyphicon glyphicon-ok"></span>
+                                Zatwierdź plik
+                            </button>
+                        </c:if>
+                        <button form="delete" type="submit" class="btn btn-danger">
+                            <span class="glyphicon glyphicon-remove"></span>
+                            Usuń plik
+                        </button>
+                    </div>
+                    <c:if test="${not file.confirmed}">
+                        <form id="confirm" method="post"
+                              action="<spring:url value="/projects/${task.projectId}/tasks/${task.id}/files/${file.id}/confirm"/>">
+                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                        </form>
+                    </c:if>
+                    <form id="delete" method="post"
+                          action="<spring:url value="/projects/${task.projectId}/tasks/${task.id}/files/${file.id}"/>">
+                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                        <input type="hidden" name="_method" value="delete"/>
+                    </form>
+                </c:if>
             </div>
 
             <div class="text-center">

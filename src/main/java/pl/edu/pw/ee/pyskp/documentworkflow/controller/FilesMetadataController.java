@@ -53,6 +53,13 @@ public class FilesMetadataController {
         return "file";
     }
 
+    @DeleteMapping("/{fileId}")
+    @PreAuthorize("@securityService.canDeleteFile(#fileId)")
+    public String deleteFile(@PathVariable long fileId, @PathVariable long taskId, @PathVariable long projectId) {
+        filesMetadataService.deleteFile(fileId);
+        return String.format("redirect:/projects/%d/tasks/%d", projectId, taskId);
+    }
+
     @GetMapping("/add")
     @PreAuthorize("@securityService.isTaskParticipant(#taskId)")
     public String getNewFileForm(Model model, @PathVariable long taskId,
@@ -99,6 +106,15 @@ public class FilesMetadataController {
                                     @PathVariable long projectId,
                                     @PathVariable long taskId) {
         filesMetadataService.markFileToConfirm(fileId);
+        return String.format("redirect:/projects/%d/tasks/%d/files/%d", projectId, taskId, fileId);
+    }
+
+    @PostMapping("/{fileId}/confirm")
+    @PreAuthorize("@securityService.canConfirmFile(#fileId)")
+    public String confirmFile(@PathVariable long fileId,
+                              @PathVariable long projectId,
+                              @PathVariable long taskId) {
+        filesMetadataService.confirmFile(fileId);
         return String.format("redirect:/projects/%d/tasks/%d/files/%d", projectId, taskId, fileId);
     }
 }
