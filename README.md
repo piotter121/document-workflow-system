@@ -10,4 +10,3 @@ Podstawowymi problemami, które taki system powinien rozwiązywać jest:
 </ul>
 </p>
 <p>Idealnie byłoby, gdyby taki system nie wymagał wprowadzania danych we własnych formularzach, a pozwalał na wymianę plików .XLS, .DOC (ew. .ODS, .ODT).</p>
-<p>Jeżeli okaże się to niewykonalne, rozwiązanie z formularzami w systemie jest akceptowalnym wyjściem.</p>
