@@ -1,6 +1,9 @@
-<%--@elvariable id="task" type="pl.edu.pw.ee.pyskp.documentworkflow.dto.TaskInfoDTO"--%>
-<%--@elvariable id="currentUser" type="pl.edu.pw.ee.pyskp.documentworkflow.dto.UserInfoDTO"--%>
+<%--@elvariable id="currentUser" type="pl.edu.pw.ee.pyskp.documentworkflow.dtos.UserInfoDTO"--%>
 <%--@elvariable id="_csrf" type="org.springframework.security.web.csrf.DefaultCsrfToken"--%>
+<%--@elvariable id="newFileForm" type="pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewFileForm"--%>
+<%--@elvariable id="projectId" type="java.lang.String"--%>
+<%--@elvariable id="taskId" type="java.lang.String"--%>
+<%--@elvariable id="taskName" type="java.lang.String"--%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
@@ -17,8 +20,8 @@
 <div class="page-header">
     <h1>
         <img src="<spring:url value="/images/logo.png"/>" width="40px" height="40px">
-        <a href="<spring:url value="/projects/${task.projectId}/tasks/${task.id}"/>">
-            ${task.name}
+        <a href="<spring:url value="/projects/${projectId}/tasks/${taskId}"/>">
+            ${taskName}
         </a>
         <small>Dodawanie nowego pliku</small>
     </h1>
@@ -79,7 +82,7 @@
                     <input type="submit" id="btnAdd" class="btn btn-primary" value="Dodaj"/>
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                     <a class="btn btn-default"
-                       href="<spring:url value="/projects/${task.projectId}/tasks/${task.id}"/>">
+                       href="<spring:url value="/projects/${projectId}/tasks/${taskId}"/>">
                         Zrezygnuj
                     </a>
                 </div>

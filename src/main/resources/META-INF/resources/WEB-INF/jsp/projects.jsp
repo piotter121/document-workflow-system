@@ -1,7 +1,7 @@
-<%--@elvariable id="currentUser" type="pl.edu.pw.ee.pyskp.documentworkflow.dto.UserInfoDTO"--%>
+<%--@elvariable id="currentUser" type="pl.edu.pw.ee.pyskp.documentworkflow.dtos.UserInfoDTO"--%>
 <%--@elvariable id="_csrf" type="org.springframework.security.web.csrf.DefaultCsrfToken"--%>
 <%--@elvariable id="projects" type="java.util.List"--%>
-<%--@elvariable id="project" type="pl.edu.pw.ee.pyskp.documentworkflow.dto.ProjectInfoDTO"--%>
+<%--@elvariable id="project" type="pl.edu.pw.ee.pyskp.documentworkflow.dtos.ProjectSummaryDTO"--%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
@@ -52,13 +52,13 @@
                         </div>
                         <div class="panel-body">
                             <p>Utworzono <fmt:formatDate value="${project.creationDate}" dateStyle="long"/></p>
-                            <c:if test="${not empty project.lastModifiedTask}">
-                                <p>Ostatnio zmodyfikowany plik ${project.lastModifiedTask.lastModifiedFile.name}
+                            <c:if test="${not empty project.lastModifiedFile}">
+                                <p>Ostatnio zmodyfikowany plik ${project.lastModifiedFile.name}
                                     w dniu <fmt:formatDate
-                                            value="${project.lastModifiedTask.lastModifiedFile.latestVersion.saveDate}"
+                                            value="${project.lastModifiedFile.saveDate}"
                                             dateStyle="long"/>
-                                    przez ${project.lastModifiedTask.lastModifiedFile.latestVersion.author.fullName}
-                                    w zadaniu ${project.lastModifiedTask.name}</p>
+                                    przez ${project.lastModifiedFile.author}
+                                    w zadaniu ${project.lastModifiedFile.taskName}</p>
                             </c:if>
                         </div>
                         <div class="panel-footer">

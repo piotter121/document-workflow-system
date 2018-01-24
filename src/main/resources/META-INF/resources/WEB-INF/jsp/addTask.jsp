@@ -1,5 +1,6 @@
-<%--@elvariable id="currentUser" type="pl.edu.pw.ee.pyskp.documentworkflow.dto.UserInfoDTO"--%>
-<%--@elvariable id="project" type="pl.edu.pw.ee.pyskp.documentworkflow.dto.ProjectInfoDTO"--%>
+<%--@elvariable id="currentUser" type="pl.edu.pw.ee.pyskp.documentworkflow.dtos.UserInfoDTO"--%>
+<%--@elvariable id="projectId" type="java.lang.String"--%>
+<%--@elvariable id="projectName" type="java.lang.String"--%>
 <%--@elvariable id="_csrf" type="org.springframework.security.web.csrf.DefaultCsrfToken"--%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
@@ -15,8 +16,8 @@
 <div class="page-header">
     <h1>
         <img src="<spring:url value="/images/logo.png"/>" width="40px" height="40px">
-        <a href="<spring:url value="/projects/${project.id}"/>">
-            ${project.name}
+        <a href="<spring:url value="/projects/${projectId}"/>">
+            ${projectName}
         </a>
         <small>Dodawanie nowego zadania</small>
     </h1>
@@ -25,6 +26,7 @@
 <%@ include file="navbarProjectActive.jsp" %>
 
 <div class="container-fluid">
+    <%--@elvariable id="newTaskForm" type="pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewTaskForm"--%>
     <form:form modelAttribute="newTaskForm" class="form-horizontal">
         <fieldset>
             <legend>

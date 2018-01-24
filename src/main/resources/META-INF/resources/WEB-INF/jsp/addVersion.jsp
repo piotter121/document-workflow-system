@@ -1,7 +1,9 @@
 <%--@elvariable id="_csrf" type="org.springframework.security.web.csrf.DefaultCsrfToken"--%>
-<%--@elvariable id="currentUser" type="pl.edu.pw.ee.pyskp.documentworkflow.dto.UserInfoDTO"--%>
-<%--@elvariable id="task" type="pl.edu.pw.ee.pyskp.documentworkflow.dto.TaskInfoDTO"--%>
-<%--@elvariable id="file" type="pl.edu.pw.ee.pyskp.documentworkflow.dto.FileMetadataDTO"--%>
+<%--@elvariable id="currentUser" type="pl.edu.pw.ee.pyskp.documentworkflow.dtos.UserInfoDTO"--%>
+<%--@elvariable id="projectId" type="java.lang.String"--%>
+<%--@elvariable id="taskId" type="java.lang.String"--%>
+<%--@elvariable id="fileId" type="java.lang.String"--%>
+<%--@elvariable id="fileName" type="java.lang.String"--%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
@@ -18,8 +20,8 @@
 <div class="page-header">
     <h1>
         <img src="<spring:url value="/images/logo.png"/>" width="40px" height="40px">
-        <a href="<spring:url value="/projects/${task.projectId}/tasks/${task.id}/files/${file.id}"/>">
-            ${file.name}
+        <a href="<spring:url value="/projects/${projectId}/tasks/${taskId}/files/${fileId}"/>">
+            ${fileName}
         </a>
         <small>Dodawanie nowej wersji pliku</small>
     </h1>
@@ -29,6 +31,7 @@
 
 <div class="container-fluid">
 
+    <%--@elvariable id="newVersionForm" type="pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewVersionForm"--%>
     <form:form method="post" modelAttribute="newVersionForm" cssClass="form-horizontal" enctype="multipart/form-data">
 
         <fieldset>
@@ -73,7 +76,7 @@
             <input type="submit" id="btnAdd" class="btn btn-primary" value="Zapisz"/>
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
             <a class="btn btn-default"
-               href="<spring:url value="/projects/${task.projectId}/tasks/${task.id}/files/${file.id}"/>">
+               href="<spring:url value="/projects/${projectId}/tasks/${taskId}/files/${fileId}"/>">
                 Zrezygnuj
             </a>
         </div>

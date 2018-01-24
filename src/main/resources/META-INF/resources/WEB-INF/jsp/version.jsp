@@ -1,10 +1,10 @@
-<%--@elvariable id="previousVersion" type="pl.edu.pw.ee.pyskp.documentworkflow.dto.VersionInfoDTO"--%>
-<%--@elvariable id="version" type="pl.edu.pw.ee.pyskp.documentworkflow.dto.VersionInfoDTO"--%>
+<%--@elvariable id="version" type="pl.edu.pw.ee.pyskp.documentworkflow.dtos.VersionInfoDTO"--%>
 <%--@elvariable id="_csrf" type="org.springframework.security.web.csrf.DefaultCsrfToken"--%>
-<%--@elvariable id="currentUser" type="pl.edu.pw.ee.pyskp.documentworkflow.dto.UserInfoDTO"--%>
-<%--@elvariable id="task" type="pl.edu.pw.ee.pyskp.documentworkflow.dto.TaskInfoDTO"--%>
-<%--@elvariable id="file" type="pl.edu.pw.ee.pyskp.documentworkflow.dto.FileMetadataDTO"--%>
-<%--@elvariable id="diffData" type="pl.edu.pw.ee.pyskp.documentworkflow.dto.DiffData"--%>
+<%--@elvariable id="taskId" type="java.lang.String"--%>
+<%--@elvariable id="projectId" type="java.lang.String"--%>
+<%--@elvariable id="fileId" type="java.lang.String"--%>
+<%--@elvariable id="fileName" type="java.lang.String"--%>
+<%--@elvariable id="diffData" type="pl.edu.pw.ee.pyskp.documentworkflow.dtos.DiffData"--%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
@@ -21,8 +21,8 @@
 <div class="page-header">
     <h1>
         <img src="<spring:url value="/images/logo.png"/>" width="40px" height="40px">
-        <a href="<spring:url value="/projects/${task.projectId}/tasks/${task.id}/files/${file.id}"/>">
-            ${file.name}
+        <a href="<spring:url value="/projects/${projectId}/tasks/${taskId}/files/${fileId}"/>">
+            ${fileName}
         </a>
         <small>Wersja ${version.versionString}</small>
     </h1>
@@ -47,12 +47,12 @@
             </blockquote>
         </div>
 
-        <c:if test="${not empty previousVersion}">
+        <c:if test="${not empty version.previousVersionString}">
             <div class="col-md-6">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">
-                            Poprzednia wersja - ${previousVersion.versionString}
+                            Poprzednia wersja - ${version.previousVersionString}
                         </h3>
                     </div>
 
@@ -98,7 +98,7 @@
         </c:if>
 
         <c:choose>
-            <c:when test="${empty previousVersion}">
+            <c:when test="${empty version.previousVersionString}">
                 <c:set var="newContentColWidth" value="col-md-offset-1 col-md-10"/>
             </c:when>
             <c:otherwise>

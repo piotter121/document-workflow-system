@@ -11,7 +11,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.util.Assert;
+
+import java.util.Objects;
 
 /**
  * Created by piotr on 16.12.16.
@@ -21,6 +22,7 @@ import org.springframework.util.Assert;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final Logger logger = Logger.getLogger(SecurityConfig.class);
 
+    @SuppressWarnings("SpringJavaAutowiredFieldsWarningInspection")
     @Autowired
     private UserDetailsService userDetailsService;
 
@@ -59,7 +61,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        Assert.notNull(userDetailsService, "Nie wstrzyknięto userDetailsService do SecurityConfig");
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 }

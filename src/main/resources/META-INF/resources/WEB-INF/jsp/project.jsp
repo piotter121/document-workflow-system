@@ -1,5 +1,5 @@
-<%--@elvariable id="project" type="pl.edu.pw.ee.pyskp.documentworkflow.dto.ProjectInfoDTO"--%>
-<%--@elvariable id="currentUser" type="pl.edu.pw.ee.pyskp.documentworkflow.dto.UserInfoDTO"--%>
+<%--@elvariable id="project" type="pl.edu.pw.ee.pyskp.documentworkflow.dtos.ProjectInfoDTO"--%>
+<%--@elvariable id="currentUser" type="pl.edu.pw.ee.pyskp.documentworkflow.dtos.UserInfoDTO"--%>
 <%--@elvariable id="_csrf" type="org.springframework.security.web.csrf.DefaultCsrfToken"--%>
 <%--@elvariable id="delete" type="java.lang.String"--%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -92,9 +92,9 @@
                                     <c:if test="${not empty task.lastModifiedFile}">
                                         <p>Ostatnio zmodyfikowany plik ${task.lastModifiedFile.name}
                                             w dniu <fmt:formatDate
-                                                    value="${task.lastModifiedFile.latestVersion.saveDate}"
+                                                    value="${task.lastModifiedFile.saveDate}"
                                                     dateStyle="long"/>
-                                            przez ${task.lastModifiedFile.latestVersion.author.fullName}</p>
+                                            przez ${task.lastModifiedFile.author}</p>
                                     </c:if>
                                 </div>
 
@@ -137,7 +137,7 @@
                             <p class="list-group-item-heading">Data ostatniej modyfikacji</p>
                             <h4 class="list-group-item-text">
                                 <fmt:formatDate pattern="dd.MM.yyyy K:mm"
-                                                value="${project.lastModifiedTask.lastModifiedFile.latestVersion.saveDate}"/>
+                                                value="${project.lastModified}"/>
                             </h4>
                         </div>
                     </div>

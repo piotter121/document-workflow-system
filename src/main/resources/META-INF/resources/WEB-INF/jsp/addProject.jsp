@@ -1,4 +1,4 @@
-<%--@elvariable id="currentUser" type="pl.edu.pw.ee.pyskp.documentworkflow.dto.UserInfoDTO"--%>
+<%--@elvariable id="currentUser" type="pl.edu.pw.ee.pyskp.documentworkflow.dtos.UserInfoDTO"--%>
 <%--@elvariable id="_csrf" type="org.springframework.security.web.csrf.DefaultCsrfToken"--%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
@@ -22,6 +22,7 @@
 <%@ include file="navbarProjectActive.jsp" %>
 
 <div class="container-fluid">
+    <%--@elvariable id="newProjectForm" type="pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewProjectForm"--%>
     <form:form modelAttribute="newProjectForm" class="form-horizontal">
         <fieldset>
             <legend>

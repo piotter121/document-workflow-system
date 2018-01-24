@@ -1,8 +1,9 @@
 <%--@elvariable id="addParticipantErrorMessage" type="java.lang.String"--%>
-<%--@elvariable id="project" type="pl.edu.pw.ee.pyskp.documentworkflow.dto.ProjectInfoDTO"--%>
-<%--@elvariable id="currentUser" type="pl.edu.pw.ee.pyskp.documentworkflow.dto.UserInfoDTO"--%>
-<%--@elvariable id="task" type="pl.edu.pw.ee.pyskp.documentworkflow.dto.TaskInfoDTO"--%>
+<%--@elvariable id="currentUser" type="pl.edu.pw.ee.pyskp.documentworkflow.dtos.UserInfoDTO"--%>
+<%--@elvariable id="task" type="pl.edu.pw.ee.pyskp.documentworkflow.dtos.TaskInfoDTO"--%>
 <%--@elvariable id="_csrf" type="org.springframework.security.web.csrf.DefaultCsrfToken"--%>
+<%--@elvariable id="projectId" type="java.lang.String"--%>
+<%--@elvariable id="projectName" type="java.lang.String"--%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
@@ -18,8 +19,8 @@
 <div class="page-header">
     <h1>
         <img src="<spring:url value="/images/logo.png"/>" width="40px" height="40px">
-        <a href="<spring:url value="/projects/${task.projectId}"/>">
-            ${project.name}
+        <a href="<spring:url value="/projects/${projectId}"/>">
+            ${projectName}
         </a>
         <small>${task.name}</small>
     </h1>
@@ -51,7 +52,7 @@
                             </div>
                         </c:if>
                         <div class="btn-group">
-                            <a href="<spring:url value="/projects/${project.id}/tasks/${task.id}/files/add"/>"
+                            <a href="<spring:url value="/projects/${projectId}/tasks/${task.id}/files/add"/>"
                                class="btn btn-success">
                                 <span class="glyphicon glyphicon-plus"></span>
                                 Dodaj nowy plik
@@ -78,7 +79,7 @@
                                                 <h3 class="panel-title">
                                                     <img src="<spring:url value="/images/${file.extension}.png"/>"
                                                          height="20"/>
-                                                    <a href="<spring:url value="/projects/${project.id}/tasks/${task.id}/files/${file.id}"/>">
+                                                    <a href="<spring:url value="/projects/${projectId}/tasks/${task.id}/files/${file.id}"/>">
                                                             ${file.name}
                                                     </a>
                                                     <c:if test="${file.markedToConfirm}">
@@ -93,11 +94,11 @@
                                             <div class="panel-body">
                                                 <p>Utworzono w dniu
                                                     <fmt:formatDate value="${file.creationDate}" dateStyle="long"/></p>
-                                                <p>Aktualny numer wersji to ${file.latestVersion.versionString}</p>
+                                                <p>Aktualny numer wersji to ${file.latestVersion.version}</p>
                                                 <c:if test="${file.creationDate != file.latestVersion.saveDate}">
                                                     <p>Ostatnio zmodyfikowany w dniu <fmt:formatDate
                                                             value="${file.modificationDate}" dateStyle="long"/>
-                                                        przez ${file.latestVersion.author.fullName}</p>
+                                                        przez ${file.latestVersion.author}</p>
                                                 </c:if>
                                             </div>
 
@@ -134,7 +135,7 @@
                             <div class="well">
                                 <div class="row">
                                     <form method="post"
-                                          action="<spring:url value="/projects/${project.id}/tasks/${task.id}/addParticipant"/>">
+                                          action="<spring:url value="/projects/${projectId}/tasks/${task.id}/addParticipant"/>">
                                         <div class="form-group">
                                             <label class="control-label col-md-2" for="participantEmail">
                                                 Adres e-mail użytkownika
