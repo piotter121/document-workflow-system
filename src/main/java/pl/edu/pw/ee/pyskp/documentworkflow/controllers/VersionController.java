@@ -1,6 +1,7 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -29,23 +30,25 @@ import java.util.UUID;
  * Created by p.pysk on 16.01.2017.
  */
 @Controller
+@RequiredArgsConstructor
+@SuppressWarnings("SameReturnValue")
 @RequestMapping("/projects/{projectId}/tasks/{taskId}/files/{fileId}/versions")
 public class VersionController {
 
-    @Autowired
-    private VersionService versionService;
+    @NonNull
+    private final VersionService versionService;
 
-    @Autowired
-    private UserService userService;
+    @NonNull
+    private final UserService userService;
 
-    @Autowired
-    private VersionRepository versionRepository;
+    @NonNull
+    private final VersionRepository versionRepository;
 
-    @Autowired
-    private FilesMetadataService filesMetadataService;
+    @NonNull
+    private final FilesMetadataService filesMetadataService;
 
-    @Autowired
-    private NewVersionFormValidator newVersionFormValidator;
+    @NonNull
+    private final NewVersionFormValidator newVersionFormValidator;
 
     @GetMapping("/{versionSaveDateMillis}")
     @PreAuthorize("@securityService.hasAccessToTask(#projectId, #taskId)")

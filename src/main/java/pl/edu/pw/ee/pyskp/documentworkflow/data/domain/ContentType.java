@@ -1,11 +1,18 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.data.domain;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+
 import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
  * Created by piotr on 11.12.16.
  */
+@SuppressWarnings("WeakerAccess")
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public enum ContentType {
     WORD_2003_DOCUMENT("application/msword", "doc"),
     WORD_2007_DOCUMENT("application/vnd.openxmlformats-officedocument.wordprocessingml.document", "docx"),
@@ -14,25 +21,16 @@ public enum ContentType {
     OPEN_DOCUMENT_TEXT("application/vnd.oasis.opendocument.text", "odt"),
     OPEN_DOCUMENT_SPREADSHEET("application/vnd.oasis.opendocument.spreadsheet", "ods");
 
-    private String name;
-    private String extension;
-
-    ContentType(String name, String extension) {
-        this.name = name;
-        this.extension = extension;
-    }
+    @Getter
+    @NonNull
+    private final String name;
+    @Getter
+    @NonNull
+    private final String extension;
 
     public static Optional<ContentType> fromName(String name) {
         return Stream.of(values())
                 .filter(contentType -> contentType.getName().equals(name))
                 .findFirst();
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getExtension() {
-        return extension;
     }
 }

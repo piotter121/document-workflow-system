@@ -1,15 +1,16 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.data.repository;
 
-import org.springframework.data.cassandra.repository.CassandraRepository;
+import org.springframework.data.cassandra.repository.Query;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Project;
 
 import java.util.Optional;
 import java.util.UUID;
 
-/**
- * Created by piotr on 13.12.16.
- */
-public interface ProjectRepository extends CassandraRepository<Project> {
+public interface ProjectRepository extends CrudRepository<Project, UUID> {
     Optional<Project> findOneById(UUID id);
-    void deleteProjectById(UUID id);
+
+    @Query("delete from project where id = :id")
+    void deleteOneById(@Param("id") UUID id);
 }

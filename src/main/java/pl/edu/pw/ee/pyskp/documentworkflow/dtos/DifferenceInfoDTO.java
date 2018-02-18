@@ -10,6 +10,7 @@ import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.DifferenceType;
  */
 @Data
 @NoArgsConstructor
+@SuppressWarnings("WeakerAccess")
 public class DifferenceInfoDTO {
     private long previousSectionStart;
     private long previousSectionSize;

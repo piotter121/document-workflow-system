@@ -25,7 +25,7 @@ public interface FilesMetadataService {
     void confirmFile(UUID taskId, UUID fileId);
 
     @Transactional(rollbackFor = Throwable.class)
-    void deleteFile(UUID taskId, UUID fileId);
+    void deleteFile(UUID projectId, UUID taskId, UUID fileId);
 
     boolean isValidVersionStringForFile(String versionString, UUID fileId);
 

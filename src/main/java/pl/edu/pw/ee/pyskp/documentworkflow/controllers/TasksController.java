@@ -1,7 +1,8 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.controllers;
 
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,18 +22,20 @@ import java.util.UUID;
  * Created by p.pysk on 02.01.2017.
  */
 @Controller
+@RequiredArgsConstructor
+@SuppressWarnings("SameReturnValue")
 @RequestMapping("/projects/{projectId}/tasks")
 public class TasksController {
     private static final Logger LOGGER = Logger.getLogger(TasksController.class);
 
-    @Autowired
-    private TaskService taskService;
+    @NonNull
+    private final TaskService taskService;
 
-    @Autowired
-    private UserService userService;
+    @NonNull
+    private final UserService userService;
 
-    @Autowired
-    private ProjectService projectService;
+    @NonNull
+    private final ProjectService projectService;
 
     @GetMapping
     public String redirectToProject(@PathVariable Long projectId) {

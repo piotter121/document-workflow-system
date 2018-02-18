@@ -14,10 +14,11 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 /**
  * Created by p.pysk on 02.01.2017.
  */
-@Target({METHOD, FIELD, ANNOTATION_TYPE})
-@Retention(RUNTIME)
-@Constraint(validatedBy = ExistingUserEmailValidator.class)
 @Documented
+@Retention(RUNTIME)
+@SuppressWarnings("unused")
+@Target({METHOD, FIELD, ANNOTATION_TYPE})
+@Constraint(validatedBy = ExistingUserEmailValidator.class)
 public @interface ExistingUserEmail {
     String message() default "{ExistingUserEmail}";
 

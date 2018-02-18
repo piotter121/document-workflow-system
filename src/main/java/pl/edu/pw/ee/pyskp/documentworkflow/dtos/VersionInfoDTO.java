@@ -15,6 +15,7 @@ import static java.util.stream.Collectors.toList;
  */
 @Data
 @NoArgsConstructor
+@SuppressWarnings("UnusedReturnValue")
 public class VersionInfoDTO {
     private List<DifferenceInfoDTO> differences;
     private String message;

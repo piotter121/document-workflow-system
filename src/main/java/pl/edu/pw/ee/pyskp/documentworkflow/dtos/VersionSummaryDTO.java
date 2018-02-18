@@ -8,7 +8,8 @@ import java.util.Date;
 
 @Data
 @EqualsAndHashCode
-class VersionSummaryDTO {
+@SuppressWarnings("WeakerAccess")
+public class VersionSummaryDTO {
     private String version, author;
     private Date saveDate;
 

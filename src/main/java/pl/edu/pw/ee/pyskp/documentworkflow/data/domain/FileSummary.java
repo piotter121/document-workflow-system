@@ -2,20 +2,24 @@ package pl.edu.pw.ee.pyskp.documentworkflow.data.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.cassandra.mapping.Column;
 import org.springframework.data.cassandra.mapping.UserDefinedType;
 
 import java.util.Date;
 
 @Data
-@UserDefinedType
 @NoArgsConstructor
+@UserDefinedType("file_summary")
 public class FileSummary {
     private String name;
 
+    @Column("modification_date")
     private Date modificationDate;
 
+    @Column("modification_author")
     private UserSummary modificationAuthor;
 
+    @Column("task_name")
     private String taskName;
 
     public FileSummary(FileMetadata fileMetadata) {

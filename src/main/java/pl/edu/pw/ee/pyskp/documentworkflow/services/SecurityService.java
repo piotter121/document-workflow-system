@@ -5,6 +5,7 @@ import java.util.UUID;
 /**
  * Created by piotr on 06.01.17.
  */
+@SuppressWarnings("unused")
 public interface SecurityService {
     boolean canAddTask(UUID projectId);
 

@@ -8,7 +8,8 @@ import java.util.Date;
 
 @Data
 @NoArgsConstructor
-class FileSummaryDTO {
+@SuppressWarnings("WeakerAccess")
+public class FileSummaryDTO {
     private String name;
     private Date saveDate;
     private String author;

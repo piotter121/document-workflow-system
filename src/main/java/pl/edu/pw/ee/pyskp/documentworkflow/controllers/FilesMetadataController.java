@@ -1,6 +1,7 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,17 +24,19 @@ import java.util.UUID;
  * Created by piotr on 04.01.17.
  */
 @Controller
+@RequiredArgsConstructor
+@SuppressWarnings("SameReturnValue")
 @RequestMapping("/projects/{projectId}/tasks/{taskId}/files")
 public class FilesMetadataController {
 
-    @Autowired
-    private TaskService taskService;
+    @NonNull
+    private final TaskService taskService;
 
-    @Autowired
-    private UserService userService;
+    @NonNull
+    private final UserService userService;
 
-    @Autowired
-    private FilesMetadataService filesMetadataService;
+    @NonNull
+    private final FilesMetadataService filesMetadataService;
 
     @GetMapping
     public String redirectToTask(@PathVariable UUID projectId, @PathVariable UUID taskId) {
@@ -56,7 +59,7 @@ public class FilesMetadataController {
     @DeleteMapping("/{fileId}")
     @PreAuthorize("@securityService.isTaskAdministrator(#projectId, #taskId)")
     public String deleteFile(@PathVariable UUID fileId, @PathVariable UUID taskId, @PathVariable UUID projectId) {
-        filesMetadataService.deleteFile(taskId, fileId);
+        filesMetadataService.deleteFile(projectId, taskId, fileId);
         return String.format("redirect:/projects/%s/tasks/%s", projectId.toString(), taskId.toString());
     }
 

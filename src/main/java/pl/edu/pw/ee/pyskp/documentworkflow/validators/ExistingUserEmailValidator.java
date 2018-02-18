@@ -1,5 +1,6 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.validators;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.UserRepository;
 
 import javax.validation.ConstraintValidator;
@@ -11,6 +12,7 @@ import javax.validation.ConstraintValidatorContext;
 public class ExistingUserEmailValidator implements ConstraintValidator<ExistingUserEmail, String> {
     private final UserRepository userRepository;
 
+    @Autowired
     public ExistingUserEmailValidator(UserRepository userRepository) {
         this.userRepository = userRepository;
     }

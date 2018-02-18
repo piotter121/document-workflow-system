@@ -25,7 +25,8 @@ public class TaskSummaryDTO {
         id = task.getTaskId().toString();
         name = task.getName();
         creationDate = task.getCreationDate();
-        lastModifiedFile = new FileSummaryDTO(task.getLastModifiedFile());
+        if (task.getLastModifiedFile() != null)
+            lastModifiedFile = new FileSummaryDTO(task.getLastModifiedFile());
         numberOfFiles = task.getNumberOfFiles();
         numberOfParticipants = task.getParticipants().size();
     }

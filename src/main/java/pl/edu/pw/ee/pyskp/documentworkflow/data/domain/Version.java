@@ -7,6 +7,7 @@ import org.hibernate.validator.constraints.Length;
 import org.springframework.cassandra.core.Ordering;
 import org.springframework.cassandra.core.PrimaryKeyType;
 import org.springframework.data.cassandra.mapping.CassandraType;
+import org.springframework.data.cassandra.mapping.Column;
 import org.springframework.data.cassandra.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.mapping.Table;
 
@@ -18,9 +19,9 @@ import java.util.UUID;
 /**
  * Created by piotr on 11.12.16.
  */
-@Table
 @Data
 @EqualsAndHashCode(of = {"fileId", "saveDate"})
+@Table
 public class Version {
     @CassandraType(type = DataType.Name.UUID)
     @PrimaryKeyColumn(name = "file_id", ordinal = 0,
@@ -32,6 +33,7 @@ public class Version {
     private Date saveDate;
 
     @Length(max = 20)
+    @Column("version_string")
     private String versionString;
 
     @Length(max = 1024)
@@ -39,9 +41,12 @@ public class Version {
 
     private UserSummary author;
 
+    @Column("file_content")
+    @CassandraType(type = DataType.Name.BLOB)
     private ByteBuffer fileContent;
 
     @Length(max = 65)
+    @Column("check_sum")
     private String checkSum;
 
     private Set<Difference> differences;

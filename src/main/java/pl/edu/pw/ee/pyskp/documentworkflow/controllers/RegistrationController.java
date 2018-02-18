@@ -1,6 +1,7 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,18 +17,20 @@ import pl.edu.pw.ee.pyskp.documentworkflow.validators.CreateUserFormValidator;
  * Created by piotr on 20.12.16.
  */
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/register")
 public class RegistrationController {
-    @Autowired
-    private UserService userService;
+    @NonNull
+    private final UserService userService;
 
-    @Autowired
-    private AuthenticationService authenticationService;
+    @NonNull
+    private final AuthenticationService authenticationService;
 
-    @Autowired
-    private CreateUserFormValidator createUserFormValidator;
+    @NonNull
+    private final CreateUserFormValidator createUserFormValidator;
 
     @GetMapping
+    @SuppressWarnings("SameReturnValue")
     public String getRegistrationForm(@ModelAttribute("newUser") CreateUserFormDTO newUser) {
         return "register";
     }

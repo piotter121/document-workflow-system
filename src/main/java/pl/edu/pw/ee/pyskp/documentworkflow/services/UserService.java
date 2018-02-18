@@ -1,17 +1,13 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.services;
 
+import org.springframework.security.core.userdetails.UserDetailsService;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.User;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.CreateUserFormDTO;
-
-import java.util.Optional;
 
 /**
  * Created by piotr on 14.12.16.
  */
-public interface UserService {
-
-    Optional<User> getUserByLogin(String login);
-
+public interface UserService extends UserDetailsService {
     User getUserByEmail(String email);
 
     User getCurrentUser();
@@ -19,5 +15,4 @@ public interface UserService {
     String getCurrentUserLogin();
 
     void createUserFromForm(CreateUserFormDTO form);
-
 }

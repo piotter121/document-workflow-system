@@ -16,6 +16,7 @@ import java.util.List;
  */
 @Data
 @NoArgsConstructor
+@SuppressWarnings("UnusedReturnValue")
 public class FileContentDTO {
     private static final Logger LOGGER = LogManager.getLogger(FileContentDTO.class);
 

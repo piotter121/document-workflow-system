@@ -20,6 +20,7 @@ import static java.util.stream.Collectors.toList;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
+@SuppressWarnings("UnusedReturnValue")
 public class FileMetadataDTO {
     private String id;
     private String name = "";
@@ -32,6 +33,7 @@ public class FileMetadataDTO {
     private List<VersionInfoDTO> versions;
     private String extension;
     private VersionSummaryDTO latestVersion;
+    private long numberOfVersions;
 
     public FileMetadataDTO(FileMetadata fileMetadata, List<Version> versions) {
         setId(fileMetadata.getFileId().toString());
@@ -46,6 +48,7 @@ public class FileMetadataDTO {
                 .stream().map(VersionInfoDTO::new).collect(Collectors.toList()));
         extension = fileMetadata.getContentType().getExtension();
         latestVersion = new VersionSummaryDTO(fileMetadata.getLatestVersion());
+        numberOfVersions = fileMetadata.getNumberOfVersions();
     }
 
     public FileMetadataDTO(FileMetadata fileMetadata) {

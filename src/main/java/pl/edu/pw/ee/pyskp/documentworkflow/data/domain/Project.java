@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.data.cassandra.mapping.CassandraType;
+import org.springframework.data.cassandra.mapping.Column;
 import org.springframework.data.cassandra.mapping.PrimaryKey;
 import org.springframework.data.cassandra.mapping.Table;
 
@@ -14,9 +15,9 @@ import java.util.UUID;
 /**
  * Created by piotr on 11.12.16.
  */
-@Table
 @Data
 @EqualsAndHashCode(of = "id")
+@Table
 public class Project {
     @PrimaryKey
     @CassandraType(type = DataType.Name.UUID)
@@ -27,6 +28,7 @@ public class Project {
 
     private String description;
 
+    @Column("creation_date")
     private Date creationDate;
 
     private UserSummary administrator;

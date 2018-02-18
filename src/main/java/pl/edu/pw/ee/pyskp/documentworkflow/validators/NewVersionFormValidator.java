@@ -1,5 +1,6 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.validators;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
@@ -14,6 +15,7 @@ import pl.edu.pw.ee.pyskp.documentworkflow.services.FilesMetadataService;
 public class NewVersionFormValidator implements Validator {
     private final FilesMetadataService filesMetadataService;
 
+    @Autowired
     public NewVersionFormValidator(FilesMetadataService filesMetadataService) {
         this.filesMetadataService = filesMetadataService;
     }

@@ -104,7 +104,7 @@
 
                                             <div class="panel-footer">
                                                 <span class="glyphicon glyphicon-list-alt"></span>
-                                                    ${file.versions.size()} ${file.versions.size() eq 1 ? 'wersja' : 'wersji'}
+                                                    ${file.numberOfVersions} ${file.numberOfVersions eq 1 ? 'wersja' : 'wersji'}
                                                 pliku
                                             </div>
                                         </div>

@@ -1,6 +1,7 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.services.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.*;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.*;
@@ -18,28 +19,29 @@ import java.util.stream.Stream;
 /**
  * Created by piotr on 29.12.16.
  */
+@RequiredArgsConstructor
 @Service
 public class ProjectServiceImpl implements ProjectService {
-    @Autowired
-    private UserService userService;
+    @NonNull
+    private final UserService userService;
 
-    @Autowired
-    private ProjectRepository projectRepository;
+    @NonNull
+    private final ProjectRepository projectRepository;
 
-    @Autowired
-    private TaskRepository taskRepository;
+    @NonNull
+    private final TaskRepository taskRepository;
 
-    @Autowired
-    private UserProjectRepository userProjectRepository;
+    @NonNull
+    private final UserProjectRepository userProjectRepository;
 
-    @Autowired
-    private FileMetadataRepository fileMetadataRepository;
+    @NonNull
+    private final FileMetadataRepository fileMetadataRepository;
 
-    @Autowired
-    private VersionRepository versionRepository;
+    @NonNull
+    private final VersionRepository versionRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    @NonNull
+    private final UserRepository userRepository;
 
     @Override
     public List<ProjectSummaryDTO> getUserParticipatedProjects(String userLogin) {
@@ -51,8 +53,8 @@ public class ProjectServiceImpl implements ProjectService {
     public UUID createNewProjectFromForm(NewProjectForm formDTO) {
         User currentUser = userService.getCurrentUser();
         Project project = new Project();
-        project.setName(formDTO.getName());
-        project.setDescription(formDTO.getDescription());
+        project.setName(formDTO.getName().trim());
+        project.setDescription(formDTO.getDescription().trim());
         project.setAdministrator(new UserSummary(currentUser));
         project.setCreationDate(new Date());
         Project createdProject = projectRepository.save(project);
@@ -78,7 +80,7 @@ public class ProjectServiceImpl implements ProjectService {
         versionRepository.deleteAllByFileIdIn(filesIds);
         fileMetadataRepository.deleteAllByTaskIdIn(tasksIds);
         taskRepository.deleteAllByProjectId(projectId);
-        projectRepository.deleteProjectById(projectId);
+        projectRepository.deleteOneById(projectId);
 
         String currentUserLogin = userService.getCurrentUserLogin();
         userProjectRepository.deleteUserProjectByUserLoginAndProjectId(currentUserLogin, projectId);
@@ -113,6 +115,7 @@ public class ProjectServiceImpl implements ProjectService {
         userProjects.addAll(newUserProjects);
         FileSummary lastModifiedFile = tasks.stream()
                 .map(Task::getLastModifiedFile)
+                .filter(Objects::nonNull)
                 .max(Comparator.comparing(FileSummary::getModificationDate))
                 .orElse(null);
         long numberOfParticipants = projectParticipants.size();
@@ -128,9 +131,8 @@ public class ProjectServiceImpl implements ProjectService {
         userProjectRepository.save(userProjects);
     }
 
-    private List<UserProject>
-    createMissingUserProjects(UUID projectId, Set<String> projectParticipants,
-                              Set<String> currentUserProjectsLogins) {
+    private List<UserProject> createMissingUserProjects(UUID projectId, Set<String> projectParticipants,
+                                                        Set<String> currentUserProjectsLogins) {
         Set<String> toCreate = new HashSet<>(projectParticipants);
         toCreate.removeAll(currentUserProjectsLogins);
         List<User> users = userRepository.findAllByLoginIn(toCreate);
@@ -140,13 +142,13 @@ public class ProjectServiceImpl implements ProjectService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public Set<String> getProjectParticipants(UUID projectId) {
+    private Set<String> getProjectParticipants(UUID projectId) {
         String administrator = projectRepository.findOneById(projectId)
                 .map(project -> project.getAdministrator().getLogin())
                 .orElseThrow(() -> new ProjectNotFoundException(projectId));
         List<Task> tasks = taskRepository.findAllByProjectId(projectId);
         Stream<String> participantsLoginsStream = tasks.stream()
+                .filter(task -> Objects.nonNull(task.getParticipants()))
                 .flatMap(task -> task.getParticipants().stream())
                 .map(UserSummary::getLogin);
         Stream<String> administratorsStream = tasks.stream()

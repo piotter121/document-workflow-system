@@ -1,6 +1,7 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.services.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Project;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Task;
@@ -10,26 +11,28 @@ import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.TaskRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.UserProjectRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ProjectNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.TaskNotFoundException;
-import pl.edu.pw.ee.pyskp.documentworkflow.services.*;
+import pl.edu.pw.ee.pyskp.documentworkflow.services.SecurityService;
+import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
 
 import java.util.UUID;
 
 /**
  * Created by piotr on 06.01.17.
  */
+@RequiredArgsConstructor
 @Service("securityService")
 public class SecurityServiceImpl implements SecurityService {
-    @Autowired
-    private UserService userService;
+    @NonNull
+    private final UserService userService;
 
-    @Autowired
-    private UserProjectRepository userProjectRepository;
+    @NonNull
+    private final UserProjectRepository userProjectRepository;
 
-    @Autowired
-    private ProjectRepository projectRepository;
+    @NonNull
+    private final ProjectRepository projectRepository;
 
-    @Autowired
-    private TaskRepository taskRepository;
+    @NonNull
+    private final TaskRepository taskRepository;
 
     @Override
     public boolean canAddTask(UUID projectId) {
@@ -47,10 +50,12 @@ public class SecurityServiceImpl implements SecurityService {
     @Override
     public boolean isTaskParticipant(UUID projectId, UUID taskId) {
         String currentUserLogin = userService.getCurrentUserLogin();
-        return taskRepository.findTaskByProjectIdAndTaskId(projectId, taskId)
-                .orElseThrow(() -> new TaskNotFoundException(taskId))
-                .getParticipants().stream()
-                .anyMatch(participant -> participant.getLogin().equals(currentUserLogin));
+        Task task = taskRepository.findTaskByProjectIdAndTaskId(projectId, taskId)
+                .orElseThrow(() -> new TaskNotFoundException(taskId));
+        return task.getAdministrator().getLogin().equals(currentUserLogin)
+                || task.getParticipants().stream()
+                .map(UserSummary::getLogin)
+                .anyMatch(participant -> participant.equals(currentUserLogin));
     }
 
     @Override

@@ -1,16 +1,20 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.services.impl;
 
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.*;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.FileMetadataRepository;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.VersionRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.*;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.FileNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.VersionNotFoundException;
-import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.FileMetadataRepository;
-import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.VersionRepository;
-import pl.edu.pw.ee.pyskp.documentworkflow.services.*;
+import pl.edu.pw.ee.pyskp.documentworkflow.services.DifferenceService;
+import pl.edu.pw.ee.pyskp.documentworkflow.services.TaskService;
+import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
+import pl.edu.pw.ee.pyskp.documentworkflow.services.VersionService;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -18,29 +22,33 @@ import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Created by piotr on 06.01.17.
  */
 @Service
+@RequiredArgsConstructor
 public class VersionServiceImpl implements VersionService {
     private static final Logger logger = Logger.getLogger(VersionServiceImpl.class);
 
-    @Autowired
-    private UserService userService;
+    @NonNull
+    private final UserService userService;
 
-    @Autowired
-    private DifferenceService differenceService;
+    @NonNull
+    private final DifferenceService differenceService;
 
-    @Autowired
-    private VersionRepository versionRepository;
+    @NonNull
+    private final VersionRepository versionRepository;
 
-    @Autowired
-    private FileMetadataRepository fileMetadataRepository;
+    @NonNull
+    private final FileMetadataRepository fileMetadataRepository;
 
-    @Autowired
-    private TaskService taskService;
+    @NonNull
+    private final TaskService taskService;
 
     @Override
     public Version createUnmanagedInitVersionOfFile(NewFileForm form) throws IOException {
@@ -52,7 +60,7 @@ public class VersionServiceImpl implements VersionService {
         byte[] bytes = file.getBytes();
         version.setCheckSum(calculateCheckSum(bytes));
         version.setSaveDate(new Date());
-        ByteBuffer content = ByteBuffer.allocate(bytes.length).put(bytes);
+        ByteBuffer content = ByteBuffer.wrap(bytes);
         version.setFileContent(content);
         Set<Difference> differences = differenceService.createDifferencesForNewFile(file.getInputStream());
         version.setDifferences(differences);

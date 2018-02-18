@@ -7,20 +7,19 @@ import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.UserRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.CreateUserFormDTO;
-import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
+
+import java.util.Objects;
 
 /**
  * Created by piotr on 20.12.16.
  */
 @Component
 public class CreateUserFormValidator implements Validator {
-    private final UserService userService;
     private final UserRepository userRepository;
 
     @Autowired
-    public CreateUserFormValidator(UserService userService, UserRepository userRepository) {
-        this.userService = userService;
-        this.userRepository = userRepository;
+    public CreateUserFormValidator(UserRepository userRepository) {
+        this.userRepository = Objects.requireNonNull(userRepository);
     }
 
     @Override
@@ -41,7 +40,7 @@ public class CreateUserFormValidator implements Validator {
         if (loginLength < 5 || loginLength > 32) {
             errors.rejectValue("login", "Size.userForm.username");
         }
-        if (userService.getUserByLogin(login).isPresent()) {
+        if (userRepository.findOneByLogin(login).isPresent()) {
             errors.rejectValue("login", "Duplicate.userForm.username");
         }
         if (userRepository.findOneByEmail(form.getEmail()).isPresent()) {

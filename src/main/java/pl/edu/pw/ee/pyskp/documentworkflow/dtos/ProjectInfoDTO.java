@@ -33,7 +33,9 @@ public class ProjectInfoDTO {
         administrator = new UserInfoDTO(project.getAdministrator());
         creationDate = project.getCreationDate();
         tasks = projectTasks.stream().map(TaskSummaryDTO::new).collect(Collectors.toList());
-        tasks.stream().map(task -> task.getLastModifiedFile().getSaveDate())
+        tasks.stream()
+                .filter(task -> task.getLastModifiedFile() != null)
+                .map(task -> task.getLastModifiedFile().getSaveDate())
                 .max(Date::compareTo)
                 .ifPresent(this::setLastModified);
     }

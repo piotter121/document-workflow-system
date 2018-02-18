@@ -23,7 +23,8 @@ public class ProjectSummaryDTO {
         id = userProject.getProjectId().toString();
         name = userProject.getName();
         creationDate = userProject.getCreationDate();
-        lastModifiedFile = new FileSummaryDTO(userProject.getLastModifiedFile());
+        if (userProject.getLastModifiedFile() != null)
+            lastModifiedFile = new FileSummaryDTO(userProject.getLastModifiedFile());
         numberOfParticipants = userProject.getNumberOfParticipants();
         numberOfTasks = userProject.getNumberOfTasks();
         numberOfFiles = userProject.getNumberOfFiles();

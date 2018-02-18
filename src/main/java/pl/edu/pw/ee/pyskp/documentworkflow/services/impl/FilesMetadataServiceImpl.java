@@ -1,8 +1,9 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.services.impl;
 
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.apache.log4j.Logger;
 import org.apache.tika.Tika;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +19,7 @@ import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ProjectNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.TaskNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.UnknownContentType;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.FilesMetadataService;
+import pl.edu.pw.ee.pyskp.documentworkflow.services.TaskService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.VersionService;
 
@@ -28,27 +30,31 @@ import java.util.UUID;
 /**
  * Created by piotr on 06.01.17.
  */
+@RequiredArgsConstructor
 @Service
 public class FilesMetadataServiceImpl implements FilesMetadataService {
     private final static Logger logger = Logger.getLogger(FilesMetadataServiceImpl.class);
 
-    @Autowired
-    private FileMetadataRepository fileMetadataRepository;
+    @NonNull
+    private final FileMetadataRepository fileMetadataRepository;
 
-    @Autowired
-    private VersionService versionService;
+    @NonNull
+    private final VersionService versionService;
 
-    @Autowired
-    private VersionRepository versionRepository;
+    @NonNull
+    private final VersionRepository versionRepository;
 
-    @Autowired
-    private TaskRepository taskRepository;
+    @NonNull
+    private final TaskRepository taskRepository;
 
-    @Autowired
-    private UserProjectRepository userProjectRepository;
+    @NonNull
+    private final UserProjectRepository userProjectRepository;
 
-    @Autowired
-    private UserService userService;
+    @NonNull
+    private final UserService userService;
+
+    @NonNull
+    private final TaskService taskService;
 
     @Override
     @Transactional(rollbackFor = Throwable.class)
@@ -123,9 +129,10 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
     }
 
     @Override
-    public void deleteFile(UUID taskId, UUID fileId) {
+    public void deleteFile(UUID projectId, UUID taskId, UUID fileId) {
         versionRepository.deleteAllByFileId(fileId);
         fileMetadataRepository.deleteFileMetadataByTaskIdAndFileId(taskId, fileId);
+        taskService.updateTaskStatistic(projectId, taskId);
     }
 
     @Override
@@ -140,7 +147,7 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
     @Override
     public String getFileName(UUID taskId, UUID fileId) {
         return fileMetadataRepository.findFileMetadataByTaskIdAndFileId(taskId, fileId)
-                .map(FileMetadata::getName)
+                .map(metadata -> metadata.getName() + "." + metadata.getContentType().getExtension())
                 .orElseThrow(() -> new FileNotFoundException(fileId));
     }
 

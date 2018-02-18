@@ -1,9 +1,13 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.services.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.*;
-import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.*;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.FileMetadataRepository;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.TaskRepository;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.UserProjectRepository;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.VersionRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewTaskForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.TaskInfoDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ProjectNotFoundException;
@@ -12,31 +16,35 @@ import pl.edu.pw.ee.pyskp.documentworkflow.services.ProjectService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.TaskService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
  * Created by p.pysk on 02.01.2017.
  */
 @Service
+@RequiredArgsConstructor
 public class TaskServiceImpl implements TaskService {
-    @Autowired
-    private TaskRepository taskRepository;
+    @NonNull
+    private final TaskRepository taskRepository;
 
-    @Autowired
-    private UserService userService;
+    @NonNull
+    private final UserService userService;
 
-    @Autowired
-    private ProjectService projectService;
+    @NonNull
+    private final ProjectService projectService;
 
-    @Autowired
-    private FileMetadataRepository fileMetadataRepository;
+    @NonNull
+    private final FileMetadataRepository fileMetadataRepository;
 
-    @Autowired
-    private VersionRepository versionRepository;
+    @NonNull
+    private final VersionRepository versionRepository;
 
-    @Autowired
-    private UserProjectRepository userProjectRepository;
+    @NonNull
+    private final UserProjectRepository userProjectRepository;
 
     @Override
     public Task getTask(UUID projectId, UUID taskId) {
@@ -65,27 +73,8 @@ public class TaskServiceImpl implements TaskService {
                 .map(FileMetadata::getFileId).collect(Collectors.toList());
         versionRepository.deleteAllByFileIdIn(fileIds);
         fileMetadataRepository.deleteAllByTaskId(taskId);
-        List<Task> otherTasks = taskRepository.findAllByProjectIdAndTaskIdNot(projectId, taskId);
         taskRepository.deleteTaskByProjectIdAndTaskId(projectId, taskId);
-        String currentUserLogin = userService.getCurrentUserLogin();
-        UserProject project
-                = userProjectRepository.findUserProjectByUserLoginAndProjectId(currentUserLogin, projectId)
-                .orElseThrow(() -> new ProjectNotFoundException(projectId));
-        long numberOfFiles = project.getNumberOfFiles();
-        project.setNumberOfFiles(numberOfFiles - fileIds.size());
-        long numberOfTasks = project.getNumberOfTasks();
-        project.setNumberOfTasks(numberOfTasks - 1);
-        long numberOfParticipantsInProject = otherTasks.stream()
-                .flatMap(task -> task.getParticipants().stream())
-                .distinct()
-                .count();
-        project.setNumberOfParticipants(numberOfParticipantsInProject);
-        FileSummary lastModifiedFile = otherTasks.stream()
-                .map(Task::getLastModifiedFile)
-                .max(Comparator.comparing(FileSummary::getModificationDate))
-                .orElse(null);
-        project.setLastModifiedFile(lastModifiedFile);
-        userProjectRepository.save(project);
+        projectService.updateProjectStatisticsForItsUsers(projectId);
     }
 
     @Override

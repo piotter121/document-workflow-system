@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
  * Created by piotr on 16.12.16.
  */
 @Controller
+@SuppressWarnings("SameReturnValue")
 public class LoginController {
 
     @GetMapping("/login")
