@@ -34,6 +34,16 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class VersionServiceImpl implements VersionService {
     private static final Logger logger = Logger.getLogger(VersionServiceImpl.class);
+    private static MessageDigest sha256 = initializeSHA256();
+
+    private static MessageDigest initializeSHA256() {
+        try {
+            return MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            logger.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
 
     @NonNull
     private final UserService userService;
@@ -126,17 +136,13 @@ public class VersionServiceImpl implements VersionService {
     }
 
     private FileMetadata getFileMetadata(UUID taskId, UUID fileId) {
-        return fileMetadataRepository.findFileMetadataByTaskIdAndFileId(taskId, fileId)
+        return fileMetadataRepository.findOneByTaskIdAndFileId(taskId, fileId)
                 .orElseThrow(() -> new FileNotFoundException(fileId));
     }
 
     private static String calculateCheckSum(byte[] bytes) {
-        try {
-            return String.format("%064x",
-                    new BigInteger(MessageDigest.getInstance("SHA-256").digest(bytes)));
-        } catch (NoSuchAlgorithmException e) {
-            logger.error(e.getMessage(), e);
-            throw new RuntimeException(e);
-        }
+        if (sha256 == null)
+            sha256 = initializeSHA256();
+        return String.format("%064x", new BigInteger(sha256.digest(bytes)));
     }
 }

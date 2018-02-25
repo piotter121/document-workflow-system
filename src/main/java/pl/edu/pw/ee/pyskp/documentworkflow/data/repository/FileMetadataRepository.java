@@ -19,7 +19,7 @@ public interface FileMetadataRepository extends CassandraRepository<FileMetadata
     @Query("delete from file_metadata where task_id in (:tasks)")
     void deleteAllByTaskIdIn(@Param("tasks") Collection<UUID> tasksIds);
 
-    Optional<FileMetadata> findFileMetadataByTaskIdAndFileId(UUID taskId, UUID fileId);
+    Optional<FileMetadata> findOneByTaskIdAndFileId(UUID taskId, UUID fileId);
 
     @Query("delete from file_metadata where task_id = :task_id and file_id = :file_id")
     void deleteFileMetadataByTaskIdAndFileId(@Param("task_id") UUID taskId, @Param("file_id") UUID fileId);

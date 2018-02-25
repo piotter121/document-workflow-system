@@ -21,7 +21,10 @@ public interface VersionRepository extends CassandraRepository<Version> {
 
     List<Version> findAllByFileId(UUID fileId);
 
-    List<Version> findTop2ByFileIdAndSaveDateLessThanEqualOrderBySaveDateDesc(UUID fileId, Date saveDate);
+    @Query("select * from version where file_id = :file_id and save_date <= :save_date order by save_date desc limit 2")
+    List<Version> findTop2ByFileIdAndSaveDateLessThanEqualOrderBySaveDateDesc(@Param("file_id") UUID fileId,
+                                                                              @Param("save_date") Date saveDate);
 
-    Optional<Version> findTopByFileIdOrderBySaveDateDesc(UUID fileId);
+    @Query("select * from version where file_id = :file_id order by save_date desc limit 1")
+    Optional<Version> findTopByFileIdOrderBySaveDateDesc(@Param("file_id") UUID fileId);
 }

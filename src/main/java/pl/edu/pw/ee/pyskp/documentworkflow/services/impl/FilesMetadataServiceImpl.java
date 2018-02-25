@@ -92,7 +92,7 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
 
     @Override
     public FileMetadataDTO getFileMetadataDTO(UUID taskId, UUID fileId) {
-        FileMetadata fileMetadata = fileMetadataRepository.findFileMetadataByTaskIdAndFileId(taskId, fileId)
+        FileMetadata fileMetadata = fileMetadataRepository.findOneByTaskIdAndFileId(taskId, fileId)
                 .orElseThrow(() -> new FileNotFoundException(fileId));
         List<Version> versions = versionRepository.findAllByFileId(fileId);
         return new FileMetadataDTO(fileMetadata, versions);
@@ -100,7 +100,7 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
 
     @Override
     public void markFileToConfirm(UUID taskId, UUID fileId) {
-        FileMetadata file = fileMetadataRepository.findFileMetadataByTaskIdAndFileId(taskId, fileId)
+        FileMetadata file = fileMetadataRepository.findOneByTaskIdAndFileId(taskId, fileId)
                 .orElseThrow(() -> new FileNotFoundException(fileId));
         file.setMarkedToConfirm(true);
         fileMetadataRepository.save(file);
@@ -108,7 +108,7 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
 
     @Override
     public boolean hasContentTypeAs(UUID taskId, UUID fileId, MultipartFile file) {
-        FileMetadata fileMetadata = fileMetadataRepository.findFileMetadataByTaskIdAndFileId(taskId, fileId)
+        FileMetadata fileMetadata = fileMetadataRepository.findOneByTaskIdAndFileId(taskId, fileId)
                 .orElseThrow(() -> new FileNotFoundException(fileId));
         ContentType contentType;
         try {
@@ -122,7 +122,7 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
 
     @Override
     public void confirmFile(UUID taskId, UUID fileId) {
-        FileMetadata fileToConfirm = fileMetadataRepository.findFileMetadataByTaskIdAndFileId(taskId, fileId)
+        FileMetadata fileToConfirm = fileMetadataRepository.findOneByTaskIdAndFileId(taskId, fileId)
                 .orElseThrow(() -> new FileNotFoundException(fileId));
         fileToConfirm.setConfirmed(true);
         fileMetadataRepository.save(fileToConfirm);
@@ -146,7 +146,7 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
 
     @Override
     public String getFileName(UUID taskId, UUID fileId) {
-        return fileMetadataRepository.findFileMetadataByTaskIdAndFileId(taskId, fileId)
+        return fileMetadataRepository.findOneByTaskIdAndFileId(taskId, fileId)
                 .map(metadata -> metadata.getName() + "." + metadata.getContentType().getExtension())
                 .orElseThrow(() -> new FileNotFoundException(fileId));
     }

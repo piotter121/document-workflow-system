@@ -10,16 +10,12 @@ import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.UserProjectRepository
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.VersionRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewTaskForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.TaskInfoDTO;
-import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ProjectNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.TaskNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.ProjectService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.TaskService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
 
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -82,7 +78,10 @@ public class TaskServiceImpl implements TaskService {
         User user = userService.getUserByEmail(userEmail);
         Task task = taskRepository.findTaskByProjectIdAndTaskId(projectId, taskId)
                 .orElseThrow(() -> new TaskNotFoundException(taskId));
-        boolean added = task.getParticipants().add(new UserSummary(user));
+        UserSummary newParticipant = new UserSummary(user);
+        Set<UserSummary> currentParticipants = new HashSet<>(task.getParticipants());
+        boolean added = currentParticipants.add(newParticipant);
+        task.setParticipants(currentParticipants);
         taskRepository.save(task);
         if (added) {
             projectService.updateProjectStatisticsForItsUsers(projectId);

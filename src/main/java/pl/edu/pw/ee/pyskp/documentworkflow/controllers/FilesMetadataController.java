@@ -102,7 +102,7 @@ public class FilesMetadataController {
     }
 
     @PutMapping("/{fileId}/markToConfirm")
-    @PreAuthorize("@securityService.hasAccessToTask(#taskId, #fileId)")
+    @PreAuthorize("@securityService.hasAccessToTask(#projectId, #taskId)")
     public String markFileToConfirm(@PathVariable UUID fileId,
                                     @PathVariable UUID projectId,
                                     @PathVariable UUID taskId) {
