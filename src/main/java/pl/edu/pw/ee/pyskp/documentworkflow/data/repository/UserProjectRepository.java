@@ -12,17 +12,17 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 public interface UserProjectRepository extends CassandraRepository<UserProject> {
-    Stream<UserProject> findAllByUserLogin(String userLogin);
+    Stream<UserProject> findAllByUserEmail(String userEmail);
 
-    List<UserProject> findAllByUserLoginInAndProjectId(Iterable<String> logins, UUID projectId);
+    List<UserProject> findAllByUserEmailInAndProjectId(Iterable<String> emails, UUID projectId);
 
-    Optional<UserProject> findUserProjectByUserLoginAndProjectId(String userLogin, UUID projectId);
+    Optional<UserProject> findUserProjectByUserEmailAndProjectId(String userEmail, UUID projectId);
 
-    @Query("delete from user_project where user_login = :user_login and project_id = :project_id")
-    void deleteUserProjectByUserLoginAndProjectId(@Param("user_login") String userLogin,
+    @Query("delete from user_project where user_email = :user_email and project_id = :project_id")
+    void deleteUserProjectByUserEmailAndProjectId(@Param("user_email") String userEmail,
                                                   @Param("project_id") UUID projectId);
 
-    @Query("delete from user_project where user_login in (:logins) and project_id = :project_id")
-    void deleteAllByUserLoginInAndProjectId(@Param("logins") Collection<String> logins,
+    @Query("delete from user_project where user_email in (:emails) and project_id = :project_id")
+    void deleteAllByUserEmailInAndProjectId(@Param("emails") Collection<String> emails,
                                             @Param("project_id") UUID projectId);
 }

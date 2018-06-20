@@ -1,0 +1,17 @@
+<div class="card bg-light">
+  <h3 class="card-header">
+    <a [routerLink]="['tasks', task.id]">{{task.name}}</a>
+  </h3>
+
+  <div class="card-body">
+    <p class="card-text">Utworzono {{task.creationDate | date:'long'}}</p>
+    <p class="card-text" *ngIf="task.lastModifiedFile">
+      {{'dws.task.summary.lastModifiedFile' | translate:task.lastModifiedFile}}
+    </p>
+  </div>
+
+  <div class="card-footer">
+    <i class="fa fa-file" aria-hidden="true"></i> {{task.numberOfFiles}}
+    <i class="fa fa-user" aria-hidden="true"></i> {{task.numberOfParticipants}}
+  </div>
+</div>

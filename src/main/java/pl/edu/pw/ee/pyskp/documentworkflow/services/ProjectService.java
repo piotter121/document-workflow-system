@@ -13,7 +13,7 @@ import java.util.UUID;
  */
 @Transactional(rollbackFor = Throwable.class)
 public interface ProjectService {
-    List<ProjectSummaryDTO> getUserParticipatedProjects(String userLogin);
+    List<ProjectSummaryDTO> getUserParticipatedProjects(String userEmail);
 
     UUID createNewProjectFromForm(NewProjectForm form);
 

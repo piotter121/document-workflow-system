@@ -15,12 +15,12 @@ import java.util.Date;
 import java.util.UUID;
 
 @Data
-@EqualsAndHashCode(of = {"userLogin", "projectId"})
+@EqualsAndHashCode(of = {"userEmail", "projectId"})
 @NoArgsConstructor
 @Table("user_project")
 public class UserProject {
-    @PrimaryKeyColumn(name = "user_login", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
-    private String userLogin;
+    @PrimaryKeyColumn(name = "user_email", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
+    private String userEmail;
 
     @CassandraType(type = DataType.Name.UUID)
     @PrimaryKeyColumn(name = "project_id", ordinal = 1)
@@ -44,7 +44,7 @@ public class UserProject {
     private long numberOfFiles = 0;
 
     public UserProject(User user, Project project) {
-        userLogin = user.getLogin();
+        userEmail = user.getEmail();
         projectId = project.getId();
         name = project.getName();
         creationDate = project.getCreationDate();

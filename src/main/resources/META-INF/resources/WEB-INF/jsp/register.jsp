@@ -28,7 +28,7 @@
 </nav>
 
 <div class="container-fluid">
-    <%--@elvariable id="newUser" type="pl.edu.pw.ee.pyskp.documentworkflow.dtos.CreateUserFormDTO"--%>
+    <%--@elvariable id="newUser" type="pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewUserDTO"--%>
     <form:form modelAttribute="newUser" class="form-horizontal">
         <fieldset>
             <legend>

@@ -21,7 +21,7 @@ import java.util.UUID;
 /**
  * Created by p.pysk on 02.01.2017.
  */
-@Controller
+//@Controller
 @RequiredArgsConstructor
 @SuppressWarnings("SameReturnValue")
 @RequestMapping("/projects/{projectId}/tasks")
@@ -97,7 +97,7 @@ public class TasksController {
     public String processNewTaskForm(@PathVariable UUID projectId,
                                      @ModelAttribute @Valid NewTaskForm newTask,
                                      BindingResult bindingResult,
-                                     Model model) {
+                                     Model model) throws UserNotFoundException {
         if (bindingResult.hasErrors()) {
             return getNewTaskForm(newTask, projectId, model);
         }

@@ -11,6 +11,7 @@ import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.VersionRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewTaskForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.TaskInfoDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.TaskNotFoundException;
+import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.UserNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.ProjectService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.TaskService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
@@ -49,7 +50,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public UUID createTaskFromForm(NewTaskForm form, UUID projectId) {
+    public UUID createTaskFromForm(NewTaskForm form, UUID projectId) throws UserNotFoundException {
         Task task = new Task();
         task.setName(form.getName());
         task.setDescription(form.getDescription());
@@ -74,7 +75,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void addParticipantToTask(String userEmail, UUID projectId, UUID taskId) {
+    public void addParticipantToTask(String userEmail, UUID projectId, UUID taskId) throws UserNotFoundException {
         User user = userService.getUserByEmail(userEmail);
         Task task = taskRepository.findTaskByProjectIdAndTaskId(projectId, taskId)
                 .orElseThrow(() -> new TaskNotFoundException(taskId));

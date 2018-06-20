@@ -1,7 +1,7 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.controllers;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * Created by piotr on 16.12.16.
@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HomeController {
 
-    @GetMapping("/")
-    @SuppressWarnings("SameReturnValue")
-    public String home() {
-        return "redirect:/projects";
+    @RequestMapping(value = "/**/{path:[^.]+}")
+    public String redirect() {
+        // Forward to home page so that route is preserved.
+        return "forward:/";
     }
 }

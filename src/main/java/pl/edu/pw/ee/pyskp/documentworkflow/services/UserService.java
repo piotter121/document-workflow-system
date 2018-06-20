@@ -1,18 +1,18 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.services;
 
-import org.springframework.security.core.userdetails.UserDetailsService;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.User;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.CreateUserFormDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewUserDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.UserNotFoundException;
 
 /**
  * Created by piotr on 14.12.16.
  */
-public interface UserService extends UserDetailsService {
-    User getUserByEmail(String email);
+public interface UserService {
+    User getUserByEmail(String email) throws UserNotFoundException;
 
     User getCurrentUser();
 
-    String getCurrentUserLogin();
+    String getCurrentUserEmail();
 
-    void createUserFromForm(CreateUserFormDTO form);
+    void createUserFromForm(NewUserDTO form);
 }

@@ -10,7 +10,7 @@ import org.springframework.data.cassandra.mapping.UserDefinedType;
  */
 @Data
 @EqualsAndHashCode
-@UserDefinedType
+@UserDefinedType("difference")
 public class Difference {
     @Column("previous_section_start")
     private long previousSectionStart;

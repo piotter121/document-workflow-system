@@ -23,7 +23,7 @@ import java.util.UUID;
 /**
  * Created by piotr on 04.01.17.
  */
-@Controller
+//@Controller
 @RequiredArgsConstructor
 @SuppressWarnings("SameReturnValue")
 @RequestMapping("/projects/{projectId}/tasks/{taskId}/files")

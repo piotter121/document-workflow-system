@@ -1,0 +1,35 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="btn-toolbar" role="toolbar">
+      <div class="btn-group" role="group">
+        <a class="btn btn-primary" routerLink="/projects/add">
+          <i class="fa fa-plus" aria-hidden="true"></i> {{'dws.project.all.createNew' | translate}}
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div *ngIf="projects?.length > 0; then showProjects else showMsgBlock"></div>
+
+  <ng-template #showProjects>
+    <div class="col-md-12">
+      <div class="text-center">
+        <h3 translate>dws.project.all.header</h3>
+      </div>
+      <div class="row">
+        <div *ngFor="let project of projects; trackBy: trackByProjects" class="col-md-4">
+          <project-summary  [project]="project"></project-summary>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #showMsgBlock>
+    <div class="col-md-8 offset-md-2">
+      <div class="alert alert-info text-center"
+           [innerHTML]="'dws.project.all.noProjectsMsg' | translate"></div>
+    </div>
+  </ng-template>
+</div>

@@ -58,7 +58,7 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
 
     @Override
     @Transactional(rollbackFor = Throwable.class)
-    public UUID createNewFileFromForm(NewFileForm formData, UUID projectId, UUID taskID)
+    public UUID createNewFileFromForm(NewFileForm formData, final UUID projectId, final UUID taskID)
             throws UnknownContentType, IOException {
         FileMetadata fileMetadata = new FileMetadata();
         fileMetadata.setName(formData.getName());
@@ -80,8 +80,9 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
         task.incrementNumberOfFiles();
         taskRepository.save(task);
 
-        String currentUserLogin = userService.getCurrentUserLogin();
-        UserProject userProject = userProjectRepository.findUserProjectByUserLoginAndProjectId(currentUserLogin, projectId)
+        String currentUserEmail = userService.getCurrentUserEmail();
+        UserProject userProject =
+                userProjectRepository.findUserProjectByUserEmailAndProjectId(currentUserEmail, projectId)
                 .orElseThrow(() -> new ProjectNotFoundException(projectId));
         userProject.setLastModifiedFile(task.getLastModifiedFile());
         userProject.incrementNumberOfFiles();

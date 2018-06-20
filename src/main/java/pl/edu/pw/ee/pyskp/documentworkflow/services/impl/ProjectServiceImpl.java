@@ -44,8 +44,8 @@ public class ProjectServiceImpl implements ProjectService {
     private final UserRepository userRepository;
 
     @Override
-    public List<ProjectSummaryDTO> getUserParticipatedProjects(String userLogin) {
-        Stream<UserProject> userProjects = userProjectRepository.findAllByUserLogin(userLogin);
+    public List<ProjectSummaryDTO> getUserParticipatedProjects(String userEmail) {
+        Stream<UserProject> userProjects = userProjectRepository.findAllByUserEmail(userEmail);
         return userProjects.map(ProjectSummaryDTO::new).collect(Collectors.toList());
     }
 
@@ -68,12 +68,12 @@ public class ProjectServiceImpl implements ProjectService {
         List<Task> tasks = taskRepository.findAllByProjectId(projectId);
         List<UUID> tasksIds = tasks.stream()
                 .map(Task::getTaskId).collect(Collectors.toList());
-        Set<String> participantsLogins = tasks.stream().flatMap(task -> task.getParticipants().stream())
-                .map(UserSummary::getLogin)
+        Set<String> participantsEmails = tasks.stream().flatMap(task -> task.getParticipants().stream())
+                .map(UserSummary::getEmail)
                 .distinct()
                 .collect(Collectors.toSet());
-        participantsLogins.addAll(tasks.stream()
-                .map(task -> task.getAdministrator().getLogin())
+        participantsEmails.addAll(tasks.stream()
+                .map(task -> task.getAdministrator().getEmail())
                 .collect(Collectors.toList()));
         List<UUID> filesIds = fileMetadataRepository.findAllByTaskIdIn(tasksIds).stream()
                 .map(FileMetadata::getFileId).collect(Collectors.toList());
@@ -82,9 +82,9 @@ public class ProjectServiceImpl implements ProjectService {
         taskRepository.deleteAllByProjectId(projectId);
         projectRepository.deleteOneById(projectId);
 
-        String currentUserLogin = userService.getCurrentUserLogin();
-        userProjectRepository.deleteUserProjectByUserLoginAndProjectId(currentUserLogin, projectId);
-        userProjectRepository.deleteAllByUserLoginInAndProjectId(participantsLogins, projectId);
+        String currentUserEmail = userService.getCurrentUserEmail();
+        userProjectRepository.deleteUserProjectByUserEmailAndProjectId(currentUserEmail, projectId);
+        userProjectRepository.deleteAllByUserEmailInAndProjectId(participantsEmails, projectId);
     }
 
     @Override
@@ -107,11 +107,11 @@ public class ProjectServiceImpl implements ProjectService {
         List<Task> tasks = taskRepository.findAllByProjectId(projectId);
         Set<String> projectParticipants = getProjectParticipants(projectId);
         List<UserProject> userProjects = userProjectRepository
-                .findAllByUserLoginInAndProjectId(projectParticipants, projectId);
-        Set<String> currentUserProjectsLogins = userProjects.stream().map(UserProject::getUserLogin)
+                .findAllByUserEmailInAndProjectId(projectParticipants, projectId);
+        Set<String> currentUserProjectsEmails = userProjects.stream().map(UserProject::getUserEmail)
                 .distinct().collect(Collectors.toSet());
         List<UserProject> newUserProjects =
-                createMissingUserProjects(projectId, projectParticipants, currentUserProjectsLogins);
+                createMissingUserProjects(projectId, projectParticipants, currentUserProjectsEmails);
         userProjects.addAll(newUserProjects);
         FileSummary lastModifiedFile = tasks.stream()
                 .map(Task::getLastModifiedFile)
@@ -131,29 +131,29 @@ public class ProjectServiceImpl implements ProjectService {
         userProjectRepository.save(userProjects);
     }
 
-    private List<UserProject> createMissingUserProjects(UUID projectId, Set<String> projectParticipants,
-                                                        Set<String> currentUserProjectsLogins) {
+    private List<UserProject> createMissingUserProjects(final UUID projectId, Set<String> projectParticipants,
+                                                        Set<String> currentUserProjectsEmails) {
         Set<String> toCreate = new HashSet<>(projectParticipants);
-        toCreate.removeAll(currentUserProjectsLogins);
-        List<User> users = userRepository.findAllByLoginIn(toCreate);
+        toCreate.removeAll(currentUserProjectsEmails);
+        List<User> users = userRepository.findAllByEmailIn(toCreate);
         Project project = projectRepository.findOneById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException(projectId));
         return users.stream().map(user -> new UserProject(user, project))
                 .collect(Collectors.toList());
     }
 
-    private Set<String> getProjectParticipants(UUID projectId) {
+    private Set<String> getProjectParticipants(final UUID projectId) {
         String administrator = projectRepository.findOneById(projectId)
-                .map(project -> project.getAdministrator().getLogin())
+                .map(project -> project.getAdministrator().getEmail())
                 .orElseThrow(() -> new ProjectNotFoundException(projectId));
         List<Task> tasks = taskRepository.findAllByProjectId(projectId);
-        Stream<String> participantsLoginsStream = tasks.stream()
+        Stream<String> participantsEmailsStream = tasks.stream()
                 .filter(task -> Objects.nonNull(task.getParticipants()))
                 .flatMap(task -> task.getParticipants().stream())
-                .map(UserSummary::getLogin);
+                .map(UserSummary::getEmail);
         Stream<String> administratorsStream = tasks.stream()
-                .map(task -> task.getAdministrator().getLogin());
-        Set<String> toReturn = Stream.concat(participantsLoginsStream, administratorsStream).distinct()
+                .map(task -> task.getAdministrator().getEmail());
+        Set<String> toReturn = Stream.concat(participantsEmailsStream, administratorsStream).distinct()
                 .collect(Collectors.toSet());
         toReturn.add(administrator);
         return toReturn;

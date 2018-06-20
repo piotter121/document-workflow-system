@@ -41,50 +41,50 @@ public class SecurityServiceImpl implements SecurityService {
 
     @Override
     public boolean hasAccessToProject(UUID projectId) {
-        String currentUserLogin = userService.getCurrentUserLogin();
-        return userProjectRepository.findUserProjectByUserLoginAndProjectId(currentUserLogin, projectId)
+        String currentUserEmail = userService.getCurrentUserEmail();
+        return userProjectRepository.findUserProjectByUserEmailAndProjectId(currentUserEmail, projectId)
                 .isPresent();
     }
 
 
     @Override
-    public boolean isTaskParticipant(UUID projectId, UUID taskId) {
-        String currentUserLogin = userService.getCurrentUserLogin();
+    public boolean isTaskParticipant(final UUID projectId, final UUID taskId) {
+        final String currentUserEmail = userService.getCurrentUserEmail();
         Task task = taskRepository.findTaskByProjectIdAndTaskId(projectId, taskId)
                 .orElseThrow(() -> new TaskNotFoundException(taskId));
-        return task.getAdministrator().getLogin().equals(currentUserLogin)
+        return task.getAdministrator().getEmail().equals(currentUserEmail)
                 || task.getParticipants().stream()
-                .map(UserSummary::getLogin)
-                .anyMatch(participant -> participant.equals(currentUserLogin));
+                .map(UserSummary::getEmail)
+                .anyMatch(participant -> participant.equals(currentUserEmail));
     }
 
     @Override
-    public boolean hasAccessToTask(UUID projectId, UUID taskId) {
+    public boolean hasAccessToTask(final UUID projectId, final UUID taskId) {
         Task task = taskRepository.findTaskByProjectIdAndTaskId(projectId, taskId)
                 .orElseThrow(() -> new TaskNotFoundException(taskId));
-        String currentUserLogin = userService.getCurrentUserLogin();
-        boolean isAdministrator = task.getAdministrator().getLogin().equals(currentUserLogin);
-        boolean isParticipant = task.getParticipants().stream().map(UserSummary::getLogin)
-                .anyMatch(currentUserLogin::equals);
+        String currentUserEmail = userService.getCurrentUserEmail();
+        boolean isAdministrator = task.getAdministrator().getEmail().equals(currentUserEmail);
+        boolean isParticipant = task.getParticipants().stream().map(UserSummary::getEmail)
+                .anyMatch(currentUserEmail::equals);
         return isAdministrator || isParticipant
                 || projectRepository.findOneById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException(projectId))
-                .getAdministrator().getLogin().equals(currentUserLogin);
+                .getAdministrator().getEmail().equals(currentUserEmail);
     }
 
     @Override
-    public boolean isCurrentUserProjectAdministrator(UUID projectId) {
+    public boolean isCurrentUserProjectAdministrator(final UUID projectId) {
         Project project = projectRepository.findOneById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException(projectId));
-        String currentUserLogin = userService.getCurrentUserLogin();
-        return project.getAdministrator().getLogin().equals(currentUserLogin);
+        String currentUserEmail = userService.getCurrentUserEmail();
+        return project.getAdministrator().getEmail().equals(currentUserEmail);
     }
 
     @Override
-    public boolean isTaskAdministrator(UUID projectId, UUID taskId) {
+    public boolean isTaskAdministrator(final UUID projectId, final UUID taskId) {
         Task task = taskRepository.findTaskByProjectIdAndTaskId(projectId, taskId)
                 .orElseThrow(() -> new TaskNotFoundException(taskId));
-        String currentUserLogin = userService.getCurrentUserLogin();
-        return task.getAdministrator().getLogin().equals(currentUserLogin);
+        String currentUserLogin = userService.getCurrentUserEmail();
+        return task.getAdministrator().getEmail().equals(currentUserLogin);
     }
 }

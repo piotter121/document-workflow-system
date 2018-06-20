@@ -1,0 +1,41 @@
+{
+  "dws": {
+    "httpErrors": {
+      "UserNotFoundException": "Nie znaleziono użytkownika z adresem email '{{email}}'"
+    },
+    "project": {
+      "details": {
+        "toolbar": {
+          "addTask": "Dodaj nowe zadanie",
+          "deleteProject": "Usuń projekt",
+          "mailToAdmin": "Wyślij wiadomość do administratora projektu"
+        },
+        "noTasksAlert": "<strong>Projekt nie posiada jeszcze żadnych zadań!</strong> Dodaj nowe zadanie, aby rozpocząć pracę",
+        "taskList": {
+          "header": "Zadanie w projekcie {{name}}"
+        },
+        "card": {
+          "header": "Szczegóły projektu",
+          "name": "Nazwa",
+          "description": "Opis",
+          "admin": "Administrator",
+          "creationDate": "Data utworzenia",
+          "lastModified": "Data ostatniej modyfikacji"
+        }
+      },
+      "all": {
+        "createNew": "Stwórz nowy projekt",
+        "header": "Projekty w których uczestniczysz",
+        "noProjectsMsg": "<strong>Brak projektów do wyświetlania.</strong> Utwórz nowy projekt, lub poproś o dodanie do istniejącego, aby rozpocząć pracę."
+      },
+      "summary": {
+        "lastModifiedFile": "Ostatnio zmodyfikowany plik {{name}} w dniu {{saveDate | date:'long'}} przez {{project.lastModifiedFile.author}} w zadaniu {{taskName}}"
+      }
+    },
+    "task": {
+      "summary": {
+        "lastModifiedFile": "Ostatnio zmodyfikowany plik {{name}} w dniu {{saveDate | date:'long'}} przez {{author}}"
+      }
+    }
+  }
+}

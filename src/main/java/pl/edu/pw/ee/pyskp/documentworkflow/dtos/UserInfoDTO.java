@@ -13,23 +13,19 @@ import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.UserSummary;
 @Data
 @ToString
 @NoArgsConstructor
-@SuppressWarnings("UnusedReturnValue")
-@EqualsAndHashCode(of = {"login", "email"})
+@EqualsAndHashCode(of = "email")
 public class UserInfoDTO {
-    private String login;
     private String firstName;
     private String lastName;
     private String email;
 
     public UserInfoDTO(User user) {
-        setLogin(user.getLogin());
         setFirstName(user.getFirstName());
         setLastName(user.getLastName());
         setEmail(user.getEmail());
     }
 
     public UserInfoDTO(UserSummary userSummary) {
-        login = userSummary.getLogin();
         firstName = userSummary.getFirstName();
         lastName = userSummary.getLastName();
         email = userSummary.getEmail();

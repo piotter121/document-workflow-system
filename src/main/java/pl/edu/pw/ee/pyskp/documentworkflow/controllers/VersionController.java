@@ -29,7 +29,7 @@ import java.util.UUID;
 /**
  * Created by p.pysk on 16.01.2017.
  */
-@Controller
+//@Controller
 @RequiredArgsConstructor
 @SuppressWarnings("SameReturnValue")
 @RequestMapping("/projects/{projectId}/tasks/{taskId}/files/{fileId}/versions")

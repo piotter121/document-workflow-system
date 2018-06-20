@@ -3,6 +3,7 @@ package pl.edu.pw.ee.pyskp.documentworkflow.services;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Task;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewTaskForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.TaskInfoDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.UserNotFoundException;
 
 import java.util.UUID;
 
@@ -12,11 +13,11 @@ import java.util.UUID;
 public interface TaskService {
     Task getTask(UUID projectId, UUID taskId);
 
-    UUID createTaskFromForm(NewTaskForm formDTO, UUID projectId);
+    UUID createTaskFromForm(NewTaskForm formDTO, UUID projectId) throws UserNotFoundException;
 
     void deleteTask(UUID projectId, UUID taskId);
 
-    void addParticipantToTask(String userEmail, UUID projectId, UUID taskId);
+    void addParticipantToTask(String userEmail, UUID projectId, UUID taskId) throws UserNotFoundException;
 
     TaskInfoDTO getTaskInfo(UUID projectId, UUID taskId);
 

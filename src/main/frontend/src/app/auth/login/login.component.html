@@ -1,0 +1,34 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="offset-md-4 col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Zaloguj się</h3>
+        </div>
+        <div class="card-body">
+          <div class="alert alert-danger" [hidden]="!error">
+            {{'dws.httpErrors.' + error?.errorCode | translate:error?.params}}
+          </div>
+          <form #loginForm="ngForm" role="form" [formGroup]="form" (ngSubmit)="login()">
+            <fieldset>
+              <div class="form-group">
+                <input class="form-control" placeholder="Adres e-mail"
+                       type="text" formControlName="email">
+              </div>
+              <div class="form-group">
+                <input class="form-control" placeholder="Hasło" type="password"
+                       formControlName="password">
+              </div>
+              <button class="btn btn-lg btn-primary btn-block" [disabled]="!loginForm.form.valid" type="submit">
+                <i class="fa fa-sign-in" aria-hidden="true"></i>Zaloguj się
+              </button>
+            </fieldset>
+          </form>
+          <a routerLink="/register" class="btn btn-info btn-block">
+            <i class="fa fa-check" aria-hidden="true"></i> Rejestracja
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

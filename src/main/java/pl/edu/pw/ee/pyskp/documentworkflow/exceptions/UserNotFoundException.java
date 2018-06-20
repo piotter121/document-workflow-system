@@ -1,14 +1,16 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.exceptions;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import lombok.Getter;
 
 /**
  * Created by piotr on 29.12.16.
  */
-@ResponseStatus(HttpStatus.NOT_FOUND)
-public class UserNotFoundException extends RuntimeException {
-    public UserNotFoundException(String loginOrEmail) {
-        super(String.format("Nie znaleziono użytkownika z podaną nazwą lub adresem e-mail: %s", loginOrEmail));
+public class UserNotFoundException extends Exception {
+    @Getter
+    private final String email;
+
+    public UserNotFoundException(String email) {
+        super(String.format("Nie znaleziono użytkownika z podanym adresem e-mail: %s", email));
+        this.email = email;
     }
 }

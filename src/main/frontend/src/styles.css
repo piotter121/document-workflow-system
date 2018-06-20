@@ -1,0 +1,17 @@
+/* You can add global styles to this file, and also import other style files */
+@import "~bootstrap/dist/css/bootstrap.min.css";
+@import "~font-awesome/css/font-awesome.min.css";
+body {
+  background-color: #f1f1f1;
+}
+[disabled] {
+  cursor: not-allowed;
+}
+
+.card-header > a {
+  color: inherit;
+}
+
+.card-header > a:hover {
+  text-decoration: inherit;
+}
