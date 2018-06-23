@@ -1,3 +1,46 @@
-<p>
-  add-task works!
-</p>
+<div class="row">
+  <div class="col-md-12">
+    <form [formGroup]="newTask" (ngSubmit)="createTask()" novalidate>
+      <fieldset>
+        <legend translate>dws.task.add.legend</legend>
+        <div class="form-group row">
+          <label class="col-md-2 col-form-label" for="name" translate>
+            dws.task.add.form.name.label
+          </label>
+          <div class="col-md-5">
+            <input id="name" type="text" class="form-control" formControlName="name"
+              [ngClass]="{'is-invalid': isInvalid(name)}" required>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="col-md-2 col-form-label" for="description" translate>
+            dws.task.add.form.description.label
+          </label>
+          <div class="col-md-5">
+            <textarea id="description" class="form-control" formControlName="description"
+                      [ngClass]="{'is-invalid': isInvalid(description)}"></textarea>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="col-md-2 col-form-label" for="administratorEmail" translate>
+            dws.task.add.form.administratorEmail.label
+          </label>
+          <div class="col-md-5">
+            <input id="administratorEmail" type="email" class="form-control" formControlName="administratorEmail"
+              [ngClass]="{'is-invalid': isInvalid(administratorEmail)}" required>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <div class="offset-md-2 col-md-10">
+            <button type="submit" class="btn btn-primary" translate>
+              dws.task.add.form.createButton
+            </button>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</div>

@@ -92,6 +92,7 @@ public class ProjectServiceImpl implements ProjectService {
         Project project = projectRepository.findOneById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException(projectId));
         List<Task> projectTasks = taskRepository.findAllByProjectId(projectId);
+        projectTasks.sort(Comparator.comparing(Task::getModificationDate));
         return new ProjectInfoDTO(project, projectTasks);
     }
 

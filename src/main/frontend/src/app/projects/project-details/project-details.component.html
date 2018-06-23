@@ -32,7 +32,7 @@
         <h3 translate [translateParams]="project">dws.project.details.taskList.header</h3>
       </div>
       <div class="row">
-        <div *ngFor="let task of project.tasks; trackBy: trackByTasks" class="col-md-6">
+        <div *ngFor="let task of project.tasks; trackBy: trackByTasks" class="col-md-6 mb-3">
           <task-summary [task]="task"></task-summary>
         </div>
       </div>

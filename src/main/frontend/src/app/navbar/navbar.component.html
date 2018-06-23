@@ -1,20 +1,23 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-  <ul class="navbar-nav">
-    <li class="nav-item">
-      <a routerLink="" routerLinkActive="active" class="nav-link">
-        <i class="fa fa-home" aria-hidden="true"></i> Strona główna
-      </a>
-    </li>
-    <li class="nav-item">
-      <a routerLink="/projects" routerLinkActive="active" class="nav-link">
-        <i class="fa fa-folder" aria-hidden="true"></i> Projekty
-      </a>
-    </li>
-  </ul>
-
-  <p class="navbar-text" *ngIf="loggedIn">Zalogowany jako {{loggedIn.username}}</p>
-
-  <button type="button" class="btn btn-secondary float-right" (click)="logout()">
-    <i class="fa fa-sign-out" aria-hidden="true"></i> Wyloguj
+  <button class="navbar-toggler" type="button" data-toggle="collapse"
+          data-target="#app-navbar" aria-controls="app-navbar"
+          [attr.aria-expanded]="!isCollapsed" aria-label="Toggle navigation"
+          (click)="isCollapsed = !isCollapsed">
+    <span class="navbar-toggler-icon"></span>
   </button>
+  <div class="collapse navbar-collapse" id="app-navbar" [ngbCollapse]="isCollapsed">
+    <a class="navbar-brand" routerLink="/">
+      <i class="fa fa-home" aria-hidden="true"></i> {{'dws.navbar.homePageLink' | translate}}
+    </a>
+
+    <span class="navbar-text mr-auto" *ngIf="loggedIn" translate [translateParams]="loggedIn">
+      dws.navbar.currentUserMsg
+    </span>
+
+    <form class="form-inline">
+      <button type="button" class="btn btn-secondary" (click)="logout()">
+        <i class="fa fa-sign-out" aria-hidden="true"></i> {{'dws.navbar.logoutBtn' | translate}}
+      </button>
+    </form>
+  </div>
 </nav>

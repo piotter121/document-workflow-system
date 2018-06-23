@@ -35,7 +35,36 @@
     "task": {
       "summary": {
         "lastModifiedFile": "Ostatnio zmodyfikowany plik {{name}} w dniu {{saveDate | date:'long'}} przez {{author}}"
+      },
+      "add": {
+        "legend": "Proszę wprowadzić nazwę, opis oraz adres e-mail osoby, która będzie zarządzać zadaniem w tym projekcie",
+        "form": {
+          "name": {
+            "label": "Nazwa"
+          },
+          "description": {
+            "label": "Opis"
+          },
+          "administratorEmail": {
+            "label": "Adres e-mail administratora"
+          },
+          "createButton": "Stwórz"
+        }
       }
+    },
+    "auth": {
+      "login": {
+        "loginBtn": "Zaloguj się",
+        "signInBtn": "Rejestracja",
+        "emailPlaceholder": "Adres e-mail",
+        "passwordPlaceholder": "Hasło",
+        "header": "Logowanie"
+      }
+    },
+    "navbar": {
+      "currentUserMsg": "Zalogowany jako {{fullName}}",
+      "logoutBtn": "Wyloguj",
+      "homePageLink": "Strona główna"
     }
   }
 }

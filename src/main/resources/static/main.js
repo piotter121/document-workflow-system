@@ -506,7 +506,7 @@ module.exports = ".form-control.ng-touched.ng-invalid:not(form) {\n  border-colo
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container-fluid\">\n  <div class=\"row\">\n    <div class=\"offset-md-4 col-md-4\">\n      <div class=\"card\">\n        <div class=\"card-header\">\n          <h3 class=\"card-title\">Zaloguj się</h3>\n        </div>\n        <div class=\"card-body\">\n          <div class=\"alert alert-danger\" [hidden]=\"!error\">\n            {{'dws.httpErrors.' + error?.errorCode | translate:error?.params}}\n          </div>\n          <form #loginForm=\"ngForm\" role=\"form\" [formGroup]=\"form\" (ngSubmit)=\"login()\">\n            <fieldset>\n              <div class=\"form-group\">\n                <input class=\"form-control\" placeholder=\"Adres e-mail\"\n                       type=\"text\" formControlName=\"email\">\n              </div>\n              <div class=\"form-group\">\n                <input class=\"form-control\" placeholder=\"Hasło\" type=\"password\"\n                       formControlName=\"password\">\n              </div>\n              <button class=\"btn btn-lg btn-primary btn-block\" [disabled]=\"!loginForm.form.valid\" type=\"submit\">\n                <i class=\"fa fa-sign-in\" aria-hidden=\"true\"></i>Zaloguj się\n              </button>\n            </fieldset>\n          </form>\n          <a routerLink=\"/register\" class=\"btn btn-info btn-block\">\n            <i class=\"fa fa-check\" aria-hidden=\"true\"></i> Rejestracja\n          </a>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n"
+module.exports = "<div class=\"container-fluid\">\n  <div class=\"row\">\n    <div class=\"offset-md-4 col-md-4\">\n      <div class=\"card\">\n        <h4 class=\"card-header\" translate>dws.auth.login.header</h4>\n        <div class=\"card-body\">\n          <div class=\"alert alert-danger\" [hidden]=\"!error\">\n            {{'dws.httpErrors.' + error?.errorCode | translate:error?.params}}\n          </div>\n          <form #loginForm=\"ngForm\" role=\"form\" [formGroup]=\"form\" (ngSubmit)=\"login()\">\n            <fieldset>\n              <div class=\"form-group\">\n                <input class=\"form-control\" placeholder=\"{{'dws.auth.login.emailPlaceholder' | translate}}\"\n                       type=\"text\" formControlName=\"email\">\n              </div>\n              <div class=\"form-group\">\n                <input class=\"form-control\" placeholder=\"{{'dws.auth.login.passwordPlaceholder' | translate}}\"\n                       type=\"password\" formControlName=\"password\">\n              </div>\n              <div class=\"form-group\">\n                <button class=\"btn btn-primary btn-block\" [disabled]=\"!loginForm.form.valid\" type=\"submit\">\n                  <i class=\"fa fa-sign-in\" aria-hidden=\"true\"></i> {{'dws.auth.login.loginBtn' | translate}}\n                </button>\n              </div>\n            </fieldset>\n          </form>\n          <a routerLink=\"/register\" class=\"btn btn-info btn-block\">\n            <i class=\"fa fa-check\" aria-hidden=\"true\"></i> {{'dws.auth.login.signInBtn' | translate}}\n          </a>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -854,7 +854,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<nav class=\"navbar navbar-expand-md navbar-dark bg-dark\">\n  <ul class=\"navbar-nav\">\n    <li class=\"nav-item\">\n      <a routerLink=\"\" routerLinkActive=\"active\" class=\"nav-link\">\n        <i class=\"fa fa-home\" aria-hidden=\"true\"></i> Strona główna\n      </a>\n    </li>\n    <li class=\"nav-item\">\n      <a routerLink=\"/projects\" routerLinkActive=\"active\" class=\"nav-link\">\n        <i class=\"fa fa-folder\" aria-hidden=\"true\"></i> Projekty\n      </a>\n    </li>\n  </ul>\n\n  <p class=\"navbar-text\" *ngIf=\"loggedIn\">Zalogowany jako {{loggedIn.username}}</p>\n\n  <button type=\"button\" class=\"btn btn-secondary float-right\" (click)=\"logout()\">\n    <i class=\"fa fa-sign-out\" aria-hidden=\"true\"></i> Wyloguj\n  </button>\n</nav>\n"
+module.exports = "<nav class=\"navbar navbar-expand-md navbar-dark bg-dark\">\n  <button class=\"navbar-toggler\" type=\"button\" data-toggle=\"collapse\"\n          data-target=\"#app-navbar\" aria-controls=\"app-navbar\"\n          [attr.aria-expanded]=\"!isCollapsed\" aria-label=\"Toggle navigation\"\n          (click)=\"isCollapsed = !isCollapsed\">\n    <span class=\"navbar-toggler-icon\"></span>\n  </button>\n  <div class=\"collapse navbar-collapse\" id=\"app-navbar\" [ngbCollapse]=\"isCollapsed\">\n    <a class=\"navbar-brand\" routerLink=\"/\">\n      <i class=\"fa fa-home\" aria-hidden=\"true\"></i> {{'dws.navbar.homePageLink' | translate}}\n    </a>\n\n    <span class=\"navbar-text mr-auto\" *ngIf=\"loggedIn\" translate [translateParams]=\"loggedIn\">\n      dws.navbar.currentUserMsg\n    </span>\n\n    <form class=\"form-inline\">\n      <button type=\"button\" class=\"btn btn-secondary\" (click)=\"logout()\">\n        <i class=\"fa fa-sign-out\" aria-hidden=\"true\"></i> {{'dws.navbar.logoutBtn' | translate}}\n      </button>\n    </form>\n  </div>\n</nav>\n"
 
 /***/ }),
 
@@ -871,6 +871,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _auth_auth_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../auth/auth.service */ "./src/app/auth/auth.service.ts");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _auth_user_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../auth/user.service */ "./src/app/auth/user.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -883,12 +884,16 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var NavbarComponent = /** @class */ (function () {
-    function NavbarComponent(authService, router) {
+    function NavbarComponent(authService, router, userService) {
         this.authService = authService;
         this.router = router;
+        this.userService = userService;
     }
     NavbarComponent.prototype.ngOnInit = function () {
+        this.loggedIn = this.userService.currentUser;
+        this.isCollapsed = false;
     };
     NavbarComponent.prototype.logout = function () {
         this.authService.logout();
@@ -901,7 +906,8 @@ var NavbarComponent = /** @class */ (function () {
             styles: [__webpack_require__(/*! ./navbar.component.css */ "./src/app/navbar/navbar.component.css")]
         }),
         __metadata("design:paramtypes", [_auth_auth_service__WEBPACK_IMPORTED_MODULE_1__["AuthService"],
-            _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"]])
+            _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"],
+            _auth_user_service__WEBPACK_IMPORTED_MODULE_3__["UserService"]])
     ], NavbarComponent);
     return NavbarComponent;
 }());
@@ -928,7 +934,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<legend>\n  Aby dodać nowy projekt należy wypełnić poniższy formularz.\n</legend>\n<form [formGroup]=\"newProject\" (ngSubmit)=\"createProject()\" novalidate>\n  <fieldset>\n    <div class=\"form-group row\">\n      <label class=\"col-md-2 col-form-label\" for=\"name\">\n        Nazwa projektu\n      </label>\n      <div class=\"col-md-5\">\n        <input id=\"name\" type=\"text\" class=\"form-control\" formControlName=\"name\"\n                  [ngClass]=\"{'is-invalid': isInvalid(name)}\" required>\n      </div>\n    </div>\n\n    <div class=\"form-group row\">\n      <label class=\"col-md-2 col-form-label\" for=\"description\">\n        Dodatkowy opis projektu\n      </label>\n      <div class=\"col-md-5\">\n        <textarea id=\"description\" class=\"form-control\" formControlName=\"description\"\n                  [ngClass]=\"{'is-invalid': isInvalid(description)}\"></textarea>\n      </div>\n    </div>\n\n    <div class=\"form-group row\">\n      <div class=\"col-md-offset-2 col-md-10\">\n        <button type=\"submit\" class=\"btn btn-secondary\">\n          Stwórz\n        </button>\n      </div>\n    </div>\n  </fieldset>\n</form>\n"
+module.exports = "<legend>\n  Aby dodać nowy projekt należy wypełnić poniższy formularz.\n</legend>\n<form [formGroup]=\"newProject\" (ngSubmit)=\"createProject()\" novalidate>\n  <fieldset>\n    <div class=\"form-group row\">\n      <label class=\"col-md-2 col-form-label\" for=\"name\">\n        Nazwa projektu\n      </label>\n      <div class=\"col-md-5\">\n        <input id=\"name\" type=\"text\" class=\"form-control\" formControlName=\"name\"\n                  [ngClass]=\"{'is-invalid': isInvalid(name)}\" required>\n      </div>\n    </div>\n\n    <div class=\"form-group row\">\n      <label class=\"col-md-2 col-form-label\" for=\"description\">\n        Dodatkowy opis projektu\n      </label>\n      <div class=\"col-md-5\">\n        <textarea id=\"description\" class=\"form-control\" formControlName=\"description\"\n                  [ngClass]=\"{'is-invalid': isInvalid(description)}\"></textarea>\n      </div>\n    </div>\n\n    <div class=\"form-group row\">\n      <div class=\"offset-md-2 col-md-10\">\n        <button type=\"submit\" class=\"btn btn-primary\">\n          Stwórz\n        </button>\n      </div>\n    </div>\n  </fieldset>\n</form>\n"
 
 /***/ }),
 
@@ -1130,7 +1136,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"project\" class=\"row\">\n  <div class=\"col-md-8\">\n    <div class=\"btn-toolbar mb-2\" role=\"toolbar\">\n      <div class=\"btn-group\" role=\"group\">\n        <div *ngIf=\"isProjectAdmin; then projectAdminGroup else projectParticipantGroup\"></div>\n        <ng-template #projectAdminGroup>\n          <a [routerLink]=\"addTaskLink\" class=\"btn btn-success\">\n            <span class=\"fa fa-plus\" aria-hidden=\"true\"></span>\n            {{'dws.project.details.toolbar.addTask' | translate}}\n          </a>\n          <button class=\"btn btn-danger\" type=\"button\" (click)=\"removeProject()\">\n            <span class=\"fa fa-trash\" aria-hidden=\"true\"></span>\n            {{'dws.project.details.toolbar.deleteProject' | translate}}\n          </button>\n        </ng-template>\n        <ng-template #projectParticipantGroup>\n          <a href=\"mailto:{{project.administrator.email}}\" class=\"btn btn-info\">\n            <span class=\"fa fa-envelope\" aria-hidden=\"true\"></span>\n            {{'dws.project.details.toolbar.mailToAdmin' | translate}}\n          </a>\n        </ng-template>\n      </div>\n    </div>\n\n    <div *ngIf=\"hasTasks; then tasksSummaries else noTasksInfo\"></div>\n    <ng-template #noTasksInfo>\n      <div class=\"alert alert-info text-center\" role=\"alert\"\n           [innerHTML]=\"'dws.project.details.noTasksAlert' | translate\"></div>\n    </ng-template>\n    <ng-template #tasksSummaries>\n      <div class=\"text-center\">\n        <h3 translate [translateParams]=\"project\">dws.project.details.taskList.header</h3>\n      </div>\n      <div class=\"row\">\n        <div *ngFor=\"let task of project.tasks; trackBy: trackByTasks\" class=\"col-md-6\">\n          <task-summary [task]=\"task\"></task-summary>\n        </div>\n      </div>\n    </ng-template>\n  </div>\n\n  <div class=\"col-md-4\">\n    <div class=\"card\">\n      <div class=\"card-header\" translate>dws.project.details.card.header</div>\n      <div class=\"list-group list-group-flush\">\n        <div class=\"list-group-item flex-column align-items-start\">\n          <small translate>dws.project.details.card.name</small><br/>\n          <span>{{project.name}}</span>\n        </div>\n        <div class=\"list-group-item flex-column align-items-start\">\n          <small translate>dws.project.details.card.description</small><br/>\n          <span>{{project.description}}</span>\n        </div>\n        <div class=\"list-group-item flex-column align-items-start\">\n          <small translate>dws.project.details.card.admin</small><br/>\n          <span>{{project.administrator.fullName}}</span>\n        </div>\n        <div class=\"list-group-item flex-column align-items-start\">\n          <small translate>dws.project.details.card.creationDate</small><br/>\n          <span>{{project.creationDate | date:'dd.MM.yyyy HH:mm'}}</span>\n        </div>\n        <div class=\"list-group-item flex-column align-items-start\">\n          <small translate>dws.project.details.card.lastModified</small><br/>\n          <span>{{project.lastModified | date:'dd.MM.yyyy HH:mm'}}</span>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n\n<div *ngIf=\"isError\">\n  TODO template błędu\n</div>\n"
+module.exports = "<div *ngIf=\"project\" class=\"row\">\n  <div class=\"col-md-8\">\n    <div class=\"btn-toolbar mb-2\" role=\"toolbar\">\n      <div class=\"btn-group\" role=\"group\">\n        <div *ngIf=\"isProjectAdmin; then projectAdminGroup else projectParticipantGroup\"></div>\n        <ng-template #projectAdminGroup>\n          <a [routerLink]=\"addTaskLink\" class=\"btn btn-success\">\n            <span class=\"fa fa-plus\" aria-hidden=\"true\"></span>\n            {{'dws.project.details.toolbar.addTask' | translate}}\n          </a>\n          <button class=\"btn btn-danger\" type=\"button\" (click)=\"removeProject()\">\n            <span class=\"fa fa-trash\" aria-hidden=\"true\"></span>\n            {{'dws.project.details.toolbar.deleteProject' | translate}}\n          </button>\n        </ng-template>\n        <ng-template #projectParticipantGroup>\n          <a href=\"mailto:{{project.administrator.email}}\" class=\"btn btn-info\">\n            <span class=\"fa fa-envelope\" aria-hidden=\"true\"></span>\n            {{'dws.project.details.toolbar.mailToAdmin' | translate}}\n          </a>\n        </ng-template>\n      </div>\n    </div>\n\n    <div *ngIf=\"hasTasks; then tasksSummaries else noTasksInfo\"></div>\n    <ng-template #noTasksInfo>\n      <div class=\"alert alert-info text-center\" role=\"alert\"\n           [innerHTML]=\"'dws.project.details.noTasksAlert' | translate\"></div>\n    </ng-template>\n    <ng-template #tasksSummaries>\n      <div class=\"text-center\">\n        <h3 translate [translateParams]=\"project\">dws.project.details.taskList.header</h3>\n      </div>\n      <div class=\"row\">\n        <div *ngFor=\"let task of project.tasks; trackBy: trackByTasks\" class=\"col-md-6 mb-3\">\n          <task-summary [task]=\"task\"></task-summary>\n        </div>\n      </div>\n    </ng-template>\n  </div>\n\n  <div class=\"col-md-4\">\n    <div class=\"card\">\n      <div class=\"card-header\" translate>dws.project.details.card.header</div>\n      <div class=\"list-group list-group-flush\">\n        <div class=\"list-group-item flex-column align-items-start\">\n          <small translate>dws.project.details.card.name</small><br/>\n          <span>{{project.name}}</span>\n        </div>\n        <div class=\"list-group-item flex-column align-items-start\">\n          <small translate>dws.project.details.card.description</small><br/>\n          <span>{{project.description}}</span>\n        </div>\n        <div class=\"list-group-item flex-column align-items-start\">\n          <small translate>dws.project.details.card.admin</small><br/>\n          <span>{{project.administrator.fullName}}</span>\n        </div>\n        <div class=\"list-group-item flex-column align-items-start\">\n          <small translate>dws.project.details.card.creationDate</small><br/>\n          <span>{{project.creationDate | date:'dd.MM.yyyy HH:mm'}}</span>\n        </div>\n        <div class=\"list-group-item flex-column align-items-start\">\n          <small translate>dws.project.details.card.lastModified</small><br/>\n          <span>{{project.lastModified | date:'dd.MM.yyyy HH:mm'}}</span>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n\n<div *ngIf=\"isError\">\n  TODO template błędu\n</div>\n"
 
 /***/ }),
 
@@ -1247,7 +1253,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"card bg-light\">\n  <h3 class=\"card-header\">\n    <a [routerLink]=\"[project.id]\">{{project.name}}</a>\n  </h3>\n\n  <div class=\"card-body\">\n    <p class=\"card-text\">Utworzono {{project.creationDate | date:'long'}}</p>\n    <p class=\"card-text\" *ngIf=\"project.lastModifiedFile\">\n      {{'dws.project.summary.lastModifiedFile' | translate:project.lastModifiedFile}}\n    </p>\n  </div>\n\n  <div class=\"card-footer\">\n    <span class=\"fa fa-user\"></span> {{project.numberOfParticipants}}\n    <span class=\"fa fa-tasks\"></span> {{project.numberOfTasks}}\n    <span class=\"fa fa-file\"></span> {{project.numberOfFiles}}\n  </div>\n</div>\n"
+module.exports = "<div class=\"card bg-light\">\n  <h4 class=\"card-header\">\n    <a [routerLink]=\"[project.id]\">{{project.name}}</a>\n  </h4>\n\n  <div class=\"card-body\">\n    <p class=\"card-text\">Utworzono {{project.creationDate | date:'dd MMMM yyyy H:mm'}}</p>\n    <p class=\"card-text\" *ngIf=\"project.lastModifiedFile\">\n      {{'dws.project.summary.lastModifiedFile' | translate:project.lastModifiedFile}}\n    </p>\n  </div>\n\n  <div class=\"card-footer\">\n    <span class=\"fa fa-user\"></span> {{project.numberOfParticipants}}\n    <span class=\"fa fa-tasks\"></span> {{project.numberOfTasks}}\n    <span class=\"fa fa-file\"></span> {{project.numberOfFiles}}\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -1503,7 +1509,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<p>\n  add-task works!\n</p>\n"
+module.exports = "<div class=\"row\">\n  <div class=\"col-md-12\">\n    <legend translate>dws.task.add.legend</legend>\n    <form [formGroup]=\"newTask\" (ngSubmit)=\"createTask()\" novalidate>\n      <fieldset>\n        <div class=\"form-group row\">\n          <label class=\"col-md-2 col-form-label\" for=\"name\" translate>\n            dws.task.add.form.name.label\n          </label>\n          <div class=\"col-md-5\">\n            <input id=\"name\" type=\"text\" class=\"form-control\" formControlName=\"name\"\n              [ngClass]=\"{'is-invalid': isInvalid(name)}\" required>\n          </div>\n        </div>\n\n        <div class=\"form-group row\">\n          <label class=\"col-md-2 col-form-label\" for=\"description\" translate>\n            dws.task.add.form.description.label\n          </label>\n          <div class=\"col-md-5\">\n            <textarea id=\"description\" class=\"form-control\" formControlName=\"description\"\n                      [ngClass]=\"{'is-invalid': isInvalid(description)}\"></textarea>\n          </div>\n        </div>\n\n        <div class=\"form-group row\">\n          <label class=\"col-md-2 col-form-label\" for=\"administratorEmail\" translate>\n            dws.task.add.form.administratorEmail.label\n          </label>\n          <div class=\"col-md-5\">\n            <input id=\"administratorEmail\" type=\"email\" class=\"form-control\" formControlName=\"administratorEmail\"\n              [ngClass]=\"{'is-invalid': isInvalid(administratorEmail)}\" required>\n          </div>\n        </div>\n\n        <div class=\"form-group row\">\n          <div class=\"offset-md-2 col-md-10\">\n            <button type=\"submit\" class=\"btn btn-primary\" translate>\n              dws.task.add.form.createButton\n            </button>\n          </div>\n        </div>\n      </fieldset>\n    </form>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -1518,6 +1524,11 @@ module.exports = "<p>\n  add-task works!\n</p>\n"
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AddTaskComponent", function() { return AddTaskComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
+/* harmony import */ var _tasks_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../tasks.service */ "./src/app/tasks/tasks.service.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var _new_task__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../new-task */ "./src/app/tasks/new-task.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1528,10 +1539,58 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
+
+
+
+
+
 var AddTaskComponent = /** @class */ (function () {
-    function AddTaskComponent() {
+    function AddTaskComponent(formBuilder, tasksService, route, router) {
+        this.formBuilder = formBuilder;
+        this.tasksService = tasksService;
+        this.route = route;
+        this.router = router;
     }
     AddTaskComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.newTask = this.formBuilder.group({
+            name: ['', [_angular_forms__WEBPACK_IMPORTED_MODULE_1__["Validators"].required, _angular_forms__WEBPACK_IMPORTED_MODULE_1__["Validators"].maxLength(50)]],
+            description: ['', [_angular_forms__WEBPACK_IMPORTED_MODULE_1__["Validators"].maxLength(1024)]],
+            administratorEmail: ['', [_angular_forms__WEBPACK_IMPORTED_MODULE_1__["Validators"].email]]
+        });
+        this.route.paramMap
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["map"])(function (paramMap) { return paramMap.get('projectId'); }))
+            .subscribe(function (projectId) { return _this.projectId = projectId; });
+    };
+    Object.defineProperty(AddTaskComponent.prototype, "name", {
+        get: function () {
+            return this.newTask.get('name');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(AddTaskComponent.prototype, "description", {
+        get: function () {
+            return this.newTask.get('description');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(AddTaskComponent.prototype, "administratorEmail", {
+        get: function () {
+            return this.newTask.get('administratorEmail');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    AddTaskComponent.prototype.createTask = function () {
+        var _this = this;
+        var newTask = new _new_task__WEBPACK_IMPORTED_MODULE_5__["NewTask"](this.name.value, this.administratorEmail.value, this.description.value);
+        this.tasksService.createTask(newTask, this.projectId)
+            .subscribe(function (taskId) { return _this.router.navigate(['/projects', _this.projectId, 'tasks', taskId]); }, function (error) { return console.error(error); });
+    };
+    AddTaskComponent.isInvalid = function (control) {
+        return control.invalid && (control.touched || control.dirty);
     };
     AddTaskComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -1539,9 +1598,35 @@ var AddTaskComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./add-task.component.html */ "./src/app/tasks/add-task/add-task.component.html"),
             styles: [__webpack_require__(/*! ./add-task.component.css */ "./src/app/tasks/add-task/add-task.component.css")]
         }),
-        __metadata("design:paramtypes", [])
+        __metadata("design:paramtypes", [_angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormBuilder"],
+            _tasks_service__WEBPACK_IMPORTED_MODULE_2__["TasksService"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_3__["ActivatedRoute"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_3__["Router"]])
     ], AddTaskComponent);
     return AddTaskComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/tasks/new-task.ts":
+/*!***********************************!*\
+  !*** ./src/app/tasks/new-task.ts ***!
+  \***********************************/
+/*! exports provided: NewTask */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NewTask", function() { return NewTask; });
+var NewTask = /** @class */ (function () {
+    function NewTask(name, administratorEmail, description) {
+        this.name = name;
+        this.administratorEmail = administratorEmail;
+        this.description = description;
+    }
+    return NewTask;
 }());
 
 
@@ -1777,12 +1862,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _add_task_add_task_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./add-task/add-task.component */ "./src/app/tasks/add-task/add-task.component.ts");
 /* harmony import */ var _tasks_routing_module__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./tasks-routing.module */ "./src/app/tasks/tasks-routing.module.ts");
 /* harmony import */ var _ngx_translate_core__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @ngx-translate/core */ "./node_modules/@ngx-translate/core/fesm5/ngx-translate-core.js");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
+/* harmony import */ var _tasks_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./tasks.service */ "./src/app/tasks/tasks.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
+
 
 
 
@@ -1798,12 +1887,17 @@ var TasksModule = /** @class */ (function () {
             imports: [
                 _angular_common__WEBPACK_IMPORTED_MODULE_1__["CommonModule"],
                 _tasks_routing_module__WEBPACK_IMPORTED_MODULE_5__["TasksRoutingModule"],
-                _ngx_translate_core__WEBPACK_IMPORTED_MODULE_6__["TranslateModule"]
+                _ngx_translate_core__WEBPACK_IMPORTED_MODULE_6__["TranslateModule"],
+                _angular_forms__WEBPACK_IMPORTED_MODULE_7__["FormsModule"],
+                _angular_forms__WEBPACK_IMPORTED_MODULE_7__["ReactiveFormsModule"]
             ],
             declarations: [
                 _task_details_task_details_component__WEBPACK_IMPORTED_MODULE_2__["TaskDetailsComponent"],
                 _task_summary_task_summary_component__WEBPACK_IMPORTED_MODULE_3__["TaskSummaryComponent"],
                 _add_task_add_task_component__WEBPACK_IMPORTED_MODULE_4__["AddTaskComponent"]
+            ],
+            providers: [
+                _tasks_service__WEBPACK_IMPORTED_MODULE_8__["TasksService"]
             ],
             exports: [
                 _task_summary_task_summary_component__WEBPACK_IMPORTED_MODULE_3__["TaskSummaryComponent"]
@@ -1811,6 +1905,52 @@ var TasksModule = /** @class */ (function () {
         })
     ], TasksModule);
     return TasksModule;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/tasks/tasks.service.ts":
+/*!****************************************!*\
+  !*** ./src/app/tasks/tasks.service.ts ***!
+  \****************************************/
+/*! exports provided: TasksService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TasksService", function() { return TasksService; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var TasksService = /** @class */ (function () {
+    function TasksService(http) {
+        this.http = http;
+    }
+    TasksService.prototype.createTask = function (newTask, projectId) {
+        return this.http.post("/api/projects/" + projectId + "/tasks", newTask)
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["map"])(function (response) { return response.taskId; }));
+    };
+    TasksService = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])({
+            providedIn: 'root'
+        }),
+        __metadata("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"]])
+    ], TasksService);
+    return TasksService;
 }());
 
 

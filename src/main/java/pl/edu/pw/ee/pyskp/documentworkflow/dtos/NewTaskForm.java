@@ -11,7 +11,7 @@ import pl.edu.pw.ee.pyskp.documentworkflow.validators.ExistingUserEmail;
 @Data
 public class NewTaskForm {
     @NotBlank
-    @Length(min = 5, max = 50)
+    @Length(max = 50)
     private String name;
 
     @Length(max = 1024)
