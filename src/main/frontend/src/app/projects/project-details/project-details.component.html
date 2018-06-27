@@ -4,11 +4,11 @@
       <div class="btn-group" role="group">
         <div *ngIf="isProjectAdmin; then projectAdminGroup else projectParticipantGroup"></div>
         <ng-template #projectAdminGroup>
-          <a [routerLink]="addTaskLink" class="btn btn-success">
+          <a [routerLink]="['tasks', 'add']" class="btn btn-success">
             <span class="fa fa-plus" aria-hidden="true"></span>
             {{'dws.project.details.toolbar.addTask' | translate}}
           </a>
-          <button class="btn btn-danger" type="button" (click)="removeProject()">
+          <button class="btn btn-danger" type="button" (click)="deleteProject()">
             <span class="fa fa-trash" aria-hidden="true"></span>
             {{'dws.project.details.toolbar.deleteProject' | translate}}
           </button>

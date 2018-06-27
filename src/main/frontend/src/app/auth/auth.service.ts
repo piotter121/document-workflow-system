@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import {HttpClient, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from "@angular/common/http";
+import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {tap} from 'rxjs/operators';
 import {NewUser} from "./register/new-user";
@@ -26,7 +26,8 @@ export class AuthService {
     }).pipe(tap((response: AuthToken) => localStorage.setItem('token', response.token)));
   }
 
-  logout() {
+  // noinspection JSMethodCanBeStatic
+  logout(): void {
     localStorage.removeItem('token');
   }
 

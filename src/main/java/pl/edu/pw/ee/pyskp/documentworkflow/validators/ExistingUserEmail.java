@@ -20,7 +20,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({METHOD, FIELD, ANNOTATION_TYPE})
 @Constraint(validatedBy = ExistingUserEmailValidator.class)
 public @interface ExistingUserEmail {
-    String message() default "{ExistingUserEmail}";
+    String message() default "UserDoesNotExists";
 
     Class<?>[] groups() default {};
 

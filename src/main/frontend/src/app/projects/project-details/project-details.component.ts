@@ -1,13 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {ProjectsService} from "../projects.service";
-import {switchMap, tap, catchError} from "rxjs/operators";
+import {switchMap, tap} from "rxjs/operators";
 import {Observable} from "rxjs";
 import {ProjectInfo} from "../project-info";
 import {UserService} from "../../auth/user.service";
 import {UserInfo} from "../../auth/user-info";
 import {HttpErrorResponse} from "@angular/common/http";
-import {ProjectSummary} from "../project-summary";
 import {TaskSummary} from "../../tasks/task-summary";
 
 @Component({
@@ -23,14 +22,14 @@ export class ProjectDetailsComponent implements OnInit {
   currentUser: UserInfo;
   isProjectAdmin: boolean;
   hasTasks: boolean;
-  addTaskLink: any[];
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private projectsService: ProjectsService,
     private userService: UserService
-  ) { }
+  ) {
+  }
 
   ngOnInit() {
     this.currentUser = this.userService.currentUser;
@@ -41,7 +40,6 @@ export class ProjectDetailsComponent implements OnInit {
     this.project$.subscribe((project: ProjectInfo) => {
       this.project = project;
       this.isProjectAdmin = project.administrator.email === this.currentUser.email;
-      this.addTaskLink = ['/projects', project.id, 'tasks', 'add'];
       this.hasTasks = project.tasks.length > 0;
     }, this.registerHttpError);
   }
@@ -51,10 +49,13 @@ export class ProjectDetailsComponent implements OnInit {
     console.error(error);
   }
 
-  removeProject() {
-
+  deleteProject() {
+    if (this.project)
+      this.projectsService.deleteProject(this.project.id)
+        .subscribe(() => this.router.navigate(['/projects']));
   }
 
+  // noinspection JSMethodCanBeStatic
   trackByTasks(index: number, task: TaskSummary): string {
     return task.id;
   }

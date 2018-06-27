@@ -30,6 +30,12 @@
       },
       "summary": {
         "lastModifiedFile": "Ostatnio zmodyfikowany plik {{name}} w dniu {{saveDate | date:'long'}} przez {{project.lastModifiedFile.author}} w zadaniu {{taskName}}"
+      },
+      "add": {
+        "createButton": "Utwórz",
+        "descriptionLabel": "Dodatkowy opis projektu",
+        "nameLabel": "Nazwa projektu",
+        "legend": "Aby dodać nowy projekt należy wypełnić poniższy formularz"
       }
     },
     "task": {
@@ -48,7 +54,7 @@
           "administratorEmail": {
             "label": "Adres e-mail administratora"
           },
-          "createButton": "Stwórz"
+          "createButton": "Utwórz"
         }
       }
     },
@@ -65,6 +71,12 @@
       "currentUserMsg": "Zalogowany jako {{fullName}}",
       "logoutBtn": "Wyloguj",
       "homePageLink": "Strona główna"
+    },
+    "validators": {
+      "required": "To pole jest wymagane",
+      "maxlength": "To pole nie może mieć więcej niż {{requiredLength}}",
+      "userNotExists": "Nie istnieje użytkownik o podanym adresie e-mail",
+      "email": "Proszę podać poprawny adres e-mail"
     }
   }
 }

@@ -4,9 +4,7 @@ import {NewTask} from "./new-task";
 import {Observable} from "rxjs";
 import {map} from "rxjs/operators"
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class TasksService {
 
   constructor(private http: HttpClient) {

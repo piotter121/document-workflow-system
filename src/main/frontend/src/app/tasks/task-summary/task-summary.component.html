@@ -4,7 +4,7 @@
   </h3>
 
   <div class="card-body">
-    <p class="card-text">Utworzono {{task.creationDate | date:'long'}}</p>
+    <p class="card-text">Utworzono {{task.creationDate | date:'dd.MM.yyyy H:mm'}}</p>
     <p class="card-text" *ngIf="task.lastModifiedFile">
       {{'dws.task.summary.lastModifiedFile' | translate:task.lastModifiedFile}}
     </p>

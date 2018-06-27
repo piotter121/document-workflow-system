@@ -50,4 +50,9 @@ public class UserServiceImpl implements UserService {
         user.setLastName(form.getLastName());
         userRepository.save(user);
     }
+
+    @Override
+    public boolean checkIfUserExists(String email) {
+        return userRepository.findOneByEmail(email).isPresent();
+    }
 }

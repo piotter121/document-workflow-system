@@ -21,7 +21,7 @@ import java.util.UUID;
  * Created by piotr on 16.12.16.
  */
 @RestController
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 @RequestMapping("/api/projects")
 public class ProjectsController {
     private static final Logger logger = Logger.getLogger(ProjectsController.class);
@@ -53,7 +53,7 @@ public class ProjectsController {
     @DeleteMapping("/{projectId}")
     @PreAuthorize("@securityService.isCurrentUserProjectAdministrator(#projectId)")
     public void deleteProject(@PathVariable UUID projectId) {
-        logger.debug("Received HTTP DELETE request for deletion project of id=" + projectId);
+        logger.debug("Received HTTP DELETE request for deletion project " + projectId);
         projectService.deleteProject(projectId);
     }
 }

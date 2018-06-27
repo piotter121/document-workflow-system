@@ -2,7 +2,7 @@
 @import "~bootstrap/dist/css/bootstrap.min.css";
 @import "~font-awesome/css/font-awesome.min.css";
 body {
-  background-color: #f1f1f1;
+  background-color: #f1f1f140;
 }
 [disabled] {
   cursor: not-allowed;
@@ -14,4 +14,9 @@ body {
 
 .card-header > a:hover {
   text-decoration: inherit;
+}
+
+input.ng-invalid.ng-touched, input.ng-invalid.ng-dirty,
+textarea.ng-invalid.ng-touched, textarea.ng-invalid.ng-dirty {
+  border-color: #dc3545;
 }

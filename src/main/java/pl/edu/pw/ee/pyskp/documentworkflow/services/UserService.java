@@ -15,4 +15,6 @@ public interface UserService {
     String getCurrentUserEmail();
 
     void createUserFromForm(NewUserDTO form);
+
+    boolean checkIfUserExists(String email);
 }

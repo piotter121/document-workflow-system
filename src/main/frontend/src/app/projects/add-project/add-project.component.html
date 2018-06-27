@@ -1,34 +1,37 @@
-<legend>
-  Aby dodać nowy projekt należy wypełnić poniższy formularz.
-</legend>
-<form [formGroup]="newProject" (ngSubmit)="createProject()" novalidate>
-  <fieldset>
-    <div class="form-group row">
-      <label class="col-md-2 col-form-label" for="name">
-        Nazwa projektu
-      </label>
-      <div class="col-md-5">
-        <input id="name" type="text" class="form-control" formControlName="name"
-                  [ngClass]="{'is-invalid': isInvalid(name)}" required>
-      </div>
-    </div>
+<div class="row">
+  <div class="col-md-12">
+    <form [formGroup]="newProject" (ngSubmit)="createProject()" novalidate>
+      <fieldset>
+        <legend translate>dws.project.add.legend</legend>
+        <div class="form-group row">
+          <label class="col-md-2 col-form-label" for="name" translate>
+            dws.project.add.nameLabel
+          </label>
+          <div class="col-md-5">
+            <input id="name" type="text" class="form-control" formControlName="name" required>
+            <invalid-feedback [control]="name"></invalid-feedback>
+          </div>
+        </div>
 
-    <div class="form-group row">
-      <label class="col-md-2 col-form-label" for="description">
-        Dodatkowy opis projektu
-      </label>
-      <div class="col-md-5">
-        <textarea id="description" class="form-control" formControlName="description"
-                  [ngClass]="{'is-invalid': isInvalid(description)}"></textarea>
-      </div>
-    </div>
+        <div class="form-group row">
+          <label class="col-md-2 col-form-label" for="description" translate>
+            dws.project.add.descriptionLabel
+          </label>
+          <div class="col-md-5">
+            <textarea id="description" class="form-control" formControlName="description"></textarea>
+            <invalid-feedback [control]="description"></invalid-feedback>
+          </div>
+        </div>
 
-    <div class="form-group row">
-      <div class="offset-md-2 col-md-10">
-        <button type="submit" class="btn btn-primary">
-          Stwórz
-        </button>
-      </div>
-    </div>
-  </fieldset>
-</form>
+        <div class="form-group row">
+          <div class="offset-md-2 col-md-10">
+            <button type="submit" class="btn btn-primary" [disabled]="newProject.invalid" translate>
+              dws.project.add.createButton
+            </button>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</div>
+

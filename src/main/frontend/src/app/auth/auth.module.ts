@@ -1,16 +1,12 @@
 import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
 import {LoginComponent} from './login/login.component';
 import {RegisterComponent} from './register/register.component';
 import {AuthGuardService} from "./auth-guard.service";
-import {RouterModule} from "@angular/router";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {HttpClientModule} from "@angular/common/http";
 import {AuthService} from "./auth.service";
 import {JwtModule, JwtModuleOptions} from "@auth0/angular-jwt";
 import {AuthRoutingModule} from "./auth-routing.module";
-import {TranslateModule} from "@ngx-translate/core";
 import {UserService} from "./user.service";
+import {SharedModule} from "../shared/shared.module";
 
 const jwtOptions: JwtModuleOptions = {
   config: {
@@ -23,14 +19,9 @@ const jwtOptions: JwtModuleOptions = {
 
 @NgModule({
   imports: [
-    CommonModule,
-    RouterModule,
-    FormsModule,
-    ReactiveFormsModule,
-    HttpClientModule,
+    SharedModule,
     JwtModule.forRoot(jwtOptions),
     AuthRoutingModule,
-    TranslateModule
   ],
   declarations: [
     LoginComponent,

@@ -5,6 +5,7 @@ import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {map} from "rxjs/operators";
 import {NewTask} from "../new-task";
 import {HttpErrorResponse} from "@angular/common/http";
+import {AppValidatorsService} from "../../shared/app-validators.service";
 
 @Component({
   selector: 'app-add-task',
@@ -20,14 +21,15 @@ export class AddTaskComponent implements OnInit {
     private formBuilder: FormBuilder,
     private tasksService: TasksService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private appValidators: AppValidatorsService
   ) {}
 
   ngOnInit() {
     this.newTask = this.formBuilder.group({
       name: ['', [Validators.required, Validators.maxLength(50)]],
-      description: ['', [Validators.maxLength(1024)]],
-      administratorEmail: ['', [Validators.email]]
+      description: ['', [Validators.maxLength(1000)]],
+      administratorEmail: ['', [Validators.email, Validators.required], this.appValidators.existingUserEmail()]
     });
     this.route.paramMap
       .pipe(map((paramMap: ParamMap) => paramMap.get('projectId')))
@@ -53,10 +55,5 @@ export class AddTaskComponent implements OnInit {
         (taskId: string) => this.router.navigate(['/projects', this.projectId, 'tasks', taskId]),
         (error: HttpErrorResponse) => console.error(error)
       );
-  }
-
-  // noinspection JSMethodCanBeStatic
-  isInvalid(control: AbstractControl): boolean {
-    return control.invalid && (control.touched || control.dirty);
   }
 }

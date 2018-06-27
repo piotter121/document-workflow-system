@@ -24,10 +24,6 @@ export class AddProjectComponent implements OnInit {
     });
   }
 
-  isInvalid(control: AbstractControl): boolean {
-    return control.invalid && (control.touched || control.dirty);
-  }
-
   get name(): AbstractControl {
     return this.newProject.get('name');
   }

@@ -1,0 +1,5 @@
+<div class="error-messages" *ngIf="showMessages">
+  <span *ngFor="let error of errorsKeys;">
+    {{'dws.validators.' + error | translate:errorValue(error)}}
+  </span>
+</div>

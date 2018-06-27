@@ -10,7 +10,7 @@ import org.hibernate.validator.constraints.NotBlank;
 @Data
 public class NewProjectForm {
     @NotBlank
-    @Length(min = 5, max = 40)
+    @Length(max = 40)
     private String name;
 
     @Length(max = 1024)
