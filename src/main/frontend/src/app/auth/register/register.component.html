@@ -1,68 +1,65 @@
-<form [formGroup]="newUser" (ngSubmit)="register()" novalidate>
-  <legend>
-    Poniżej znajduje się formularz rejestracji w systemie. Wszystkie pola są wymagane.
-  </legend>
-  <fieldset>
-    <div class="form-group row">
-      <label class="col-md-2 col-form-label" for="email">
-        Adres e-mail
-      </label>
-      <div class="col-md-5">
-        <input id="email" type="email" class="form-control" formControlName="email"
-               [ngClass]="{'is-invalid': isInvalid(email)}">
-      </div>
-    </div>
-    <div class="form-group row">
-      <label class="col-md-2 col-form-label" for="firstName">
-        Imię
-      </label>
-      <div class="col-md-5">
-        <input id="firstName" type="text" class="form-control" formControlName="firstName"
-               [ngClass]="{'is-invalid': isInvalid(firstName)}">
-      </div>
-    </div>
-    <div class="form-group row">
-      <label class="col-md-2 col-form-label" for="lastName">
-        Nazwisko
-      </label>
-      <div class="col-md-5">
-        <input id="lastName" type="text" class="form-control" formControlName="lastName"
-               [ngClass]="{'is-invalid': isInvalid(lastName)}">
-      </div>
-    </div>
-    <div class="form-group row">
-      <label class="col-md-2 col-form-label" for="password">
-        Hasło
-      </label>
-      <div class="col-md-5">
-        <input id="password" type="password" class="form-control" formControlName="password"
-               [ngClass]="{'is-invalid': isInvalid(password)}">
-        <div class="invalid-feedback">
-          <span class="error-span" *ngIf="password.errors?.minlength">Hasło powinno mieć co najmniej 6 znaków</span>
+<div class="row">
+  <div class="col-md-12">
+    <form [formGroup]="newUser" (ngSubmit)="register()" novalidate>
+      <fieldset>
+        <legend translate>
+          dws.auth.register.legend
+        </legend>
+        <div class="form-group row">
+          <label class="col-md-2 col-form-label" for="email" translate>
+            dws.auth.register.emailLabel
+          </label>
+          <div class="col-md-5">
+            <input id="email" type="email" class="form-control" formControlName="email">
+            <invalid-feedback [control]="email"></invalid-feedback>
+          </div>
         </div>
-      </div>
-    </div>
-    <div class="form-group row">
-      <label class="col-md-2 col-form-label" for="passwordRepeated">
-        Powtórz hasło
-      </label>
-      <div class="col-md-5">
-        <input id="passwordRepeated" type="password" class="form-control"
-               [ngClass]="{'is-invalid': isInvalid(passwordRepeated)}"
-               formControlName="passwordRepeated">
-        <div class="invalid-feedback">
-          <span class="error-span" *ngIf="passwordRepeated.errors?.MatchPassword">Podane hasło jest inne!</span>
-          <span class="error-span" *ngIf="passwordRepeated.errors?.minlength">Hasło powinno mieć co najmniej 6 znaków</span>
+        <div class="form-group row">
+          <label class="col-md-2 col-form-label" for="firstName" translate>
+            dws.auth.register.firstNameLabel
+          </label>
+          <div class="col-md-5">
+            <input id="firstName" type="text" class="form-control" formControlName="firstName">
+            <invalid-feedback [control]="firstName"></invalid-feedback>
+          </div>
         </div>
-      </div>
-    </div>
-    <div class="alert alert-danger" [hidden]="errors?.length == 0">
-      <p *ngFor="let error of errors">
-        {{error}}
-      </p>
-    </div>
-    <button type="submit" class="btn btn-secondary" [disabled]="newUser.invalid">
-      <i class="fa fa-check" aria-hidden="true"></i> Zarejestruj się
-    </button>
-  </fieldset>
-</form>
+        <div class="form-group row">
+          <label class="col-md-2 col-form-label" for="lastName" translate>
+            dws.auth.register.lastNameLabel
+          </label>
+          <div class="col-md-5">
+            <input id="lastName" type="text" class="form-control" formControlName="lastName">
+            <invalid-feedback [control]="lastName"></invalid-feedback>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-md-2 col-form-label" for="password" translate>
+            dws.auth.register.passwordLabel
+          </label>
+          <div class="col-md-5">
+            <input id="password" type="password" class="form-control" formControlName="password">
+            <invalid-feedback [control]="password"></invalid-feedback>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-md-2 col-form-label" for="passwordRepeated" translate>
+            dws.auth.register.passwordRepeatedLabel
+          </label>
+          <div class="col-md-5">
+            <input id="passwordRepeated" type="password" class="form-control"
+                   formControlName="passwordRepeated">
+            <invalid-feedback [control]="passwordRepeated"></invalid-feedback>
+          </div>
+        </div>
+        <div class="alert alert-danger" [hidden]="errors?.length == 0">
+          <p *ngFor="let error of errors">
+            {{error}}
+          </p>
+        </div>
+        <button type="submit" class="btn btn-secondary" [disabled]="newUser.invalid">
+          <i class="fa fa-check" aria-hidden="true"></i> {{'dws.auth.register.submitButton' | translate}}
+        </button>
+      </fieldset>
+    </form>
+  </div>
+</div>

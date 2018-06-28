@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {AbstractControl, AsyncValidatorFn, ValidationErrors} from "@angular/forms";
 import {Observable} from "rxjs";
-import {map} from "rxjs/operators";
+import {map, debounceTime, distinctUntilChanged} from "rxjs/operators";
 import {HttpClient} from "@angular/common/http";
 
 @Injectable()
@@ -16,7 +16,7 @@ export class AppValidatorsService {
       params: {
         'email': email
       }
-    });
+    }).pipe(debounceTime(500), distinctUntilChanged());
   }
 
   existingUserEmail(): AsyncValidatorFn {
@@ -27,4 +27,11 @@ export class AppValidatorsService {
     };
   }
 
+  nonExistingUserEmail(): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+      let value: string = control.value;
+      return this.checkIfUserExists(value)
+        .pipe(map((exists: boolean) => exists ? {'userExists': true} : null));
+    };
+  }
 }

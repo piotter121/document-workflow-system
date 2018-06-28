@@ -1,13 +1,15 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {ProjectsService} from "../projects.service";
-import {switchMap, tap} from "rxjs/operators";
+import {switchMap} from "rxjs/operators";
 import {Observable} from "rxjs";
 import {ProjectInfo} from "../project-info";
 import {UserService} from "../../auth/user.service";
 import {UserInfo} from "../../auth/user-info";
 import {HttpErrorResponse} from "@angular/common/http";
 import {TaskSummary} from "../../tasks/task-summary";
+import {ToastrService} from "ngx-toastr";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-project-details',
@@ -16,7 +18,6 @@ import {TaskSummary} from "../../tasks/task-summary";
 })
 export class ProjectDetailsComponent implements OnInit {
 
-  isError: boolean = false;
   project$: Observable<ProjectInfo>;
   project: ProjectInfo;
   currentUser: UserInfo;
@@ -27,26 +28,32 @@ export class ProjectDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private projectsService: ProjectsService,
-    private userService: UserService
+    private userService: UserService,
+    private toastr: ToastrService,
+    private translate: TranslateService
   ) {
   }
 
   ngOnInit() {
     this.currentUser = this.userService.currentUser;
     this.project$ = this.route.paramMap.pipe(
-      tap(() => this.isError = false),
       switchMap((params: ParamMap) => this.projectsService.getProjectInfo(params.get('projectId')))
     );
     this.project$.subscribe((project: ProjectInfo) => {
       this.project = project;
       this.isProjectAdmin = project.administrator.email === this.currentUser.email;
       this.hasTasks = project.tasks.length > 0;
-    }, this.registerHttpError);
+    }, this.onGetProjectError.bind(this));
   }
 
-  private registerHttpError(error: HttpErrorResponse) {
-    this.isError = true;
-    console.error(error);
+  private onGetProjectError(error: HttpErrorResponse) {
+    this.router.navigate(['/projects'])
+      .then(() => {
+        let data = error.error;
+        if (data && data.errorCode)
+          this.translate.get(`dws.httpErrors.${data.errorCode}`, data.params)
+            .subscribe((translation: string) => this.toastr.error(translation));
+      });
   }
 
   deleteProject() {

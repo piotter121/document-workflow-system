@@ -15,6 +15,8 @@ import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {TranslateHttpLoader} from "@ngx-translate/http-loader";
 import {registerLocaleData} from "@angular/common";
 import localePl from '@angular/common/locales/pl';
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {ToastrModule} from "ngx-toastr";
 
 registerLocaleData(localePl, 'pl');
 
@@ -31,6 +33,12 @@ export function HttpLoaderFactory(http: HttpClient): TranslateLoader {
     BrowserModule,
     HttpClientModule,
     NgbModule.forRoot(),
+    BrowserAnimationsModule,
+    ToastrModule.forRoot({
+      timeOut: 10_000,
+      positionClass: 'toast-bottom-right',
+      preventDuplicates: true
+    }),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

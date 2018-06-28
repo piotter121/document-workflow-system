@@ -1,1 +1,21 @@
+<div class="row" *ngIf="task">
+  <div class="col-md-8">
+    <ngb-tabset type="pills">
+      <ngb-tab title="{{'dws.task.details.files.pillTitle' | translate}}">
+        <ng-template ngbTabContent>
+          <files-list [task]="task"></files-list>
+        </ng-template>
+      </ngb-tab>
 
+      <ngb-tab title="{{'dws.task.details.participants.pillTitle' | translate}}">
+        <ng-template ngbTabContent>
+          <participants-list [task]="task"></participants-list>
+        </ng-template>
+      </ngb-tab>
+    </ngb-tabset>
+  </div>
+
+  <div class="col-md-4">
+
+  </div>
+</div>

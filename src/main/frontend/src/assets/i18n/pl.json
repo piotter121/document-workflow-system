@@ -1,6 +1,7 @@
 {
   "dws": {
     "httpErrors": {
+      "AccessDeniedException": "Dostęp do wybranego zasobu jest zabroniony",
       "UserNotFoundException": "Nie znaleziono użytkownika z adresem email '{{email}}'"
     },
     "project": {
@@ -56,6 +57,14 @@
           },
           "createButton": "Utwórz"
         }
+      },
+      "details": {
+        "files": {
+          "pillTitle": "Pliki"
+        },
+        "participants": {
+          "pillTitle": "Uczestnicy"
+        }
       }
     },
     "auth": {
@@ -65,6 +74,15 @@
         "emailPlaceholder": "Adres e-mail",
         "passwordPlaceholder": "Hasło",
         "header": "Logowanie"
+      },
+      "register": {
+        "legend": "Poniżej znajduje się formularz rejestracji w systemie. Wszystkie pola są wymagane",
+        "emailLabel": "Adres e-mail",
+        "firstNameLabel": "Imię",
+        "lastNameLabel": "Nazwisko",
+        "passwordLabel": "Hasło",
+        "passwordRepeatedLabel": "Powtórz hasło",
+        "submitButton": "Zarejestruj się"
       }
     },
     "navbar": {
@@ -74,9 +92,12 @@
     },
     "validators": {
       "required": "To pole jest wymagane",
-      "maxlength": "To pole nie może mieć więcej niż {{requiredLength}}",
+      "maxlength": "To pole nie może mieć więcej niż {{requiredLength}} znaków",
+      "minlength": "To pole musi mieć co najmniej {{requiredLength}} znaków",
       "userNotExists": "Nie istnieje użytkownik o podanym adresie e-mail",
-      "email": "Proszę podać poprawny adres e-mail"
+      "userExists": "Już istnieje użytkownik o podanym adresie e-mail",
+      "email": "Proszę podać poprawny adres e-mail",
+      "MatchPassword": "Podane hasło jest inne!"
     }
   }
 }

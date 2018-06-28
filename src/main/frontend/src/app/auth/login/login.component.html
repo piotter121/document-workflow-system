@@ -12,10 +12,12 @@
               <div class="form-group">
                 <input class="form-control" placeholder="{{'dws.auth.login.emailPlaceholder' | translate}}"
                        type="text" formControlName="email">
+                <invalid-feedback [control]="email"></invalid-feedback>
               </div>
               <div class="form-group">
                 <input class="form-control" placeholder="{{'dws.auth.login.passwordPlaceholder' | translate}}"
                        type="password" formControlName="password">
+                <invalid-feedback [control]="password"></invalid-feedback>
               </div>
               <div class="form-group">
                 <button class="btn btn-primary btn-block" [disabled]="!loginForm.form.valid" type="submit">

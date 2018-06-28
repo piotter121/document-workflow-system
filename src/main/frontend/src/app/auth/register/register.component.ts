@@ -4,6 +4,7 @@ import {Router} from "@angular/router";
 import {HttpErrorResponse} from "@angular/common/http";
 import {AbstractControl, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {NewUser} from "./new-user";
+import {AppValidatorsService} from "../../shared/app-validators.service";
 
 @Component({
   selector: 'app-register',
@@ -17,12 +18,13 @@ export class RegisterComponent implements OnInit {
 
   constructor(private authService: AuthService,
               private router: Router,
-              private formBuilder: FormBuilder) { }
+              private formBuilder: FormBuilder,
+              private appValidators: AppValidatorsService) { }
 
   ngOnInit() {
     this.errors = [];
     this.newUser = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.email], this.appValidators.nonExistingUserEmail()],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -92,9 +94,5 @@ export class RegisterComponent implements OnInit {
     } else if (passwordRepeatedErrors) {
       delete abstractControl.get('passwordRepeated').errors['MatchPassword'];
     }
-  }
-
-  isInvalid(control: AbstractControl): boolean {
-    return control.invalid && (control.touched || control.dirty);
   }
 }

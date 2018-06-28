@@ -15,6 +15,7 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.translate.setDefaultLang('en');
     this.translate.use(navigator.languages[1] || navigator.language);
+    console.log(this.translate.getBrowserLang());
   }
 
   isLoggedIn(): boolean {
