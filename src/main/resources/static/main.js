@@ -1745,7 +1745,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"card bg-light\">\n  <h4 class=\"card-header\">\n    <a [routerLink]=\"[project.id]\">{{project.name}}</a>\n  </h4>\n\n  <div class=\"card-body\">\n    <p class=\"card-text\" translate [translateParams]=\"project | json\">\n      dws.project.summary.creationDate\n    </p>\n    <p class=\"card-text\" *ngIf=\"project.lastModifiedFile\" translate [translateParams]=\"project.lastModifiedFile | json\">\n      dws.project.summary.lastModifiedFile\n    </p>\n  </div>\n\n  <div class=\"card-footer\">\n    <span class=\"fa fa-user\"></span> {{project.numberOfParticipants}}\n    <span class=\"fa fa-tasks\"></span> {{project.numberOfTasks}}\n    <span class=\"fa fa-file\"></span> {{project.numberOfFiles}}\n  </div>\n</div>\n"
+module.exports = "<div class=\"card bg-light\">\n  <h4 class=\"card-header\">\n    <a [routerLink]=\"[project.id]\">{{project.name}}</a>\n  </h4>\n\n  <div class=\"card-body\">\n    <p class=\"card-text\" translate [translateParams]=\"project | formatDates:'DD.MM.YYYY H:mm'\">\n      dws.project.summary.creationDate\n    </p>\n    <p class=\"card-text\" *ngIf=\"project.lastModifiedFile\" translate\n       [translateParams]=\"project.lastModifiedFile | formatDates:'DD.MM.YYYY H:mm'\">\n      dws.project.summary.lastModifiedFile\n    </p>\n  </div>\n\n  <div class=\"card-footer\">\n    <span class=\"fa fa-user\"></span> {{project.numberOfParticipants}}\n    <span class=\"fa fa-tasks\"></span> {{project.numberOfTasks}}\n    <span class=\"fa fa-file\"></span> {{project.numberOfFiles}}\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -2055,6 +2055,49 @@ var AppValidatorsService = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/shared/format-dates.pipe.ts":
+/*!*********************************************!*\
+  !*** ./src/app/shared/format-dates.pipe.ts ***!
+  \*********************************************/
+/*! exports provided: FormatDatesPipe */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FormatDatesPipe", function() { return FormatDatesPipe; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_1__);
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
+
+var FormatDatesPipe = /** @class */ (function () {
+    function FormatDatesPipe() {
+    }
+    FormatDatesPipe.prototype.transform = function (value, format) {
+        var result = {};
+        Object.keys(value).forEach(function (key) {
+            result[key] = (value[key] instanceof Date) ? moment__WEBPACK_IMPORTED_MODULE_1__(value[key]).format(format) : value[key];
+        });
+        return result;
+    };
+    FormatDatesPipe = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Pipe"])({
+            name: 'formatDates'
+        })
+    ], FormatDatesPipe);
+    return FormatDatesPipe;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/shared/formatter.ts":
 /*!*************************************!*\
   !*** ./src/app/shared/formatter.ts ***!
@@ -2184,12 +2227,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _invalid_feedback_invalid_feedback_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./invalid-feedback/invalid-feedback.component */ "./src/app/shared/invalid-feedback/invalid-feedback.component.ts");
 /* harmony import */ var _app_validators_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./app-validators.service */ "./src/app/shared/app-validators.service.ts");
 /* harmony import */ var _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @ng-bootstrap/ng-bootstrap */ "./node_modules/@ng-bootstrap/ng-bootstrap/index.js");
+/* harmony import */ var _format_dates_pipe__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./format-dates.pipe */ "./src/app/shared/format-dates.pipe.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -2207,7 +2252,8 @@ var SharedModule = /** @class */ (function () {
                 _ngx_translate_core__WEBPACK_IMPORTED_MODULE_3__["TranslateModule"]
             ],
             declarations: [
-                _invalid_feedback_invalid_feedback_component__WEBPACK_IMPORTED_MODULE_4__["InvalidFeedbackComponent"]
+                _invalid_feedback_invalid_feedback_component__WEBPACK_IMPORTED_MODULE_4__["InvalidFeedbackComponent"],
+                _format_dates_pipe__WEBPACK_IMPORTED_MODULE_7__["FormatDatesPipe"]
             ],
             providers: [
                 _app_validators_service__WEBPACK_IMPORTED_MODULE_5__["AppValidatorsService"]
@@ -2218,7 +2264,8 @@ var SharedModule = /** @class */ (function () {
                 _angular_forms__WEBPACK_IMPORTED_MODULE_2__["ReactiveFormsModule"],
                 _ngx_translate_core__WEBPACK_IMPORTED_MODULE_3__["TranslateModule"],
                 _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_6__["NgbModule"],
-                _invalid_feedback_invalid_feedback_component__WEBPACK_IMPORTED_MODULE_4__["InvalidFeedbackComponent"]
+                _invalid_feedback_invalid_feedback_component__WEBPACK_IMPORTED_MODULE_4__["InvalidFeedbackComponent"],
+                _format_dates_pipe__WEBPACK_IMPORTED_MODULE_7__["FormatDatesPipe"]
             ]
         })
     ], SharedModule);

@@ -30,8 +30,8 @@
         "noProjectsMsg": "<strong>Brak projektów do wyświetlania.</strong> Utwórz nowy projekt, lub poproś o dodanie do istniejącego, aby rozpocząć pracę."
       },
       "summary": {
-        "creationDate": "Utworzono {{creationDateFormatted}}",
-        "lastModifiedFile": "Ostatnio zmodyfikowany plik {{name}} w dniu {{saveDateFormatted}} przez {{author}} w zadaniu {{taskName}}"
+        "creationDate": "Utworzono {{creationDate}}",
+        "lastModifiedFile": "Ostatnio zmodyfikowany plik {{name}} w dniu {{saveDate}} przez {{author}} w zadaniu {{taskName}}"
       },
       "add": {
         "createButton": "Utwórz",
