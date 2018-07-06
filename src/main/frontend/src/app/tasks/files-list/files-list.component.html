@@ -1,3 +1,38 @@
-<p>
-  files-list works!
-</p>
+<div class="row">
+  <div class="col-md-12">
+    <div class="btn-toolbar" role="toolbar">
+      <div class="btn-group" role="group">
+        <a *ngIf="!currentUser.equals(task.administrator)" class="btn btn-info"
+           href="mailto:{{task.administrator.email}}">
+          <i class="fa fa-envelope" aria-hidden="true"></i>
+          {{'dws.task.details.files.toolbar.sendEmailToAdmin' | translate}}
+        </a>
+
+        <a class="btn btn-success" [routerLink]="['files', 'add']">
+          <i class="fa fa-plus" aria-hidden="true"></i>
+          {{'dws.task.details.files.toolbar.addFile' | translate}}
+        </a>
+      </div>
+    </div>
+
+    <div *ngIf="task.filesInfo?.length === 0; then noFilesInfo else listFiles"></div>
+
+    <ng-template #noFilesInfo>
+      <div class="alert alert-info text-center" role="alert"
+           [innerHTML]="'dws.task.details.files.noFilesInfoMsg' | translate">
+      </div>
+    </ng-template>
+
+    <ng-template #listFiles>
+      <div class="text-center">
+        <h3 translate [translateParams]="task">dws.task.details.files.listHeader</h3>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-2"
+             *ngFor="let file of task.filesInfo; trackBy: file.id">
+          <file-summary [file]="file"></file-summary>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</div>

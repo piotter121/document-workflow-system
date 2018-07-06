@@ -30,7 +30,8 @@
         "noProjectsMsg": "<strong>Brak projektów do wyświetlania.</strong> Utwórz nowy projekt, lub poproś o dodanie do istniejącego, aby rozpocząć pracę."
       },
       "summary": {
-        "lastModifiedFile": "Ostatnio zmodyfikowany plik {{name}} w dniu {{saveDate | date:'long'}} przez {{project.lastModifiedFile.author}} w zadaniu {{taskName}}"
+        "creationDate": "Utworzono {{creationDateFormatted}}",
+        "lastModifiedFile": "Ostatnio zmodyfikowany plik {{name}} w dniu {{saveDateFormatted}} przez {{author}} w zadaniu {{taskName}}"
       },
       "add": {
         "createButton": "Utwórz",
@@ -41,7 +42,8 @@
     },
     "task": {
       "summary": {
-        "lastModifiedFile": "Ostatnio zmodyfikowany plik {{name}} w dniu {{saveDate | date:'long'}} przez {{author}}"
+        "created": "Utworzono {{creationDate | date:'dd.MM.yyyy H:mm'}}",
+        "lastModifiedFile": "Ostatnio zmodyfikowany plik {{name}} w dniu {{saveDate}} przez {{author}}"
       },
       "add": {
         "legend": "Proszę wprowadzić nazwę, opis oraz adres e-mail osoby, która będzie zarządzać zadaniem w tym projekcie",
@@ -60,11 +62,31 @@
       },
       "details": {
         "files": {
-          "pillTitle": "Pliki"
+          "pillTitle": "Pliki",
+          "toolbar": {
+            "sendEmailToAdmin": "Wyślij wiadomość do administratora zadania",
+            "addFile": "Dodaj nowy plik"
+          },
+          "noFilesInfoMsg": "<strong>Zadanie nie posiada jeszcze żadnych plików!</strong>\nDodaj nowy plik, aby kontynuować pracę",
+          "listHeader": "Pliki w zadaniu {{name}}"
         },
         "participants": {
-          "pillTitle": "Uczestnicy"
+          "pillTitle": "Uczestnicy",
+          "addParticipant": {
+            "button": "Dodaj uczestnika do zadania",
+            "label": "Adres e-mail użytkownika",
+            "buttonSubmit": "Dodaj"
+          }
         }
+      }
+    },
+    "files": {
+      "summary": {
+        "created": "Utworzono {{creationDate | date:'dd.MM.yyyy H:mm'}}",
+        "version": "Aktualny numer wersji to {{latestVersion.version}}",
+        "markedToConfirm": "Do zatwierdzenia",
+        "confirmed": "Zatwierdzony",
+        "lastModified": "Ostatnio zmodyfikowany w dniu {{modificationDate | date:'dd.MM.yyyy H:mm'}} przez {{latestVersion.author}}"
       }
     },
     "auth": {
@@ -97,7 +119,8 @@
       "userNotExists": "Nie istnieje użytkownik o podanym adresie e-mail",
       "userExists": "Już istnieje użytkownik o podanym adresie e-mail",
       "email": "Proszę podać poprawny adres e-mail",
-      "MatchPassword": "Podane hasło jest inne!"
+      "MatchPassword": "Podane hasło jest inne!",
+      "isCurrentParticipant": "Podany użytkownik jest już uczestnikiem zadania"
     }
   }
 }

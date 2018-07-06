@@ -1,0 +1,25 @@
+<div class="card bg-light">
+  <h3 class="card-header">
+    <img src="/assets/images/{{file.extension}}.png">
+    <a [routerLink]="['files', file.id]">{{file.name}}</a>
+    <span *ngIf="file.markedToConfirm" class="badge text-uppercase" translate>
+      dws.files.summary.markedToConfirm
+    </span>
+    <span *ngIf="file.confirmed" class="badge text-uppercase" translate>
+      dws.files.summary.confirmed
+    </span>
+  </h3>
+
+  <div class="card-body">
+    <p class="card-text" translate [translateParams]="file">dws.files.summary.created</p>
+    <p class="card-text" translate [translateParams]="file">dws.files.summary.version</p>
+    <p class="card-text" *ngIf="file.creationDate !== file.latestVersion.saveDate"
+       translate [translateParams]="file">
+      dws.files.summary.lastModified
+    </p>
+  </div>
+
+  <div class="card-footer">
+    <span class="fa fa-list-alt"></span> {{file.numberOfVersions}}
+  </div>
+</div>

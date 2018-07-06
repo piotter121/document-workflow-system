@@ -4,9 +4,11 @@
   </h4>
 
   <div class="card-body">
-    <p class="card-text">Utworzono {{project.creationDate | date:'dd MMMM yyyy H:mm'}}</p>
-    <p class="card-text" *ngIf="project.lastModifiedFile">
-      {{'dws.project.summary.lastModifiedFile' | translate:project.lastModifiedFile}}
+    <p class="card-text" translate [translateParams]="project | json">
+      dws.project.summary.creationDate
+    </p>
+    <p class="card-text" *ngIf="project.lastModifiedFile" translate [translateParams]="project.lastModifiedFile | json">
+      dws.project.summary.lastModifiedFile
     </p>
   </div>
 

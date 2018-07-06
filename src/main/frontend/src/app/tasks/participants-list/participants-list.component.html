@@ -1,3 +1,7 @@
-<p>
-  participants-list works!
-</p>
+<div class="row">
+  <div class="col-md-12">
+    <add-participant *ngIf="currentUser.equals(task.administrator)" [task]="task"></add-participant>
+
+
+  </div>
+</div>

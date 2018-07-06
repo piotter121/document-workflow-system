@@ -4,6 +4,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {TranslateModule} from "@ngx-translate/core";
 import {InvalidFeedbackComponent} from './invalid-feedback/invalid-feedback.component';
 import {AppValidatorsService} from "./app-validators.service";
+import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 
 @NgModule({
   imports: [
@@ -21,6 +22,7 @@ import {AppValidatorsService} from "./app-validators.service";
     FormsModule,
     ReactiveFormsModule,
     TranslateModule,
+    NgbModule,
     InvalidFeedbackComponent
   ]
 })
