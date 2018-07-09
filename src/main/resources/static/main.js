@@ -1,285 +1,5 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([["main"],{
 
-/***/ "./node_modules/moment/locale sync recursive ^\\.\\/.*$":
-/*!**************************************************!*\
-  !*** ./node_modules/moment/locale sync ^\.\/.*$ ***!
-  \**************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var map = {
-	"./af": "./node_modules/moment/locale/af.js",
-	"./af.js": "./node_modules/moment/locale/af.js",
-	"./ar": "./node_modules/moment/locale/ar.js",
-	"./ar-dz": "./node_modules/moment/locale/ar-dz.js",
-	"./ar-dz.js": "./node_modules/moment/locale/ar-dz.js",
-	"./ar-kw": "./node_modules/moment/locale/ar-kw.js",
-	"./ar-kw.js": "./node_modules/moment/locale/ar-kw.js",
-	"./ar-ly": "./node_modules/moment/locale/ar-ly.js",
-	"./ar-ly.js": "./node_modules/moment/locale/ar-ly.js",
-	"./ar-ma": "./node_modules/moment/locale/ar-ma.js",
-	"./ar-ma.js": "./node_modules/moment/locale/ar-ma.js",
-	"./ar-sa": "./node_modules/moment/locale/ar-sa.js",
-	"./ar-sa.js": "./node_modules/moment/locale/ar-sa.js",
-	"./ar-tn": "./node_modules/moment/locale/ar-tn.js",
-	"./ar-tn.js": "./node_modules/moment/locale/ar-tn.js",
-	"./ar.js": "./node_modules/moment/locale/ar.js",
-	"./az": "./node_modules/moment/locale/az.js",
-	"./az.js": "./node_modules/moment/locale/az.js",
-	"./be": "./node_modules/moment/locale/be.js",
-	"./be.js": "./node_modules/moment/locale/be.js",
-	"./bg": "./node_modules/moment/locale/bg.js",
-	"./bg.js": "./node_modules/moment/locale/bg.js",
-	"./bm": "./node_modules/moment/locale/bm.js",
-	"./bm.js": "./node_modules/moment/locale/bm.js",
-	"./bn": "./node_modules/moment/locale/bn.js",
-	"./bn.js": "./node_modules/moment/locale/bn.js",
-	"./bo": "./node_modules/moment/locale/bo.js",
-	"./bo.js": "./node_modules/moment/locale/bo.js",
-	"./br": "./node_modules/moment/locale/br.js",
-	"./br.js": "./node_modules/moment/locale/br.js",
-	"./bs": "./node_modules/moment/locale/bs.js",
-	"./bs.js": "./node_modules/moment/locale/bs.js",
-	"./ca": "./node_modules/moment/locale/ca.js",
-	"./ca.js": "./node_modules/moment/locale/ca.js",
-	"./cs": "./node_modules/moment/locale/cs.js",
-	"./cs.js": "./node_modules/moment/locale/cs.js",
-	"./cv": "./node_modules/moment/locale/cv.js",
-	"./cv.js": "./node_modules/moment/locale/cv.js",
-	"./cy": "./node_modules/moment/locale/cy.js",
-	"./cy.js": "./node_modules/moment/locale/cy.js",
-	"./da": "./node_modules/moment/locale/da.js",
-	"./da.js": "./node_modules/moment/locale/da.js",
-	"./de": "./node_modules/moment/locale/de.js",
-	"./de-at": "./node_modules/moment/locale/de-at.js",
-	"./de-at.js": "./node_modules/moment/locale/de-at.js",
-	"./de-ch": "./node_modules/moment/locale/de-ch.js",
-	"./de-ch.js": "./node_modules/moment/locale/de-ch.js",
-	"./de.js": "./node_modules/moment/locale/de.js",
-	"./dv": "./node_modules/moment/locale/dv.js",
-	"./dv.js": "./node_modules/moment/locale/dv.js",
-	"./el": "./node_modules/moment/locale/el.js",
-	"./el.js": "./node_modules/moment/locale/el.js",
-	"./en-au": "./node_modules/moment/locale/en-au.js",
-	"./en-au.js": "./node_modules/moment/locale/en-au.js",
-	"./en-ca": "./node_modules/moment/locale/en-ca.js",
-	"./en-ca.js": "./node_modules/moment/locale/en-ca.js",
-	"./en-gb": "./node_modules/moment/locale/en-gb.js",
-	"./en-gb.js": "./node_modules/moment/locale/en-gb.js",
-	"./en-ie": "./node_modules/moment/locale/en-ie.js",
-	"./en-ie.js": "./node_modules/moment/locale/en-ie.js",
-	"./en-il": "./node_modules/moment/locale/en-il.js",
-	"./en-il.js": "./node_modules/moment/locale/en-il.js",
-	"./en-nz": "./node_modules/moment/locale/en-nz.js",
-	"./en-nz.js": "./node_modules/moment/locale/en-nz.js",
-	"./eo": "./node_modules/moment/locale/eo.js",
-	"./eo.js": "./node_modules/moment/locale/eo.js",
-	"./es": "./node_modules/moment/locale/es.js",
-	"./es-do": "./node_modules/moment/locale/es-do.js",
-	"./es-do.js": "./node_modules/moment/locale/es-do.js",
-	"./es-us": "./node_modules/moment/locale/es-us.js",
-	"./es-us.js": "./node_modules/moment/locale/es-us.js",
-	"./es.js": "./node_modules/moment/locale/es.js",
-	"./et": "./node_modules/moment/locale/et.js",
-	"./et.js": "./node_modules/moment/locale/et.js",
-	"./eu": "./node_modules/moment/locale/eu.js",
-	"./eu.js": "./node_modules/moment/locale/eu.js",
-	"./fa": "./node_modules/moment/locale/fa.js",
-	"./fa.js": "./node_modules/moment/locale/fa.js",
-	"./fi": "./node_modules/moment/locale/fi.js",
-	"./fi.js": "./node_modules/moment/locale/fi.js",
-	"./fo": "./node_modules/moment/locale/fo.js",
-	"./fo.js": "./node_modules/moment/locale/fo.js",
-	"./fr": "./node_modules/moment/locale/fr.js",
-	"./fr-ca": "./node_modules/moment/locale/fr-ca.js",
-	"./fr-ca.js": "./node_modules/moment/locale/fr-ca.js",
-	"./fr-ch": "./node_modules/moment/locale/fr-ch.js",
-	"./fr-ch.js": "./node_modules/moment/locale/fr-ch.js",
-	"./fr.js": "./node_modules/moment/locale/fr.js",
-	"./fy": "./node_modules/moment/locale/fy.js",
-	"./fy.js": "./node_modules/moment/locale/fy.js",
-	"./gd": "./node_modules/moment/locale/gd.js",
-	"./gd.js": "./node_modules/moment/locale/gd.js",
-	"./gl": "./node_modules/moment/locale/gl.js",
-	"./gl.js": "./node_modules/moment/locale/gl.js",
-	"./gom-latn": "./node_modules/moment/locale/gom-latn.js",
-	"./gom-latn.js": "./node_modules/moment/locale/gom-latn.js",
-	"./gu": "./node_modules/moment/locale/gu.js",
-	"./gu.js": "./node_modules/moment/locale/gu.js",
-	"./he": "./node_modules/moment/locale/he.js",
-	"./he.js": "./node_modules/moment/locale/he.js",
-	"./hi": "./node_modules/moment/locale/hi.js",
-	"./hi.js": "./node_modules/moment/locale/hi.js",
-	"./hr": "./node_modules/moment/locale/hr.js",
-	"./hr.js": "./node_modules/moment/locale/hr.js",
-	"./hu": "./node_modules/moment/locale/hu.js",
-	"./hu.js": "./node_modules/moment/locale/hu.js",
-	"./hy-am": "./node_modules/moment/locale/hy-am.js",
-	"./hy-am.js": "./node_modules/moment/locale/hy-am.js",
-	"./id": "./node_modules/moment/locale/id.js",
-	"./id.js": "./node_modules/moment/locale/id.js",
-	"./is": "./node_modules/moment/locale/is.js",
-	"./is.js": "./node_modules/moment/locale/is.js",
-	"./it": "./node_modules/moment/locale/it.js",
-	"./it.js": "./node_modules/moment/locale/it.js",
-	"./ja": "./node_modules/moment/locale/ja.js",
-	"./ja.js": "./node_modules/moment/locale/ja.js",
-	"./jv": "./node_modules/moment/locale/jv.js",
-	"./jv.js": "./node_modules/moment/locale/jv.js",
-	"./ka": "./node_modules/moment/locale/ka.js",
-	"./ka.js": "./node_modules/moment/locale/ka.js",
-	"./kk": "./node_modules/moment/locale/kk.js",
-	"./kk.js": "./node_modules/moment/locale/kk.js",
-	"./km": "./node_modules/moment/locale/km.js",
-	"./km.js": "./node_modules/moment/locale/km.js",
-	"./kn": "./node_modules/moment/locale/kn.js",
-	"./kn.js": "./node_modules/moment/locale/kn.js",
-	"./ko": "./node_modules/moment/locale/ko.js",
-	"./ko.js": "./node_modules/moment/locale/ko.js",
-	"./ky": "./node_modules/moment/locale/ky.js",
-	"./ky.js": "./node_modules/moment/locale/ky.js",
-	"./lb": "./node_modules/moment/locale/lb.js",
-	"./lb.js": "./node_modules/moment/locale/lb.js",
-	"./lo": "./node_modules/moment/locale/lo.js",
-	"./lo.js": "./node_modules/moment/locale/lo.js",
-	"./lt": "./node_modules/moment/locale/lt.js",
-	"./lt.js": "./node_modules/moment/locale/lt.js",
-	"./lv": "./node_modules/moment/locale/lv.js",
-	"./lv.js": "./node_modules/moment/locale/lv.js",
-	"./me": "./node_modules/moment/locale/me.js",
-	"./me.js": "./node_modules/moment/locale/me.js",
-	"./mi": "./node_modules/moment/locale/mi.js",
-	"./mi.js": "./node_modules/moment/locale/mi.js",
-	"./mk": "./node_modules/moment/locale/mk.js",
-	"./mk.js": "./node_modules/moment/locale/mk.js",
-	"./ml": "./node_modules/moment/locale/ml.js",
-	"./ml.js": "./node_modules/moment/locale/ml.js",
-	"./mn": "./node_modules/moment/locale/mn.js",
-	"./mn.js": "./node_modules/moment/locale/mn.js",
-	"./mr": "./node_modules/moment/locale/mr.js",
-	"./mr.js": "./node_modules/moment/locale/mr.js",
-	"./ms": "./node_modules/moment/locale/ms.js",
-	"./ms-my": "./node_modules/moment/locale/ms-my.js",
-	"./ms-my.js": "./node_modules/moment/locale/ms-my.js",
-	"./ms.js": "./node_modules/moment/locale/ms.js",
-	"./mt": "./node_modules/moment/locale/mt.js",
-	"./mt.js": "./node_modules/moment/locale/mt.js",
-	"./my": "./node_modules/moment/locale/my.js",
-	"./my.js": "./node_modules/moment/locale/my.js",
-	"./nb": "./node_modules/moment/locale/nb.js",
-	"./nb.js": "./node_modules/moment/locale/nb.js",
-	"./ne": "./node_modules/moment/locale/ne.js",
-	"./ne.js": "./node_modules/moment/locale/ne.js",
-	"./nl": "./node_modules/moment/locale/nl.js",
-	"./nl-be": "./node_modules/moment/locale/nl-be.js",
-	"./nl-be.js": "./node_modules/moment/locale/nl-be.js",
-	"./nl.js": "./node_modules/moment/locale/nl.js",
-	"./nn": "./node_modules/moment/locale/nn.js",
-	"./nn.js": "./node_modules/moment/locale/nn.js",
-	"./pa-in": "./node_modules/moment/locale/pa-in.js",
-	"./pa-in.js": "./node_modules/moment/locale/pa-in.js",
-	"./pl": "./node_modules/moment/locale/pl.js",
-	"./pl.js": "./node_modules/moment/locale/pl.js",
-	"./pt": "./node_modules/moment/locale/pt.js",
-	"./pt-br": "./node_modules/moment/locale/pt-br.js",
-	"./pt-br.js": "./node_modules/moment/locale/pt-br.js",
-	"./pt.js": "./node_modules/moment/locale/pt.js",
-	"./ro": "./node_modules/moment/locale/ro.js",
-	"./ro.js": "./node_modules/moment/locale/ro.js",
-	"./ru": "./node_modules/moment/locale/ru.js",
-	"./ru.js": "./node_modules/moment/locale/ru.js",
-	"./sd": "./node_modules/moment/locale/sd.js",
-	"./sd.js": "./node_modules/moment/locale/sd.js",
-	"./se": "./node_modules/moment/locale/se.js",
-	"./se.js": "./node_modules/moment/locale/se.js",
-	"./si": "./node_modules/moment/locale/si.js",
-	"./si.js": "./node_modules/moment/locale/si.js",
-	"./sk": "./node_modules/moment/locale/sk.js",
-	"./sk.js": "./node_modules/moment/locale/sk.js",
-	"./sl": "./node_modules/moment/locale/sl.js",
-	"./sl.js": "./node_modules/moment/locale/sl.js",
-	"./sq": "./node_modules/moment/locale/sq.js",
-	"./sq.js": "./node_modules/moment/locale/sq.js",
-	"./sr": "./node_modules/moment/locale/sr.js",
-	"./sr-cyrl": "./node_modules/moment/locale/sr-cyrl.js",
-	"./sr-cyrl.js": "./node_modules/moment/locale/sr-cyrl.js",
-	"./sr.js": "./node_modules/moment/locale/sr.js",
-	"./ss": "./node_modules/moment/locale/ss.js",
-	"./ss.js": "./node_modules/moment/locale/ss.js",
-	"./sv": "./node_modules/moment/locale/sv.js",
-	"./sv.js": "./node_modules/moment/locale/sv.js",
-	"./sw": "./node_modules/moment/locale/sw.js",
-	"./sw.js": "./node_modules/moment/locale/sw.js",
-	"./ta": "./node_modules/moment/locale/ta.js",
-	"./ta.js": "./node_modules/moment/locale/ta.js",
-	"./te": "./node_modules/moment/locale/te.js",
-	"./te.js": "./node_modules/moment/locale/te.js",
-	"./tet": "./node_modules/moment/locale/tet.js",
-	"./tet.js": "./node_modules/moment/locale/tet.js",
-	"./tg": "./node_modules/moment/locale/tg.js",
-	"./tg.js": "./node_modules/moment/locale/tg.js",
-	"./th": "./node_modules/moment/locale/th.js",
-	"./th.js": "./node_modules/moment/locale/th.js",
-	"./tl-ph": "./node_modules/moment/locale/tl-ph.js",
-	"./tl-ph.js": "./node_modules/moment/locale/tl-ph.js",
-	"./tlh": "./node_modules/moment/locale/tlh.js",
-	"./tlh.js": "./node_modules/moment/locale/tlh.js",
-	"./tr": "./node_modules/moment/locale/tr.js",
-	"./tr.js": "./node_modules/moment/locale/tr.js",
-	"./tzl": "./node_modules/moment/locale/tzl.js",
-	"./tzl.js": "./node_modules/moment/locale/tzl.js",
-	"./tzm": "./node_modules/moment/locale/tzm.js",
-	"./tzm-latn": "./node_modules/moment/locale/tzm-latn.js",
-	"./tzm-latn.js": "./node_modules/moment/locale/tzm-latn.js",
-	"./tzm.js": "./node_modules/moment/locale/tzm.js",
-	"./ug-cn": "./node_modules/moment/locale/ug-cn.js",
-	"./ug-cn.js": "./node_modules/moment/locale/ug-cn.js",
-	"./uk": "./node_modules/moment/locale/uk.js",
-	"./uk.js": "./node_modules/moment/locale/uk.js",
-	"./ur": "./node_modules/moment/locale/ur.js",
-	"./ur.js": "./node_modules/moment/locale/ur.js",
-	"./uz": "./node_modules/moment/locale/uz.js",
-	"./uz-latn": "./node_modules/moment/locale/uz-latn.js",
-	"./uz-latn.js": "./node_modules/moment/locale/uz-latn.js",
-	"./uz.js": "./node_modules/moment/locale/uz.js",
-	"./vi": "./node_modules/moment/locale/vi.js",
-	"./vi.js": "./node_modules/moment/locale/vi.js",
-	"./x-pseudo": "./node_modules/moment/locale/x-pseudo.js",
-	"./x-pseudo.js": "./node_modules/moment/locale/x-pseudo.js",
-	"./yo": "./node_modules/moment/locale/yo.js",
-	"./yo.js": "./node_modules/moment/locale/yo.js",
-	"./zh-cn": "./node_modules/moment/locale/zh-cn.js",
-	"./zh-cn.js": "./node_modules/moment/locale/zh-cn.js",
-	"./zh-hk": "./node_modules/moment/locale/zh-hk.js",
-	"./zh-hk.js": "./node_modules/moment/locale/zh-hk.js",
-	"./zh-tw": "./node_modules/moment/locale/zh-tw.js",
-	"./zh-tw.js": "./node_modules/moment/locale/zh-tw.js"
-};
-
-
-function webpackContext(req) {
-	var id = webpackContextResolve(req);
-	var module = __webpack_require__(id);
-	return module;
-}
-function webpackContextResolve(req) {
-	var id = map[req];
-	if(!(id + 1)) { // check for number or string
-		var e = new Error('Cannot find module "' + req + '".');
-		e.code = 'MODULE_NOT_FOUND';
-		throw e;
-	}
-	return id;
-}
-webpackContext.keys = function webpackContextKeys() {
-	return Object.keys(map);
-};
-webpackContext.resolve = webpackContextResolve;
-module.exports = webpackContext;
-webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
-
-/***/ }),
-
 /***/ "./src/$$_lazy_route_resource lazy recursive":
 /*!**********************************************************!*\
   !*** ./src/$$_lazy_route_resource lazy namespace object ***!
@@ -340,7 +60,9 @@ var AppRoutingModule = /** @class */ (function () {
     AppRoutingModule = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["NgModule"])({
             imports: [
-                _angular_router__WEBPACK_IMPORTED_MODULE_0__["RouterModule"].forRoot(appRoutes)
+                _angular_router__WEBPACK_IMPORTED_MODULE_0__["RouterModule"].forRoot(appRoutes, {
+                    enableTracing: true
+                })
             ],
             exports: [_angular_router__WEBPACK_IMPORTED_MODULE_0__["RouterModule"]]
         })
@@ -455,12 +177,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_common_locales_pl__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(_angular_common_locales_pl__WEBPACK_IMPORTED_MODULE_13__);
 /* harmony import */ var _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @angular/platform-browser/animations */ "./node_modules/@angular/platform-browser/fesm5/animations.js");
 /* harmony import */ var ngx_toastr__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ngx-toastr */ "./node_modules/ngx-toastr/fesm5/ngx-toastr.js");
+/* harmony import */ var _files_files_module__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./files/files.module */ "./src/app/files/files.module.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -508,6 +232,7 @@ var AppModule = /** @class */ (function () {
                     }
                 }),
                 _auth_auth_module__WEBPACK_IMPORTED_MODULE_4__["AuthModule"],
+                _files_files_module__WEBPACK_IMPORTED_MODULE_16__["FilesModule"],
                 _tasks_tasks_module__WEBPACK_IMPORTED_MODULE_6__["TasksModule"],
                 _projects_projects_module__WEBPACK_IMPORTED_MODULE_5__["ProjectsModule"],
                 _app_routing_module__WEBPACK_IMPORTED_MODULE_7__["AppRoutingModule"]
@@ -1129,6 +854,108 @@ var UserService = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/files/add-file/add-file.component.css":
+/*!*******************************************************!*\
+  !*** ./src/app/files/add-file/add-file.component.css ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = ""
+
+/***/ }),
+
+/***/ "./src/app/files/add-file/add-file.component.html":
+/*!********************************************************!*\
+  !*** ./src/app/files/add-file/add-file.component.html ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"row\">\n  <div class=\"col-md-12\">\n    <form [formGroup]=\"newFile\" (ngSubmit)=\"createNewFile()\" novalidate>\n      <fieldset>\n        <legend translate>dws.files.add.legend</legend>\n\n        <div class=\"form-group row\">\n          <label class=\"col-md-2 col-form-label\" for=\"name\" translate>dws.files.add.labels.name</label>\n          <div class=\"col-md-5\">\n            <input id=\"name\" type=\"text\" class=\"form-control\" formControlName=\"name\" required>\n            <invalid-feedback [control]=\"name\"></invalid-feedback>\n          </div>\n        </div>\n\n        <div class=\"form-group row\">\n          <label class=\"col-md-2 col-form-label\" for=\"description\" translate>dws.files.add.labels.description</label>\n          <div class=\"col-md-5\">\n            <textarea id=\"description\" class=\"form-control\" formControlName=\"description\"></textarea>\n            <invalid-feedback [control]=\"description\"></invalid-feedback>\n          </div>\n        </div>\n\n        <div class=\"form-group row\">\n          <label class=\"col-md-2 col-form-label\" for=\"file\" translate>dws.files.add.labels.file</label>\n          <div class=\"col-md-5\">\n            <input id=\"file\" type=\"file\" class=\"form-control\" formControlName=\"file\" required>\n            <invalid-feedback [control]=\"file\"></invalid-feedback>\n          </div>\n        </div>\n\n        <div class=\"form-group row\">\n          <label class=\"col-md-2 col-form-label\" for=\"versionString\" translate>\n            dws.files.add.labels.versionString\n          </label>\n          <div class=\"col-md-5\">\n            <input id=\"versionString\" type=\"text\" class=\"form-control\" formControlName=\"versionString\" required>\n            <invalid-feedback [control]=\"versionString\"></invalid-feedback>\n          </div>\n        </div>\n\n        <div class=\"form-group row\">\n          <div class=\"offset-md-2 col-md-10\">\n            <button type=\"submit\" class=\"btn btn-primary\" [disabled]=\"newFile.invalid\" translate>\n              dws.files.add.submitButton\n            </button>\n            <a class=\"btn btn-secondary\" [routerLink]=\"['./../..']\" translate>dws.files.add.cancelButton</a>\n          </div>\n        </div>\n      </fieldset>\n    </form>\n  </div>\n</div>\n"
+
+/***/ }),
+
+/***/ "./src/app/files/add-file/add-file.component.ts":
+/*!******************************************************!*\
+  !*** ./src/app/files/add-file/add-file.component.ts ***!
+  \******************************************************/
+/*! exports provided: AddFileComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AddFileComponent", function() { return AddFileComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var AddFileComponent = /** @class */ (function () {
+    function AddFileComponent(formBuilder) {
+        this.formBuilder = formBuilder;
+    }
+    AddFileComponent.prototype.ngOnInit = function () {
+        this.newFile = this.formBuilder.group({
+            name: ['', [_angular_forms__WEBPACK_IMPORTED_MODULE_1__["Validators"].required, _angular_forms__WEBPACK_IMPORTED_MODULE_1__["Validators"].maxLength(255)]],
+            description: ['', _angular_forms__WEBPACK_IMPORTED_MODULE_1__["Validators"].maxLength(1024)],
+            file: ['', _angular_forms__WEBPACK_IMPORTED_MODULE_1__["Validators"].required],
+            versionString: ['1', [_angular_forms__WEBPACK_IMPORTED_MODULE_1__["Validators"].required, _angular_forms__WEBPACK_IMPORTED_MODULE_1__["Validators"].maxLength(20)]]
+        });
+    };
+    Object.defineProperty(AddFileComponent.prototype, "name", {
+        get: function () {
+            return this.newFile.get('name');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(AddFileComponent.prototype, "description", {
+        get: function () {
+            return this.newFile.get('description');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(AddFileComponent.prototype, "file", {
+        get: function () {
+            return this.newFile.get('file');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(AddFileComponent.prototype, "versionString", {
+        get: function () {
+            return this.newFile.get('versionString');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    AddFileComponent.prototype.createNewFile = function () {
+    };
+    AddFileComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'app-add-file',
+            template: __webpack_require__(/*! ./add-file.component.html */ "./src/app/files/add-file/add-file.component.html"),
+            styles: [__webpack_require__(/*! ./add-file.component.css */ "./src/app/files/add-file/add-file.component.css")]
+        }),
+        __metadata("design:paramtypes", [_angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormBuilder"]])
+    ], AddFileComponent);
+    return AddFileComponent;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/files/file-metadata.ts":
 /*!****************************************!*\
   !*** ./src/app/files/file-metadata.ts ***!
@@ -1228,6 +1055,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FilesRoutingModule", function() { return FilesRoutingModule; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _add_file_add_file_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./add-file/add-file.component */ "./src/app/files/add-file/add-file.component.ts");
+/* harmony import */ var _auth_auth_guard_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../auth/auth-guard.service */ "./src/app/auth/auth-guard.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1236,7 +1065,19 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 };
 
 
-var filesRoutes = [];
+
+
+var filesRoutes = [
+    {
+        path: 'projects/:projectId/tasks/:taskId/files/add',
+        component: _add_file_add_file_component__WEBPACK_IMPORTED_MODULE_2__["AddFileComponent"],
+        canActivate: [_auth_auth_guard_service__WEBPACK_IMPORTED_MODULE_3__["AuthGuardService"]]
+    },
+    {
+        path: 'projects/:projectId/tasks/:taskId/files',
+        redirectTo: 'projects/:projectId/tasks/:taskId'
+    }
+];
 var FilesRoutingModule = /** @class */ (function () {
     function FilesRoutingModule() {
     }
@@ -1271,12 +1112,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _shared_shared_module__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../shared/shared.module */ "./src/app/shared/shared.module.ts");
 /* harmony import */ var _file_summary_file_summary_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./file-summary/file-summary.component */ "./src/app/files/file-summary/file-summary.component.ts");
 /* harmony import */ var _files_routing_module__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./files-routing.module */ "./src/app/files/files-routing.module.ts");
+/* harmony import */ var _add_file_add_file_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./add-file/add-file.component */ "./src/app/files/add-file/add-file.component.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -1291,7 +1134,8 @@ var FilesModule = /** @class */ (function () {
                 _files_routing_module__WEBPACK_IMPORTED_MODULE_3__["FilesRoutingModule"]
             ],
             declarations: [
-                _file_summary_file_summary_component__WEBPACK_IMPORTED_MODULE_2__["FileSummaryComponent"]
+                _file_summary_file_summary_component__WEBPACK_IMPORTED_MODULE_2__["FileSummaryComponent"],
+                _add_file_add_file_component__WEBPACK_IMPORTED_MODULE_4__["AddFileComponent"]
             ],
             exports: [
                 _file_summary_file_summary_component__WEBPACK_IMPORTED_MODULE_2__["FileSummaryComponent"]
@@ -1501,7 +1345,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"row\">\n  <div class=\"col-md-12\">\n    <div class=\"btn-toolbar\" role=\"toolbar\">\n      <div class=\"btn-group\" role=\"group\">\n        <a class=\"btn btn-primary\" routerLink=\"/projects/add\">\n          <i class=\"fa fa-plus\" aria-hidden=\"true\"></i> {{'dws.project.all.createNew' | translate}}\n        </a>\n      </div>\n    </div>\n  </div>\n</div>\n\n<div class=\"row\">\n  <div *ngIf=\"projects?.length > 0; then showProjects else showMsgBlock\"></div>\n\n  <ng-template #showProjects>\n    <div class=\"col-md-12\">\n      <div class=\"text-center\">\n        <h3 translate>dws.project.all.header</h3>\n      </div>\n      <div class=\"row\">\n        <div *ngFor=\"let project of projects; trackBy: trackByProjects\" class=\"col-md-4\">\n          <project-summary  [project]=\"project\"></project-summary>\n        </div>\n      </div>\n    </div>\n  </ng-template>\n\n  <ng-template #showMsgBlock>\n    <div class=\"col-md-8 offset-md-2\">\n      <div class=\"alert alert-info text-center\"\n           [innerHTML]=\"'dws.project.all.noProjectsMsg' | translate\"></div>\n    </div>\n  </ng-template>\n</div>\n"
+module.exports = "<div class=\"row\">\n  <div class=\"col-md-12\">\n    <div class=\"btn-toolbar\" role=\"toolbar\">\n      <div class=\"btn-group\" role=\"group\">\n        <a class=\"btn btn-primary\" routerLink=\"/projects/add\">\n          <i class=\"fa fa-plus\" aria-hidden=\"true\"></i> {{'dws.project.all.createNew' | translate}}\n        </a>\n      </div>\n    </div>\n  </div>\n</div>\n\n<div class=\"row\">\n  <div *ngIf=\"projects?.length > 0; then showProjects else showMsgBlock\"></div>\n\n  <ng-template #showProjects>\n    <div class=\"col-md-12\">\n      <div class=\"text-center\">\n        <h3 translate>dws.project.all.header</h3>\n      </div>\n      <div class=\"row\">\n        <div *ngFor=\"let project of projects; trackBy: project?.id\" class=\"col-md-4\">\n          <project-summary [project]=\"project\"></project-summary>\n        </div>\n      </div>\n    </div>\n  </ng-template>\n\n  <ng-template #showMsgBlock>\n    <div class=\"col-md-8 offset-md-2\">\n      <div class=\"alert alert-info text-center\"\n           [innerHTML]=\"'dws.project.all.noProjectsMsg' | translate\"></div>\n    </div>\n  </ng-template>\n</div>\n"
 
 /***/ }),
 
@@ -1543,9 +1387,6 @@ var AllProjectsComponent = /** @class */ (function () {
         }, function (error) {
             console.error(error);
         });
-    };
-    AllProjectsComponent.prototype.trackByProjects = function (index, project) {
-        return project.id;
     };
     AllProjectsComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -1708,18 +1549,9 @@ var ProjectDetailsComponent = /** @class */ (function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ProjectSummary", function() { return ProjectSummary; });
-/* harmony import */ var _shared_formatter__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../shared/formatter */ "./src/app/shared/formatter.ts");
-
 var ProjectSummary = /** @class */ (function () {
     function ProjectSummary() {
     }
-    Object.defineProperty(ProjectSummary.prototype, "creationDateFormatted", {
-        get: function () {
-            return _shared_formatter__WEBPACK_IMPORTED_MODULE_0__["Formatter"].formatDateTime(this.creationDate);
-        },
-        enumerable: true,
-        configurable: true
-    });
     return ProjectSummary;
 }());
 
@@ -1745,7 +1577,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"card bg-light\">\n  <h4 class=\"card-header\">\n    <a [routerLink]=\"[project.id]\">{{project.name}}</a>\n  </h4>\n\n  <div class=\"card-body\">\n    <p class=\"card-text\" translate [translateParams]=\"project | formatDates:'DD.MM.YYYY H:mm'\">\n      dws.project.summary.creationDate\n    </p>\n    <p class=\"card-text\" *ngIf=\"project.lastModifiedFile\" translate\n       [translateParams]=\"project.lastModifiedFile | formatDates:'DD.MM.YYYY H:mm'\">\n      dws.project.summary.lastModifiedFile\n    </p>\n  </div>\n\n  <div class=\"card-footer\">\n    <span class=\"fa fa-user\"></span> {{project.numberOfParticipants}}\n    <span class=\"fa fa-tasks\"></span> {{project.numberOfTasks}}\n    <span class=\"fa fa-file\"></span> {{project.numberOfFiles}}\n  </div>\n</div>\n"
+module.exports = "<div class=\"card bg-light\">\n  <h4 class=\"card-header\">\n    <a [routerLink]=\"[project.id]\">{{project.name}}</a>\n  </h4>\n\n  <div class=\"card-body\">\n    <p class=\"card-text\" translate\n       [translateParams]=\"{creationDate: (project.creationDate | date:'dd.MM.yyyy H:mm')}\">\n      dws.project.summary.creationDate\n    </p>\n    <p class=\"card-text\" *ngIf=\"project.lastModifiedFile\" translate\n       [translateParams]=\"project.lastModifiedFile\">\n      dws.project.summary.lastModifiedFile\n    </p>\n  </div>\n\n  <div class=\"card-footer\">\n    <span class=\"fa fa-user\"></span> {{project.numberOfParticipants}}\n    <span class=\"fa fa-tasks\"></span> {{project.numberOfTasks}}\n    <span class=\"fa fa-file\"></span> {{project.numberOfFiles}}\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -1761,8 +1593,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ProjectSummaryComponent", function() { return ProjectSummaryComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _project_summary__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../project-summary */ "./src/app/projects/project-summary.ts");
-/* harmony import */ var _ngx_translate_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @ngx-translate/core */ "./node_modules/@ngx-translate/core/fesm5/ngx-translate-core.js");
-/* harmony import */ var _shared_formatter__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../shared/formatter */ "./src/app/shared/formatter.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1774,25 +1604,10 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 };
 
 
-
-
 var ProjectSummaryComponent = /** @class */ (function () {
-    function ProjectSummaryComponent(translateService) {
-        this.translateService = translateService;
+    function ProjectSummaryComponent() {
     }
     ProjectSummaryComponent.prototype.ngOnInit = function () {
-        this.creationDateMsg = this.translateService.get('dws.project.summary.creationDate', {
-            creationDate: _shared_formatter__WEBPACK_IMPORTED_MODULE_3__["Formatter"].formatDateTime(this.project.creationDate)
-        });
-        if (this.project.lastModifiedFile) {
-            var lastModifiedFile = this.project.lastModifiedFile;
-            this.lastModifiedMsg = this.translateService.get('dws.project.summary.lastModifiedFile', {
-                name: lastModifiedFile.name,
-                saveDate: _shared_formatter__WEBPACK_IMPORTED_MODULE_3__["Formatter"].formatDateTime(lastModifiedFile.saveDate),
-                author: lastModifiedFile.author,
-                taskName: lastModifiedFile.taskName
-            });
-        }
     };
     __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
@@ -1804,7 +1619,7 @@ var ProjectSummaryComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./project-summary.component.html */ "./src/app/projects/project-summary/project-summary.component.html"),
             styles: [__webpack_require__(/*! ./project-summary.component.css */ "./src/app/projects/project-summary/project-summary.component.css")]
         }),
-        __metadata("design:paramtypes", [_ngx_translate_core__WEBPACK_IMPORTED_MODULE_2__["TranslateService"]])
+        __metadata("design:paramtypes", [])
     ], ProjectSummaryComponent);
     return ProjectSummaryComponent;
 }());
@@ -2055,77 +1870,6 @@ var AppValidatorsService = /** @class */ (function () {
 
 /***/ }),
 
-/***/ "./src/app/shared/format-dates.pipe.ts":
-/*!*********************************************!*\
-  !*** ./src/app/shared/format-dates.pipe.ts ***!
-  \*********************************************/
-/*! exports provided: FormatDatesPipe */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FormatDatesPipe", function() { return FormatDatesPipe; });
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_1__);
-var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-
-
-var FormatDatesPipe = /** @class */ (function () {
-    function FormatDatesPipe() {
-    }
-    FormatDatesPipe.prototype.transform = function (value, format) {
-        var result = {};
-        Object.keys(value).forEach(function (key) {
-            result[key] = (value[key] instanceof Date) ? moment__WEBPACK_IMPORTED_MODULE_1__(value[key]).format(format) : value[key];
-        });
-        return result;
-    };
-    FormatDatesPipe = __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Pipe"])({
-            name: 'formatDates'
-        })
-    ], FormatDatesPipe);
-    return FormatDatesPipe;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/shared/formatter.ts":
-/*!*************************************!*\
-  !*** ./src/app/shared/formatter.ts ***!
-  \*************************************/
-/*! exports provided: DATE_TIME_FORMAT, Formatter */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DATE_TIME_FORMAT", function() { return DATE_TIME_FORMAT; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Formatter", function() { return Formatter; });
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
-
-var DATE_TIME_FORMAT = 'DD.MM.YYYY H:mm';
-var Formatter = /** @class */ (function () {
-    function Formatter() {
-    }
-    Formatter.formatDateTime = function (date) {
-        return moment__WEBPACK_IMPORTED_MODULE_0__(date).format(DATE_TIME_FORMAT);
-    };
-    return Formatter;
-}());
-
-
-
-/***/ }),
-
 /***/ "./src/app/shared/invalid-feedback/invalid-feedback.component.css":
 /*!************************************************************************!*\
   !*** ./src/app/shared/invalid-feedback/invalid-feedback.component.css ***!
@@ -2227,14 +1971,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _invalid_feedback_invalid_feedback_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./invalid-feedback/invalid-feedback.component */ "./src/app/shared/invalid-feedback/invalid-feedback.component.ts");
 /* harmony import */ var _app_validators_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./app-validators.service */ "./src/app/shared/app-validators.service.ts");
 /* harmony import */ var _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @ng-bootstrap/ng-bootstrap */ "./node_modules/@ng-bootstrap/ng-bootstrap/index.js");
-/* harmony import */ var _format_dates_pipe__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./format-dates.pipe */ "./src/app/shared/format-dates.pipe.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-
 
 
 
@@ -2252,8 +1994,7 @@ var SharedModule = /** @class */ (function () {
                 _ngx_translate_core__WEBPACK_IMPORTED_MODULE_3__["TranslateModule"]
             ],
             declarations: [
-                _invalid_feedback_invalid_feedback_component__WEBPACK_IMPORTED_MODULE_4__["InvalidFeedbackComponent"],
-                _format_dates_pipe__WEBPACK_IMPORTED_MODULE_7__["FormatDatesPipe"]
+                _invalid_feedback_invalid_feedback_component__WEBPACK_IMPORTED_MODULE_4__["InvalidFeedbackComponent"]
             ],
             providers: [
                 _app_validators_service__WEBPACK_IMPORTED_MODULE_5__["AppValidatorsService"]
@@ -2264,8 +2005,7 @@ var SharedModule = /** @class */ (function () {
                 _angular_forms__WEBPACK_IMPORTED_MODULE_2__["ReactiveFormsModule"],
                 _ngx_translate_core__WEBPACK_IMPORTED_MODULE_3__["TranslateModule"],
                 _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_6__["NgbModule"],
-                _invalid_feedback_invalid_feedback_component__WEBPACK_IMPORTED_MODULE_4__["InvalidFeedbackComponent"],
-                _format_dates_pipe__WEBPACK_IMPORTED_MODULE_7__["FormatDatesPipe"]
+                _invalid_feedback_invalid_feedback_component__WEBPACK_IMPORTED_MODULE_4__["InvalidFeedbackComponent"]
             ]
         })
     ], SharedModule);
@@ -2294,7 +2034,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"btn-toolbar\" role=\"toolbar\">\n  <div class=\"btn-group\" role=\"group\">\n    <button class=\"btn btn-primary\" type=\"button\" (click)=\"isCollapsed = !isCollapsed\"\n            [attr.aria-expanded]=\"!isCollapsed\" aria-controls=\"addParticipantDiv\">\n      <i class=\"fa fa-plus\" aria-hidden=\"true\"></i>\n      {{'dws.task.details.participants.addParticipant.button' | translate}}\n    </button>\n  </div>\n</div>\n\n<div id=\"addParticipantDiv\" [ngbCollapse]=\"isCollapsed\">\n  <div class=\"card bg-light\">\n    <div class=\"card-body\">\n      <form [formGroup]=\"addParticipantForm\" (ngSubmit)=\"addParticipant()\" novalidate>\n        <div class=\"form-group row\">\n          <label class=\"col-md-2 col-form-label\" for=\"participantEmail\" translate>\n            dws.task.details.participants.addParticipant.label\n          </label>\n          <input id=\"participantEmail\" type=\"email\" formControlName=\"participantEmail\" class=\"form-control\" required>\n          <invalid-feedback [control]=\"participantEmail\"></invalid-feedback>\n        </div>\n        <div class=\"form-group row\">\n          <div class=\"offset-md-2 col-md-10\">\n            <button type=\"submit\" class=\"btn btn-primary\" [disabled]=\"addParticipantForm.invalid\" translate>\n              dws.task.details.participants.addParticipant.buttonSubmit\n            </button>\n          </div>\n        </div>\n      </form>\n    </div>\n  </div>\n</div>\n"
+module.exports = "<div class=\"btn-toolbar mb-2\" role=\"toolbar\">\n  <div class=\"btn-group\" role=\"group\">\n    <button class=\"btn btn-primary\" type=\"button\" (click)=\"isCollapsed = !isCollapsed\"\n            [attr.aria-expanded]=\"!isCollapsed\" aria-controls=\"addParticipantDiv\">\n      <i class=\"fa fa-plus\" aria-hidden=\"true\"></i>\n      {{'dws.task.details.participants.addParticipant.button' | translate}}\n    </button>\n  </div>\n</div>\n\n<div id=\"addParticipantDiv\" [ngbCollapse]=\"isCollapsed\">\n  <div class=\"card bg-light\">\n    <div class=\"card-body\">\n      <form [formGroup]=\"addParticipantForm\" (ngSubmit)=\"addParticipant()\" novalidate>\n        <div class=\"form-group row\">\n          <label class=\"col-md-2 col-form-label\" for=\"participantEmail\" translate>\n            dws.task.details.participants.addParticipant.label\n          </label>\n          <div class=\"col-md-10\">\n            <input id=\"participantEmail\" type=\"email\" formControlName=\"participantEmail\" class=\"form-control\" required>\n            <invalid-feedback [control]=\"participantEmail\"></invalid-feedback>\n          </div>\n        </div>\n        <div class=\"form-group row\">\n          <div class=\"offset-md-2 col-md-10\">\n            <button type=\"submit\" class=\"btn btn-primary\" [disabled]=\"addParticipantForm.invalid\" translate>\n              dws.task.details.participants.addParticipant.buttonSubmit\n            </button>\n          </div>\n        </div>\n      </form>\n    </div>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -2519,7 +2259,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"row\">\n  <div class=\"col-md-12\">\n    <div class=\"btn-toolbar\" role=\"toolbar\">\n      <div class=\"btn-group\" role=\"group\">\n        <a *ngIf=\"!currentUser.equals(task.administrator)\" class=\"btn btn-info\"\n           href=\"mailto:{{task.administrator.email}}\">\n          <i class=\"fa fa-envelope\" aria-hidden=\"true\"></i>\n          {{'dws.task.details.files.toolbar.sendEmailToAdmin' | translate}}\n        </a>\n\n        <a class=\"btn btn-success\" [routerLink]=\"['files', 'add']\">\n          <i class=\"fa fa-plus\" aria-hidden=\"true\"></i>\n          {{'dws.task.details.files.toolbar.addFile' | translate}}\n        </a>\n      </div>\n    </div>\n\n    <div *ngIf=\"task.filesInfo?.length === 0; then noFilesInfo else listFiles\"></div>\n\n    <ng-template #noFilesInfo>\n      <div class=\"alert alert-info text-center\" role=\"alert\"\n           [innerHTML]=\"'dws.task.details.files.noFilesInfoMsg' | translate\">\n      </div>\n    </ng-template>\n\n    <ng-template #listFiles>\n      <div class=\"text-center\">\n        <h3 translate [translateParams]=\"task\">dws.task.details.files.listHeader</h3>\n      </div>\n      <div class=\"row\">\n        <div class=\"col-md-6 mb-2\"\n             *ngFor=\"let file of task.filesInfo; trackBy: file.id\">\n          <file-summary [file]=\"file\"></file-summary>\n        </div>\n      </div>\n    </ng-template>\n  </div>\n</div>\n"
+module.exports = "<div class=\"row\">\n  <div class=\"col-md-12\">\n    <div class=\"btn-toolbar mb-2\" role=\"toolbar\">\n      <div class=\"btn-group\" role=\"group\">\n        <a *ngIf=\"!currentUser.equals(task.administrator)\" class=\"btn btn-info\"\n           href=\"mailto:{{task.administrator.email}}\">\n          <i class=\"fa fa-envelope\" aria-hidden=\"true\"></i>\n          {{'dws.task.details.files.toolbar.sendEmailToAdmin' | translate}}\n        </a>\n\n        <a class=\"btn btn-success\" [routerLink]=\"['files', 'add']\">\n          <i class=\"fa fa-plus\" aria-hidden=\"true\"></i>\n          {{'dws.task.details.files.toolbar.addFile' | translate}}\n        </a>\n      </div>\n    </div>\n\n    <div *ngIf=\"task.filesInfo?.length === 0; then noFilesInfo else listFiles\"></div>\n\n    <ng-template #noFilesInfo>\n      <div class=\"alert alert-info text-center\" role=\"alert\"\n           [innerHTML]=\"'dws.task.details.files.noFilesInfoMsg' | translate\">\n      </div>\n    </ng-template>\n\n    <ng-template #listFiles>\n      <div class=\"text-center\">\n        <h3 translate [translateParams]=\"task\">dws.task.details.files.listHeader</h3>\n      </div>\n      <div class=\"row\">\n        <div class=\"col-md-6 mb-2\"\n             *ngFor=\"let file of task.filesInfo; trackBy: file.id\">\n          <file-summary [file]=\"file\"></file-summary>\n        </div>\n      </div>\n    </ng-template>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -2688,7 +2428,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"row\" *ngIf=\"task\">\n  <div class=\"col-md-8\">\n    <ngb-tabset type=\"pills\">\n      <ngb-tab title=\"{{'dws.task.details.files.pillTitle' | translate}}\">\n        <ng-template ngbTabContent>\n          <files-list [task]=\"task\"></files-list>\n        </ng-template>\n      </ngb-tab>\n\n      <ngb-tab title=\"{{'dws.task.details.participants.pillTitle' | translate}}\">\n        <ng-template ngbTabContent>\n          <participants-list [task]=\"task\"></participants-list>\n        </ng-template>\n      </ngb-tab>\n    </ngb-tabset>\n  </div>\n\n  <div class=\"col-md-4\">\n\n  </div>\n</div>\n"
+module.exports = "<div class=\"row\" *ngIf=\"task\">\n  <div class=\"col-md-8\">\n    <ngb-tabset type=\"pills\">\n      <ngb-tab title=\"{{'dws.task.details.files.pillTitle' | translate}}\">\n        <ng-template ngbTabContent>\n          <div class=\"mt-2\">\n            <files-list [task]=\"task\"></files-list>\n          </div>\n        </ng-template>\n      </ngb-tab>\n\n      <ngb-tab title=\"{{'dws.task.details.participants.pillTitle' | translate}}\">\n        <ng-template ngbTabContent>\n          <div class=\"mt-2\">\n            <participants-list [task]=\"task\"></participants-list>\n          </div>\n        </ng-template>\n      </ngb-tab>\n    </ngb-tabset>\n  </div>\n\n  <div class=\"col-md-4\">\n\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -2833,7 +2573,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"card bg-light\">\n  <h3 class=\"card-header\">\n    <a [routerLink]=\"['tasks', task.id]\">{{task.name}}</a>\n  </h3>\n\n  <div class=\"card-body\">\n    <p class=\"card-text\" translate [translateParams]=\"task\">dws.task.summary.created</p>\n    <p class=\"card-text\" *ngIf=\"task.lastModifiedFile\" translate [translateParams]=\"task.lastModifiedFile\">\n      dws.task.summary.lastModifiedFile\n    </p>\n  </div>\n\n  <div class=\"card-footer\">\n    <i class=\"fa fa-file\" aria-hidden=\"true\"></i> {{task.numberOfFiles}}\n    <i class=\"fa fa-user\" aria-hidden=\"true\"></i> {{task.numberOfParticipants}}\n  </div>\n</div>\n"
+module.exports = "<div class=\"card bg-light\">\n  <h3 class=\"card-header\">\n    <a [routerLink]=\"['tasks', task.id]\">{{task.name}}</a>\n  </h3>\n\n  <div class=\"card-body\">\n    <p class=\"card-text\" translate [translateParams]=\"{creationDate: (task.creationDate | date:'dd.MM.yyyy H:mm')}\">\n      dws.task.summary.created\n    </p>\n    <p class=\"card-text\" *ngIf=\"task.lastModifiedFile\" translate [translateParams]=\"task.lastModifiedFile\">\n      dws.task.summary.lastModifiedFile\n    </p>\n  </div>\n\n  <div class=\"card-footer\">\n    <i class=\"fa fa-file\" aria-hidden=\"true\"></i> {{task.numberOfFiles}}\n    <i class=\"fa fa-user\" aria-hidden=\"true\"></i> {{task.numberOfParticipants}}\n  </div>\n</div>\n"
 
 /***/ }),
 

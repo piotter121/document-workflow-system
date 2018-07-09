@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewTaskForm;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.TaskInfoDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.UserNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.ProjectService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.TaskService;
@@ -40,18 +41,14 @@ public class TasksController {
 //        return String.format("redirect:/projects/%d", projectId);
 //    }
 //
-//    @GetMapping("/{taskId}")
-//    @PreAuthorize("@securityService.isTaskParticipant(#projectId, #taskId)")
-//    public String getTaskInfo(@PathVariable UUID taskId,
-//                              @PathVariable UUID projectId,
-//                              Model model) {
-//        model.addAttribute("task", taskService.getTaskInfo(projectId, taskId));
-//        addCurrentUserToModel(model);
-//        model.addAttribute("projectId", projectId.toString());
-//        model.addAttribute("projectName", projectService.getProjectName(projectId));
-//        return "task";
-//    }
-//
+    @GetMapping("/{taskId}")
+    @PreAuthorize("@securityService.isTaskParticipant(#projectId, #taskId)")
+    public TaskInfoDTO getTaskInfo(@PathVariable UUID taskId,
+                                   @PathVariable UUID projectId) {
+        return taskService.getTaskInfo(projectId, taskId);
+    }
+
+    //
 //    @DeleteMapping("/{taskId}")
 //    @PreAuthorize("@securityService.isCurrentUserProjectAdministrator(#projectId)")
 //    public String deleteTask(@PathVariable UUID taskId, @PathVariable UUID projectId) {

@@ -24,8 +24,4 @@ export class AllProjectsComponent implements OnInit {
         console.error(error);
       });
   }
-
-  trackByProjects(index: number, project: ProjectSummary): string {
-    return project.id;
-  }
 }

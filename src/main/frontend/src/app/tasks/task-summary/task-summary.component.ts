@@ -11,6 +11,7 @@ export class TaskSummaryComponent {
   @Input()
   task: TaskSummary;
 
-  constructor() { }
+  constructor() {
+  }
 
 }

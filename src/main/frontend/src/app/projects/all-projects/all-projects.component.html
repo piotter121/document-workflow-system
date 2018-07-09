@@ -19,8 +19,8 @@
         <h3 translate>dws.project.all.header</h3>
       </div>
       <div class="row">
-        <div *ngFor="let project of projects; trackBy: trackByProjects" class="col-md-4">
-          <project-summary  [project]="project"></project-summary>
+        <div *ngFor="let project of projects; trackBy: project?.id" class="col-md-4">
+          <project-summary [project]="project"></project-summary>
         </div>
       </div>
     </div>

@@ -42,7 +42,7 @@
     },
     "task": {
       "summary": {
-        "created": "Utworzono {{creationDate | date:'dd.MM.yyyy H:mm'}}",
+        "created": "Utworzono {{creationDate}}",
         "lastModifiedFile": "Ostatnio zmodyfikowany plik {{name}} w dniu {{saveDate}} przez {{author}}"
       },
       "add": {
@@ -87,6 +87,17 @@
         "markedToConfirm": "Do zatwierdzenia",
         "confirmed": "Zatwierdzony",
         "lastModified": "Ostatnio zmodyfikowany w dniu {{modificationDate | date:'dd.MM.yyyy H:mm'}} przez {{latestVersion.author}}"
+      },
+      "add": {
+        "legend": "Proszę wypełnić poniższy formularz aby dodać nowy plik do zadania",
+        "labels": {
+          "name": "Wyświetlana nazwa pliku",
+          "description": "Dodatkowy opis",
+          "file": "Plik",
+          "versionString": "Numer inicjalnej wersji pliku"
+        },
+        "submitButton": "Dodaj",
+        "cancelButton": "Zrezygnuj"
       }
     },
     "auth": {

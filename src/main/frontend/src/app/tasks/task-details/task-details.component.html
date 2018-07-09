@@ -3,13 +3,17 @@
     <ngb-tabset type="pills">
       <ngb-tab title="{{'dws.task.details.files.pillTitle' | translate}}">
         <ng-template ngbTabContent>
-          <files-list [task]="task"></files-list>
+          <div class="mt-2">
+            <files-list [task]="task"></files-list>
+          </div>
         </ng-template>
       </ngb-tab>
 
       <ngb-tab title="{{'dws.task.details.participants.pillTitle' | translate}}">
         <ng-template ngbTabContent>
-          <participants-list [task]="task"></participants-list>
+          <div class="mt-2">
+            <participants-list [task]="task"></participants-list>
+          </div>
         </ng-template>
       </ngb-tab>
     </ngb-tabset>

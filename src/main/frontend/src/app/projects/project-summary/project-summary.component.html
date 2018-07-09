@@ -4,11 +4,12 @@
   </h4>
 
   <div class="card-body">
-    <p class="card-text" translate [translateParams]="project | formatDates:'DD.MM.YYYY H:mm'">
+    <p class="card-text" translate
+       [translateParams]="{creationDate: (project.creationDate | date:'dd.MM.yyyy H:mm')}">
       dws.project.summary.creationDate
     </p>
     <p class="card-text" *ngIf="project.lastModifiedFile" translate
-       [translateParams]="project.lastModifiedFile | formatDates:'DD.MM.YYYY H:mm'">
+       [translateParams]="project.lastModifiedFile">
       dws.project.summary.lastModifiedFile
     </p>
   </div>

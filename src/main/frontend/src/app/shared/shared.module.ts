@@ -5,7 +5,6 @@ import {TranslateModule} from "@ngx-translate/core";
 import {InvalidFeedbackComponent} from './invalid-feedback/invalid-feedback.component';
 import {AppValidatorsService} from "./app-validators.service";
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
-import { FormatDatesPipe } from './format-dates.pipe';
 
 @NgModule({
   imports: [
@@ -13,8 +12,7 @@ import { FormatDatesPipe } from './format-dates.pipe';
     TranslateModule
   ],
   declarations: [
-    InvalidFeedbackComponent,
-    FormatDatesPipe
+    InvalidFeedbackComponent
   ],
   providers: [
     AppValidatorsService
@@ -25,8 +23,7 @@ import { FormatDatesPipe } from './format-dates.pipe';
     ReactiveFormsModule,
     TranslateModule,
     NgbModule,
-    InvalidFeedbackComponent,
-    FormatDatesPipe
+    InvalidFeedbackComponent
   ]
 })
 export class SharedModule {

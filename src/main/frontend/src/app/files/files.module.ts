@@ -2,6 +2,7 @@ import {NgModule} from '@angular/core';
 import {SharedModule} from "../shared/shared.module";
 import { FileSummaryComponent } from './file-summary/file-summary.component';
 import {FilesRoutingModule} from "./files-routing.module";
+import { AddFileComponent } from './add-file/add-file.component';
 
 @NgModule({
   imports: [
@@ -9,7 +10,8 @@ import {FilesRoutingModule} from "./files-routing.module";
     FilesRoutingModule
   ],
   declarations: [
-    FileSummaryComponent
+    FileSummaryComponent,
+    AddFileComponent
   ],
   exports: [
     FileSummaryComponent

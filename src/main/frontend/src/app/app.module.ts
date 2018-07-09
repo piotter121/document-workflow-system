@@ -1,11 +1,8 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {LOCALE_ID, NgModule} from '@angular/core';
-
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-
 import {AppComponent} from './app.component';
 import {AuthModule} from './auth/auth.module';
-
 import {ProjectsModule} from "./projects/projects.module";
 import {TasksModule} from "./tasks/tasks.module";
 import {AppRoutingModule} from "./app-routing.module";
@@ -17,6 +14,8 @@ import {registerLocaleData} from "@angular/common";
 import localePl from '@angular/common/locales/pl';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ToastrModule} from "ngx-toastr";
+import {FilesModule} from "./files/files.module";
+import {RouterModule} from "@angular/router";
 
 registerLocaleData(localePl, 'pl');
 
@@ -47,6 +46,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateLoader {
       }
     }),
     AuthModule,
+    FilesModule,
     TasksModule,
     ProjectsModule,
     AppRoutingModule

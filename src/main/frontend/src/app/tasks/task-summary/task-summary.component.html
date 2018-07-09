@@ -4,7 +4,9 @@
   </h3>
 
   <div class="card-body">
-    <p class="card-text" translate [translateParams]="task">dws.task.summary.created</p>
+    <p class="card-text" translate [translateParams]="{creationDate: (task.creationDate | date:'dd.MM.yyyy H:mm')}">
+      dws.task.summary.created
+    </p>
     <p class="card-text" *ngIf="task.lastModifiedFile" translate [translateParams]="task.lastModifiedFile">
       dws.task.summary.lastModifiedFile
     </p>
