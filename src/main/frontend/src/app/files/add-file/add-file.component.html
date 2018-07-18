@@ -23,7 +23,7 @@
         <div class="form-group row">
           <label class="col-md-2 col-form-label" for="file" translate>dws.files.add.labels.file</label>
           <div class="col-md-5">
-            <input id="file" type="file" class="form-control" formControlName="file" required>
+            <input id="file" type="file" class="form-control-file" formControlName="file" required>
             <invalid-feedback [control]="file"></invalid-feedback>
           </div>
         </div>
@@ -40,7 +40,7 @@
 
         <div class="form-group row">
           <div class="offset-md-2 col-md-10">
-            <button type="submit" class="btn btn-primary" [disabled]="newFile.invalid" translate>
+            <button type="submit" class="btn btn-primary mr-2" [disabled]="newFile.invalid" translate>
               dws.files.add.submitButton
             </button>
             <a class="btn btn-secondary" [routerLink]="['./../..']" translate>dws.files.add.cancelButton</a>
