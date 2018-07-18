@@ -15,7 +15,7 @@ import localePl from '@angular/common/locales/pl';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ToastrModule} from "ngx-toastr";
 import {FilesModule} from "./files/files.module";
-import {RouterModule} from "@angular/router";
+import {httpInterceptorProviders} from "./http-interceptors";
 
 registerLocaleData(localePl, 'pl');
 
@@ -55,7 +55,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateLoader {
     {
       provide: LOCALE_ID,
       useValue: 'pl'
-    }
+    },
+    httpInterceptorProviders
   ],
   bootstrap: [AppComponent]
 })
