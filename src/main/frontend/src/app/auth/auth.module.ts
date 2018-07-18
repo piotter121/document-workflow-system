@@ -21,7 +21,7 @@ const jwtOptions: JwtModuleOptions = {
   imports: [
     SharedModule,
     JwtModule.forRoot(jwtOptions),
-    AuthRoutingModule,
+    AuthRoutingModule
   ],
   declarations: [
     LoginComponent,
