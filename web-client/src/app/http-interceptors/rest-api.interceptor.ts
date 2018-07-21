@@ -6,10 +6,16 @@ import {environment} from "src/environments/environment";
 @Injectable()
 export class RestApiInterceptor implements HttpInterceptor {
   private restApi: string = environment.restApi;
+  private pattern: RegExp = /^\/api\/*|\/auth\//;
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    return next.handle(req.clone({
-      url: this.restApi + req.url
-    }));
+    if (this.pattern.test(req.url)) {
+      const request = req.clone({
+        url: this.restApi + req.url
+      });
+      return next.handle(request);
+    } else {
+      return next.handle(req);
+    }
   }
 }
