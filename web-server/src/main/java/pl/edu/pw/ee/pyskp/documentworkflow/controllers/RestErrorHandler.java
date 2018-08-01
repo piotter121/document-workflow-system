@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.ErrorMessageDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.validation.ValidationErrorDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ProjectNotFoundException;
+import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.TaskNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.UserNotFoundException;
 
 import java.util.List;
@@ -57,7 +59,7 @@ public class RestErrorHandler {
         return localizedErrorMessage;
     }
 
-    @ExceptionHandler(UserNotFoundException.class)
+    @ExceptionHandler({UserNotFoundException.class, TaskNotFoundException.class, ProjectNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
     public ErrorMessageDTO handleNotFoundException(UserNotFoundException exception) {

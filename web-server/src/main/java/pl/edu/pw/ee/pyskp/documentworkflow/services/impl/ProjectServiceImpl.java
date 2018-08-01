@@ -2,6 +2,7 @@ package pl.edu.pw.ee.pyskp.documentworkflow.services.impl;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.*;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.*;
@@ -19,7 +20,7 @@ import java.util.stream.Stream;
 /**
  * Created by piotr on 29.12.16.
  */
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Service
 public class ProjectServiceImpl implements ProjectService {
     @NonNull
@@ -70,7 +71,6 @@ public class ProjectServiceImpl implements ProjectService {
                 .map(Task::getTaskId).collect(Collectors.toList());
         Set<String> participantsEmails = tasks.stream().flatMap(task -> task.getParticipants().stream())
                 .map(UserSummary::getEmail)
-                .distinct()
                 .collect(Collectors.toSet());
         participantsEmails.addAll(tasks.stream()
                 .map(task -> task.getAdministrator().getEmail())
@@ -109,8 +109,9 @@ public class ProjectServiceImpl implements ProjectService {
         Set<String> projectParticipants = getProjectParticipants(projectId);
         List<UserProject> userProjects = userProjectRepository
                 .findAllByUserEmailInAndProjectId(projectParticipants, projectId);
-        Set<String> currentUserProjectsEmails = userProjects.stream().map(UserProject::getUserEmail)
-                .distinct().collect(Collectors.toSet());
+        Set<String> currentUserProjectsEmails = userProjects.stream()
+                .map(UserProject::getUserEmail)
+                .collect(Collectors.toSet());
         List<UserProject> newUserProjects =
                 createMissingUserProjects(projectId, projectParticipants, currentUserProjectsEmails);
         userProjects.addAll(newUserProjects);
@@ -154,7 +155,7 @@ public class ProjectServiceImpl implements ProjectService {
                 .map(UserSummary::getEmail);
         Stream<String> administratorsStream = tasks.stream()
                 .map(task -> task.getAdministrator().getEmail());
-        Set<String> toReturn = Stream.concat(participantsEmailsStream, administratorsStream).distinct()
+        Set<String> toReturn = Stream.concat(participantsEmailsStream, administratorsStream)
                 .collect(Collectors.toSet());
         toReturn.add(administrator);
         return toReturn;

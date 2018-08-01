@@ -4,7 +4,6 @@ export class NewFile {
   constructor(
     public name: string,
     public description: string,
-    public file: File,
     public versionString: string
   ) {
   }

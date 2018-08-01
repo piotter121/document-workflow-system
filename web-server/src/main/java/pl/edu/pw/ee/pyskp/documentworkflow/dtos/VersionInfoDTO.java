@@ -13,9 +13,8 @@ import static java.util.stream.Collectors.toList;
 /**
  * Created by piotr on 07.01.17.
  */
-@Data
 @NoArgsConstructor
-@SuppressWarnings("UnusedReturnValue")
+@Data
 public class VersionInfoDTO {
     private List<DifferenceInfoDTO> differences;
     private String message;

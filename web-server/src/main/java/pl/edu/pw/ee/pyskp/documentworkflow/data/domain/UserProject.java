@@ -14,9 +14,9 @@ import org.springframework.data.cassandra.mapping.Table;
 import java.util.Date;
 import java.util.UUID;
 
+@NoArgsConstructor
 @Data
 @EqualsAndHashCode(of = {"userEmail", "projectId"})
-@NoArgsConstructor
 @Table("user_project")
 public class UserProject {
     @PrimaryKeyColumn(name = "user_email", ordinal = 0, type = PrimaryKeyType.PARTITIONED)

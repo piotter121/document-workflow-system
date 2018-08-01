@@ -1,4 +1,4 @@
-export class ErrorMessage {
+export interface ErrorMessage {
   errorCode: string;
-  params: { [key: string]: any }
+  params: { [key: string]: string }
 }

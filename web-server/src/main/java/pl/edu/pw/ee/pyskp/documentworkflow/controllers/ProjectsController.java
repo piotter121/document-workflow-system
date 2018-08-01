@@ -4,6 +4,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.User;
@@ -48,6 +49,12 @@ public class ProjectsController {
     @PreAuthorize("@securityService.hasAccessToProject(#projectId)")
     public ProjectInfoDTO getProjectInfo(@PathVariable UUID projectId) {
         return projectService.getProjectInfo(projectId);
+    }
+
+    @GetMapping(value = "/{projectId}/name", produces = MediaType.TEXT_PLAIN_VALUE)
+    @PreAuthorize("@securityService.hasAccessToProject(#projectId)")
+    public String getProjectName(@PathVariable UUID projectId) {
+        return projectService.getProjectName(projectId);
     }
 
     @DeleteMapping("/{projectId}")

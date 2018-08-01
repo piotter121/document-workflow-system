@@ -7,9 +7,9 @@ import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.UserProject;
 
 import java.util.Date;
 
+@NoArgsConstructor
 @Data
 @EqualsAndHashCode(of = "id")
-@NoArgsConstructor
 public class ProjectSummaryDTO {
     private String id;
     private String name;

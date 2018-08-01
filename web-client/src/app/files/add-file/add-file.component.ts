@@ -1,8 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {FilesService} from "../files.service";
-import {ActivatedRoute} from "@angular/router";
-import {NewFile} from "../new-file";
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FilesService} from '../files.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import {HttpErrorResponse} from '@angular/common/http';
+import {ToastrService} from 'ngx-toastr';
 
 @Component({
   selector: 'app-add-file',
@@ -12,13 +13,16 @@ import {NewFile} from "../new-file";
 export class AddFileComponent implements OnInit {
 
   newFile: FormGroup;
+  fileToUpload: File;
   private projectId: string;
   private taskId: string;
 
   constructor(
     private formBuilder: FormBuilder,
     private filesService: FilesService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router,
+    private toastService: ToastrService
   ) {
   }
 
@@ -26,7 +30,6 @@ export class AddFileComponent implements OnInit {
     this.newFile = this.formBuilder.group({
       name: ['', [Validators.required, Validators.maxLength(255)]],
       description: ['', Validators.maxLength(1024)],
-      file: ['', Validators.required],
       versionString: ['1', [Validators.required, Validators.maxLength(20)]]
     });
     this.route.paramMap.subscribe(paramMap => {
@@ -43,18 +46,20 @@ export class AddFileComponent implements OnInit {
     return this.newFile.get('description');
   }
 
-  get file() {
-    return this.newFile.get('file');
-  }
-
   get versionString() {
     return this.newFile.get('versionString');
   }
 
   createNewFile() {
-    const newFile: NewFile = new NewFile(
-      this.name.value, this.description.value, this.file.value, this.versionString.value
-    );
-    this.filesService.addFileToTask(this.projectId, this.taskId, newFile);
+    const formData: FormData = new FormData();
+    formData.append('name', this.name.value);
+    formData.append('description', this.description.value);
+    formData.append('file', this.fileToUpload, this.fileToUpload.name);
+    formData.append('versionString', this.versionString.value);
+    this.filesService.addFileToTask(this.projectId, this.taskId, formData)
+      .subscribe(
+        (fileId: string) => this.router.navigate(['/projects', this.projectId, 'tasks', this.taskId, 'files', fileId]),
+        (error: HttpErrorResponse) => this.toastService.error(error.message, error.name)
+      );
   }
 }

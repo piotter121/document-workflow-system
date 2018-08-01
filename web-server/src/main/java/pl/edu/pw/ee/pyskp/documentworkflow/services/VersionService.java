@@ -5,6 +5,7 @@ import pl.edu.pw.ee.pyskp.documentworkflow.dtos.DiffData;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewFileForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewVersionForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.VersionInfoDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.TaskNotFoundException;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -15,7 +16,7 @@ import java.util.UUID;
 public interface VersionService {
     Version createUnmanagedInitVersionOfFile(NewFileForm form) throws IOException;
 
-    long addNewVersionOfFile(NewVersionForm form) throws IOException;
+    long addNewVersionOfFile(NewVersionForm form) throws IOException, TaskNotFoundException;
 
     DiffData buildDiffData(UUID fileId, long versionSaveDateMillis);
 

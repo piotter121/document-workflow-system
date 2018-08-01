@@ -17,10 +17,9 @@ import static java.util.stream.Collectors.toList;
 /**
  * Created by piotr on 31.12.16.
  */
-@Data
 @NoArgsConstructor
+@Data
 @EqualsAndHashCode(of = "id")
-@SuppressWarnings("UnusedReturnValue")
 public class FileMetadataDTO {
     private String id;
     private String name = "";
@@ -51,7 +50,7 @@ public class FileMetadataDTO {
         numberOfVersions = fileMetadata.getNumberOfVersions();
     }
 
-    public FileMetadataDTO(FileMetadata fileMetadata) {
+    FileMetadataDTO(FileMetadata fileMetadata) {
         this(fileMetadata, Collections.emptyList());
     }
 

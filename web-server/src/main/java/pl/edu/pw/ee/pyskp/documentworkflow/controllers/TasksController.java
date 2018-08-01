@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewTaskForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.TaskInfoDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.TaskNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.UserNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.ProjectService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.TaskService;
@@ -15,6 +16,7 @@ import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
 
 import javax.validation.Valid;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -25,7 +27,7 @@ import java.util.UUID;
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 @RequestMapping("/api/projects/{projectId}/tasks")
 public class TasksController {
-    private static final Logger LOGGER = Logger.getLogger(TasksController.class);
+    private final Logger logger = Logger.getLogger(TasksController.class);
 
     @NonNull
     private final TaskService taskService;
@@ -36,27 +38,29 @@ public class TasksController {
     @NonNull
     private final ProjectService projectService;
 
-    //    @GetMapping
-//    public String redirectToProject(@PathVariable Long projectId) {
-//        return String.format("redirect:/projects/%d", projectId);
-//    }
-//
     @GetMapping("/{taskId}")
     @PreAuthorize("@securityService.isTaskParticipant(#projectId, #taskId)")
-    public TaskInfoDTO getTaskInfo(@PathVariable UUID taskId,
-                                   @PathVariable UUID projectId) {
+    public TaskInfoDTO getTaskInfo(@PathVariable UUID taskId, @PathVariable UUID projectId)
+            throws TaskNotFoundException {
         return taskService.getTaskInfo(projectId, taskId);
     }
 
+    @GetMapping("/exists")
+    @PreAuthorize("@securityService.hasAccessToProject(#projectId)")
+    public boolean existsByName(@PathVariable UUID projectId, @RequestParam String taskName) {
+        return taskService.existsByName(projectId, taskName);
+    }
+
+
+    @DeleteMapping("/{taskId}")
+    @PreAuthorize("@securityService.isCurrentUserProjectAdministrator(#projectId)")
+    public void deleteTask(@PathVariable UUID taskId, @PathVariable UUID projectId) {
+        if (logger.isDebugEnabled())
+            logger.debug("Received HTTP DELETE request for deletion task of id=" + taskId);
+        taskService.deleteTask(projectId, taskId);
+    }
+
     //
-//    @DeleteMapping("/{taskId}")
-//    @PreAuthorize("@securityService.isCurrentUserProjectAdministrator(#projectId)")
-//    public String deleteTask(@PathVariable UUID taskId, @PathVariable UUID projectId) {
-//        LOGGER.debug("Received HTTP DELETE request for deletion task of id=" + taskId);
-//        taskService.deleteTask(projectId, taskId);
-//        return String.format("redirect:/projects/%s?deleted", projectId.toString());
-//    }
-//
 //    @GetMapping("/{taskId}/addParticipant")
 //    public String redirectToTask(@PathVariable UUID projectId, @PathVariable UUID taskId) {
 //        return String.format("redirect:/projects/%s/tasks/%s", projectId.toString(), taskId.toString());
@@ -95,9 +99,15 @@ public class TasksController {
         UUID taskId = taskService.createTaskFromForm(newTask, projectId);
         return Collections.singletonMap("taskId", taskId.toString());
     }
-//
-//    private void addCurrentUserToModel(Model model) {
-//        model.addAttribute("currentUser", new UserInfoDTO(userService.getCurrentUser()));
-//    }
+
+    @GetMapping("/{taskId}/name")
+    @PreAuthorize("@securityService.isTaskParticipant(#projectId, #taskId)")
+    public Map<String, String> getProjectAndTaskName(@PathVariable UUID projectId, @PathVariable UUID taskId)
+            throws TaskNotFoundException {
+        Map<String, String> result = new HashMap<>(2);
+        result.put("projectName", projectService.getProjectName(projectId));
+        result.put("taskName", taskService.getTaskName(projectId, taskId));
+        return result;
+    }
 
 }

@@ -1,6 +1,6 @@
 <div class="card bg-light">
   <h3 class="card-header">
-    <img src="/assets/images/{{file.extension}}.png">
+    <img src="/assets/images/{{file.extension}}.png" height="25">
     <a [routerLink]="['files', file.id]">{{file.name}}</a>
     <span *ngIf="file.markedToConfirm" class="badge text-uppercase" translate>
       dws.files.summary.markedToConfirm
@@ -11,10 +11,12 @@
   </h3>
 
   <div class="card-body">
-    <p class="card-text" translate [translateParams]="file">dws.files.summary.created</p>
+    <p class="card-text" translate [translateParams]="{creationDate: (file.creationDate | date:'dd.MM.yyyy HH:mm')}">
+      dws.files.summary.created
+    </p>
     <p class="card-text" translate [translateParams]="file">dws.files.summary.version</p>
-    <p class="card-text" *ngIf="file.creationDate !== file.latestVersion.saveDate"
-       translate [translateParams]="file">
+    <p class="card-text" *ngIf="!hasOneVersion()"
+       translate [translateParams]="lastModifiedMessageParams">
       dws.files.summary.lastModified
     </p>
   </div>

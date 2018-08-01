@@ -1,5 +1,7 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.validators;
 
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -11,14 +13,11 @@ import pl.edu.pw.ee.pyskp.documentworkflow.services.FilesMetadataService;
 /**
  * Created by piotr on 19.01.17.
  */
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Component
 public class NewVersionFormValidator implements Validator {
+    @NonNull
     private final FilesMetadataService filesMetadataService;
-
-    @Autowired
-    public NewVersionFormValidator(FilesMetadataService filesMetadataService) {
-        this.filesMetadataService = filesMetadataService;
-    }
 
     @Override
     public boolean supports(Class<?> clazz) {

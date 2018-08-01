@@ -1,5 +1,7 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.config;
 
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,13 +17,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @Component
+@RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class StatelessAuthenticationFilter extends GenericFilterBean {
+    @NonNull
     private final TokenAuthenticationService authenticationService;
-
-    @Autowired
-    public StatelessAuthenticationFilter(TokenAuthenticationService authenticationService) {
-        this.authenticationService = authenticationService;
-    }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)

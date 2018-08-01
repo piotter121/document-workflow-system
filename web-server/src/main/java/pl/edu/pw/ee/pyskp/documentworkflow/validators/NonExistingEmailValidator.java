@@ -1,19 +1,17 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.validators;
 
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.UserRepository;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.util.Objects;
 
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class NonExistingEmailValidator implements ConstraintValidator<NonExistingEmail, String> {
+    @NonNull
     private final UserRepository userRepository;
-
-    @Autowired
-    public NonExistingEmailValidator(UserRepository userRepository) {
-        this.userRepository = Objects.requireNonNull(userRepository);
-    }
 
     @Override
     public void initialize(NonExistingEmail constraintAnnotation) {}

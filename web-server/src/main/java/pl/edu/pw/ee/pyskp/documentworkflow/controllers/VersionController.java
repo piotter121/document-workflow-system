@@ -16,6 +16,7 @@ import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.VersionRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.DiffData;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewVersionForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.UserInfoDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.TaskNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.VersionNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.FilesMetadataService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
@@ -100,8 +101,7 @@ public class VersionController {
                                           @PathVariable UUID projectId,
                                           @ModelAttribute NewVersionForm form,
                                           BindingResult bindingResult,
-                                          Model model)
-            throws IOException {
+                                          Model model) throws IOException, TaskNotFoundException {
         form.setFileId(fileId);
         form.setTaskId(taskId);
         form.setProjectId(projectId);

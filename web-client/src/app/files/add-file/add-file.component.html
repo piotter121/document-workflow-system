@@ -23,8 +23,8 @@
         <div class="form-group row">
           <label class="col-md-2 col-form-label" for="file" translate>dws.files.add.labels.file</label>
           <div class="col-md-5">
-            <input id="file" type="file" class="form-control-file" formControlName="file" required>
-            <invalid-feedback [control]="file"></invalid-feedback>
+            <input id="file" type="file" class="form-control-file"
+                   (change)="fileToUpload = $event.target.files.item(0)" required>
           </div>
         </div>
 

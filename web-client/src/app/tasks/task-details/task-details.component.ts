@@ -1,13 +1,14 @@
 import {Component, OnInit} from '@angular/core';
-import {Observable} from "rxjs";
-import {TaskInfo} from "../task-info";
-import {ActivatedRoute, ParamMap, Router} from "@angular/router";
-import {switchMap} from "rxjs/operators";
-import {TasksService} from "../tasks.service";
-import {HttpErrorResponse} from "@angular/common/http";
-import {ToastrService} from "ngx-toastr";
-import {TranslateService} from "@ngx-translate/core";
-import {ErrorMessage} from "../../shared/error-message";
+import {Observable} from 'rxjs';
+import {TaskInfo} from '../task-info';
+import {ActivatedRoute, ParamMap, Router} from '@angular/router';
+import {switchMap} from 'rxjs/operators';
+import {TasksService} from '../tasks.service';
+import {ToastrService} from 'ngx-toastr';
+import {TranslateService} from '@ngx-translate/core';
+import {GlobalsService} from '../../shared/globals.service';
+import {UserService} from '../../auth/user.service';
+import {UserInfo} from '../../auth/user-info';
 
 @Component({
   selector: 'app-task-details',
@@ -17,40 +18,43 @@ import {ErrorMessage} from "../../shared/error-message";
 export class TaskDetailsComponent implements OnInit {
   task$: Observable<TaskInfo>;
   task: TaskInfo;
+  currentUser: UserInfo;
 
-  constructor(
-    private route: ActivatedRoute,
-    private tasksService: TasksService,
-    private router: Router,
-    private toast: ToastrService,
-    private translate: TranslateService
-  ) {
+  constructor(private route: ActivatedRoute,
+              private tasksService: TasksService,
+              private router: Router,
+              private toast: ToastrService,
+              private translate: TranslateService,
+              private globals: GlobalsService,
+              private userService: UserService) {
   }
 
   ngOnInit() {
-    this.task$ = this.route.paramMap.pipe(
-      switchMap((params: ParamMap) => this.tasksService
-        .getTaskInfo(params.get('projectId'), params.get('taskId')))
-    );
+    this.task$ = this.route.paramMap.pipe(switchMap((params: ParamMap) => {
+      const projectId = params.get('projectId');
+      const taskId = params.get('taskId');
+      return this.tasksService.getTaskInfo(projectId, taskId);
+    }));
     this.task$.subscribe((task: TaskInfo) => {
       this.task = task;
-    }, (error: HttpErrorResponse) => this.onGetTaskError(error));
+      this.globals.title.next({
+        main: this.task.projectName,
+        small: this.task.name,
+        routerLink: ['/projects', this.task.projectId]
+      });
+    }, () => this.onGetTaskError());
+    this.currentUser = this.userService.currentUser;
   }
 
-  private onGetTaskError(error: HttpErrorResponse) {
+  private onGetTaskError() {
     this.router.navigate(['..', '..'], {
       relativeTo: this.route
-    }).then(() => {
-      let errorMessage: ErrorMessage = error.error;
-      if (errorMessage && errorMessage.errorCode)
-        this.showErrorMessage(errorMessage);
-      else
-        console.log(error);
     });
   }
 
-  private showErrorMessage(errorMessage: ErrorMessage) {
-    this.translate.get(`dws.httpErrors.${errorMessage.errorCode}`, errorMessage.params)
-      .subscribe((translation: string) => this.toast.error(translation));
+  deleteTask() {
+    const projectId = this.task.projectId;
+    this.tasksService.deleteTask(this.task.projectId, this.task.id)
+      .subscribe(() => this.router.navigate(['/projects', projectId]));
   }
 }

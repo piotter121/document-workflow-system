@@ -32,7 +32,7 @@
         <h3 translate [translateParams]="project">dws.project.details.taskList.header</h3>
       </div>
       <div class="row">
-        <div *ngFor="let task of project.tasks; trackBy: trackByTasks" class="col-md-6 mb-3">
+        <div *ngFor="let task of project.tasks; trackBy: task?.id" class="col-md-6 mb-3">
           <task-summary [task]="task"></task-summary>
         </div>
       </div>
@@ -59,7 +59,7 @@
           <small translate>dws.project.details.card.creationDate</small><br/>
           <span>{{project.creationDate | date:'dd.MM.yyyy HH:mm'}}</span>
         </div>
-        <div class="list-group-item flex-column align-items-start">
+        <div *ngIf="project.lastModified" class="list-group-item flex-column align-items-start">
           <small translate>dws.project.details.card.lastModified</small><br/>
           <span>{{project.lastModified | date:'dd.MM.yyyy HH:mm'}}</span>
         </div>

@@ -6,8 +6,8 @@ import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.FileSummary;
 
 import java.util.Date;
 
-@Data
 @NoArgsConstructor
+@Data
 @SuppressWarnings("WeakerAccess")
 public class FileSummaryDTO {
     private String name;

@@ -2,6 +2,7 @@ package pl.edu.pw.ee.pyskp.documentworkflow.services.impl;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
  * Created by piotr on 14.12.16.
  */
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserServiceImpl implements UserService {
     @NonNull
     private final UserRepository userRepository;

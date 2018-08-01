@@ -2,6 +2,7 @@ package pl.edu.pw.ee.pyskp.documentworkflow.services.impl;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Project;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Task;
@@ -19,7 +20,7 @@ import java.util.UUID;
 /**
  * Created by piotr on 06.01.17.
  */
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Service("securityService")
 public class SecurityServiceImpl implements SecurityService {
     @NonNull
@@ -48,7 +49,7 @@ public class SecurityServiceImpl implements SecurityService {
 
 
     @Override
-    public boolean isTaskParticipant(final UUID projectId, final UUID taskId) {
+    public boolean isTaskParticipant(final UUID projectId, final UUID taskId) throws TaskNotFoundException {
         final String currentUserEmail = userService.getCurrentUserEmail();
         Task task = taskRepository.findTaskByProjectIdAndTaskId(projectId, taskId)
                 .orElseThrow(() -> new TaskNotFoundException(taskId));
@@ -59,7 +60,7 @@ public class SecurityServiceImpl implements SecurityService {
     }
 
     @Override
-    public boolean hasAccessToTask(final UUID projectId, final UUID taskId) {
+    public boolean hasAccessToTask(final UUID projectId, final UUID taskId) throws TaskNotFoundException {
         Task task = taskRepository.findTaskByProjectIdAndTaskId(projectId, taskId)
                 .orElseThrow(() -> new TaskNotFoundException(taskId));
         String currentUserEmail = userService.getCurrentUserEmail();
@@ -81,7 +82,7 @@ public class SecurityServiceImpl implements SecurityService {
     }
 
     @Override
-    public boolean isTaskAdministrator(final UUID projectId, final UUID taskId) {
+    public boolean isTaskAdministrator(final UUID projectId, final UUID taskId) throws TaskNotFoundException {
         Task task = taskRepository.findTaskByProjectIdAndTaskId(projectId, taskId)
                 .orElseThrow(() -> new TaskNotFoundException(taskId));
         String currentUserLogin = userService.getCurrentUserEmail();

@@ -9,9 +9,9 @@ import org.springframework.data.cassandra.mapping.CassandraType;
 import org.springframework.data.cassandra.mapping.Column;
 import org.springframework.data.cassandra.mapping.UserDefinedType;
 
+@NoArgsConstructor
 @Data
 @EqualsAndHashCode(of = "email")
-@NoArgsConstructor
 @UserDefinedType("user_summary")
 public class UserSummary {
     @Column("email")

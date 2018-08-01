@@ -10,6 +10,7 @@ import {HttpErrorResponse} from "@angular/common/http";
 import {TaskSummary} from "../../tasks/task-summary";
 import {ToastrService} from "ngx-toastr";
 import {TranslateService} from "@ngx-translate/core";
+import {GlobalsService} from '../../shared/globals.service';
 
 @Component({
   selector: 'app-project-details',
@@ -30,7 +31,8 @@ export class ProjectDetailsComponent implements OnInit {
     private projectsService: ProjectsService,
     private userService: UserService,
     private toastr: ToastrService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private globals: GlobalsService
   ) {
   }
 
@@ -43,6 +45,13 @@ export class ProjectDetailsComponent implements OnInit {
       this.project = project;
       this.isProjectAdmin = project.administrator.email === this.currentUser.email;
       this.hasTasks = project.tasks.length > 0;
+      this.translate.get('dws.project.header').subscribe(translation => {
+        this.globals.title.next({
+          main: translation,
+          routerLink: ['/projects'],
+          small: this.project.name
+        });
+      });
     }, this.onGetProjectError.bind(this));
   }
 
@@ -62,8 +71,4 @@ export class ProjectDetailsComponent implements OnInit {
         .subscribe(() => this.router.navigate(['/projects']));
   }
 
-  // noinspection JSMethodCanBeStatic
-  trackByTasks(index: number, task: TaskSummary): string {
-    return task.id;
-  }
 }

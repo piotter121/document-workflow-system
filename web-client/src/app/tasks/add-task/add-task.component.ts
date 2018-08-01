@@ -26,14 +26,20 @@ export class AddTaskComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.newTask = this.formBuilder.group({
-      name: ['', [Validators.required, Validators.maxLength(50)]],
-      description: ['', [Validators.maxLength(1000)]],
-      administratorEmail: ['', [Validators.email, Validators.required], this.appValidators.existingUserEmail()]
-    });
     this.route.paramMap
       .pipe(map((paramMap: ParamMap) => paramMap.get('projectId')))
-      .subscribe((projectId: string) => this.projectId = projectId);
+      .subscribe((projectId: string) => {
+        this.projectId = projectId;
+        this.newTask = this.formBuilder.group({
+          name: [
+            '',
+            [Validators.required, Validators.maxLength(50)],
+            this.appValidators.nonExistingTaskNameInProject(this.projectId)
+          ],
+          description: ['', [Validators.maxLength(1000)]],
+          administratorEmail: ['', [Validators.email, Validators.required], this.appValidators.existingUserEmail()]
+        });
+      });
   }
 
   get name(): AbstractControl {

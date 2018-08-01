@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
 /**
  * Created by piotr on 29.12.16.
  */
-@Data
 @NoArgsConstructor
+@Data
 @EqualsAndHashCode(of = {"id"})
 public class ProjectInfoDTO {
     private String id;

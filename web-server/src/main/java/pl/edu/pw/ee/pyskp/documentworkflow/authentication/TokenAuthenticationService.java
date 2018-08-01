@@ -1,5 +1,7 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.authentication;
 
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -7,15 +9,12 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 
 @Service
+@RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class TokenAuthenticationService {
     public static final String AUTH_HEADER_NAME = "X-AUTH-TOKEN";
 
+    @NonNull
     private final TokenHandler tokenHandler;
-
-    @Autowired
-    public TokenAuthenticationService(TokenHandler tokenHandler) {
-        this.tokenHandler = tokenHandler;
-    }
 
     public Authentication getAuthentication(HttpServletRequest request) {
         String token = request.getHeader(AUTH_HEADER_NAME);

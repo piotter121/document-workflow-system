@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.FileMetadata;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Task;
 
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,14 +14,15 @@ import java.util.stream.Collectors;
 /**
  * Created by piotr on 31.12.16.
  */
-@Data
 @NoArgsConstructor
+@Data
 @EqualsAndHashCode(of = "id")
 public class TaskInfoDTO {
     private String id;
     private String name;
     private String description;
-    private String projectId;
+    private String projectId, projectName;
+    private UserInfoDTO projectAdministrator;
     private UserInfoDTO administrator;
     private Date creationDate;
     private Date modificationDate;
@@ -34,12 +36,15 @@ public class TaskInfoDTO {
         setDescription(task.getDescription());
         setAdministrator(new UserInfoDTO(task.getAdministrator()));
         setCreationDate(task.getCreationDate());
-        modificationDate = task.getModificationDate();
+        setModificationDate(task.getModificationDate());
         setProjectId(task.getProjectId().toString());
         setParticipants(task.getParticipants()
                 .stream().map(UserInfoDTO::new).collect(Collectors.toList()));
         if (task.getLastModifiedFile() != null)
             lastModifiedFile = new FileSummaryDTO(task.getLastModifiedFile());
-        filesInfo = files.stream().map(FileMetadataDTO::new).collect(Collectors.toList());
+        filesInfo = files.stream()
+                .sorted(Comparator.comparing((FileMetadata file) -> file.getLatestVersion().getSaveDate()).reversed())
+                .map(FileMetadataDTO::new)
+                .collect(Collectors.toList());
     }
 }

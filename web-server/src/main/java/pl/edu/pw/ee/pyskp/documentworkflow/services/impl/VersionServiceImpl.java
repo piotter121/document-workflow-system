@@ -2,7 +2,9 @@ package pl.edu.pw.ee.pyskp.documentworkflow.services.impl;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.*;
@@ -10,11 +12,13 @@ import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.FileMetadataRepositor
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.VersionRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.*;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.FileNotFoundException;
+import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.TaskNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.VersionNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.DifferenceService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.TaskService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.VersionService;
+import pl.edu.pw.ee.pyskp.documentworkflow.utils.TikaUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -31,16 +35,16 @@ import java.util.UUID;
  * Created by piotr on 06.01.17.
  */
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class VersionServiceImpl implements VersionService {
-    private static final Logger logger = Logger.getLogger(VersionServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(VersionServiceImpl.class);
     private static MessageDigest sha256 = initializeSHA256();
 
     private static MessageDigest initializeSHA256() {
         try {
             return MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
     }
@@ -60,6 +64,8 @@ public class VersionServiceImpl implements VersionService {
     @NonNull
     private final TaskService taskService;
 
+    private final TikaUtils tikaUtils = new TikaUtils();
+
     @Override
     public Version createUnmanagedInitVersionOfFile(NewFileForm form) throws IOException {
         Version version = new Version();
@@ -78,7 +84,7 @@ public class VersionServiceImpl implements VersionService {
     }
 
     @Override
-    public long addNewVersionOfFile(NewVersionForm form) throws IOException {
+    public long addNewVersionOfFile(NewVersionForm form) throws IOException, TaskNotFoundException {
         Version newVersion = new Version();
         MultipartFile file = form.getFile();
         newVersion.setSaveDate(new Date());
@@ -114,13 +120,23 @@ public class VersionServiceImpl implements VersionService {
         Version version = last2Versions.get(0);
         DiffData diffData = new DiffData();
         diffData.setDifferences(version.getDifferences());
-        diffData.setNewContent(new FileContentDTO(version.getFileContent().array()));
+        diffData.setNewContent(new FileContentDTO(getLines(version)));
 
         if (last2Versions.size() != 1) {
-            diffData.setOldContent(new FileContentDTO(last2Versions.get(1).getFileContent().array()));
+            diffData.setOldContent(new FileContentDTO(getLines(last2Versions.get(1))));
         }
 
         return diffData;
+    }
+
+    private List<String> getLines(Version version) {
+        byte[] bytes = version.getFileContent().array();
+        try {
+            return tikaUtils.extractLines(new ByteArrayInputStream(bytes));
+        } catch (IOException e) {
+            LOGGER.error("Input/output exception occurred during extraction of lines");
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

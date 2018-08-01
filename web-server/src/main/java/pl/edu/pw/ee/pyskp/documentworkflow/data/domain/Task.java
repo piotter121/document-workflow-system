@@ -30,9 +30,6 @@ public class Task {
 
     private String name;
 
-    @Column("project_name")
-    private String projectName;
-
     @Length(max = 1000)
     private String description;
 
@@ -51,8 +48,7 @@ public class Task {
 
     @Transient
     public Date getModificationDate() {
-        return lastModifiedFile == null ? creationDate
-                : lastModifiedFile.getModificationDate();
+        return lastModifiedFile == null ? creationDate : lastModifiedFile.getModificationDate();
     }
 
     @Transient

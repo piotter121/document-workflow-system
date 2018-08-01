@@ -8,5 +8,5 @@ import java.util.Map;
 @Data
 public class ErrorMessageDTO {
     private String errorCode;
-    private Map<String, Object> params = new HashMap<>();
+    private Map<String, String> params = new HashMap<>();
 }

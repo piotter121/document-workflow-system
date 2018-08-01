@@ -4,6 +4,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.log4j.Logger;
 import org.apache.tika.Tika;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,7 +31,7 @@ import java.util.UUID;
 /**
  * Created by piotr on 06.01.17.
  */
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Service
 public class FilesMetadataServiceImpl implements FilesMetadataService {
     private final static Logger logger = Logger.getLogger(FilesMetadataServiceImpl.class);
@@ -57,9 +58,11 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
     private final TaskService taskService;
 
     @Override
-    @Transactional(rollbackFor = Throwable.class)
+    @Transactional(rollbackFor = Exception.class)
     public UUID createNewFileFromForm(NewFileForm formData, final UUID projectId, final UUID taskID)
-            throws UnknownContentType, IOException {
+            throws UnknownContentType, IOException, TaskNotFoundException {
+        Task task = taskRepository.findTaskByProjectIdAndTaskId(projectId, taskID)
+                .orElseThrow(() -> new TaskNotFoundException(taskID));
         FileMetadata fileMetadata = new FileMetadata();
         fileMetadata.setName(formData.getName());
         fileMetadata.setDescription(formData.getDescription());
@@ -67,18 +70,18 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
         fileMetadata.setMarkedToConfirm(false);
         fileMetadata.setTaskId(taskID);
         fileMetadata.setContentType(getContentType(formData.getFile()));
+        fileMetadata.setTaskName(task.getName());
         Version initVersion = versionService.createUnmanagedInitVersionOfFile(formData);
         fileMetadata.setLatestVersion(new VersionSummary(initVersion));
-        UUID fileId = fileMetadataRepository.save(fileMetadata).getFileId();
+        fileMetadata = fileMetadataRepository.save(fileMetadata);
+        UUID fileId = fileMetadata.getFileId();
 
         initVersion.setFileId(fileId);
         versionRepository.save(initVersion);
 
-        Task task = taskRepository.findTaskByProjectIdAndTaskId(projectId, taskID)
-                .orElseThrow(() -> new TaskNotFoundException(taskID));
         task.setLastModifiedFile(new FileSummary(fileMetadata));
         task.incrementNumberOfFiles();
-        taskRepository.save(task);
+        task = taskRepository.save(task);
 
         String currentUserEmail = userService.getCurrentUserEmail();
         UserProject userProject =
@@ -92,6 +95,7 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public FileMetadataDTO getFileMetadataDTO(UUID taskId, UUID fileId) {
         FileMetadata fileMetadata = fileMetadataRepository.findOneByTaskIdAndFileId(taskId, fileId)
                 .orElseThrow(() -> new FileNotFoundException(fileId));
@@ -100,6 +104,7 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
     }
 
     @Override
+    @Transactional
     public void markFileToConfirm(UUID taskId, UUID fileId) {
         FileMetadata file = fileMetadataRepository.findOneByTaskIdAndFileId(taskId, fileId)
                 .orElseThrow(() -> new FileNotFoundException(fileId));
@@ -130,7 +135,7 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
     }
 
     @Override
-    public void deleteFile(UUID projectId, UUID taskId, UUID fileId) {
+    public void deleteFile(UUID projectId, UUID taskId, UUID fileId) throws TaskNotFoundException {
         versionRepository.deleteAllByFileId(fileId);
         fileMetadataRepository.deleteFileMetadataByTaskIdAndFileId(taskId, fileId);
         taskService.updateTaskStatistic(projectId, taskId);

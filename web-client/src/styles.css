@@ -10,6 +10,10 @@ body {
   cursor: not-allowed;
 }
 
+.card {
+  box-shadow: 0 2px 2px 0 #555;
+}
+
 .card-header > a {
   color: inherit;
 }
@@ -21,4 +25,12 @@ body {
 input.ng-invalid.ng-touched, input.ng-invalid.ng-dirty,
 textarea.ng-invalid.ng-touched, textarea.ng-invalid.ng-dirty {
   border-color: #dc3545;
+}
+
+.btn-success {
+  background-color: #689c68;
+}
+
+.btn-danger {
+  background-color: #bf6360;
 }

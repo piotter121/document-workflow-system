@@ -7,8 +7,8 @@ import org.springframework.data.cassandra.mapping.UserDefinedType;
 
 import java.util.Date;
 
-@Data
 @NoArgsConstructor
+@Data
 @UserDefinedType("file_summary")
 public class FileSummary {
     private String name;

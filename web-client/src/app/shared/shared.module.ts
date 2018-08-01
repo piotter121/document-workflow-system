@@ -1,10 +1,11 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {TranslateModule} from "@ngx-translate/core";
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {TranslateModule} from '@ngx-translate/core';
 import {InvalidFeedbackComponent} from './invalid-feedback/invalid-feedback.component';
-import {AppValidatorsService} from "./app-validators.service";
-import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
+import {AppValidatorsService} from './app-validators.service';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {GlobalsService} from './globals.service';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
     InvalidFeedbackComponent
   ],
   providers: [
-    AppValidatorsService
+    AppValidatorsService,
+    GlobalsService
   ],
   exports: [
     CommonModule,

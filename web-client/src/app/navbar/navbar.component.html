@@ -1,3 +1,11 @@
+<div class="pb-2 mt-4 mb-2 page-header">
+  <h3>
+    <img src="/assets/images/logo.png" height="40" width="40">
+    <a *ngIf="title?.main" [routerLink]="title?.routerLink" class="mr-2">{{ title?.main }}</a>
+    <small *ngIf="title?.small"><i class="fa fa-angle-double-right" aria-hidden="true"></i> {{ title?.small }}</small>
+  </h3>
+</div>
+
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
   <button class="navbar-toggler" type="button" data-toggle="collapse"
           data-target="#app-navbar" aria-controls="app-navbar"

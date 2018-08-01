@@ -7,8 +7,8 @@ import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Task;
 
 import java.util.Date;
 
-@Data
 @NoArgsConstructor
+@Data
 @EqualsAndHashCode(of = "id")
 public class TaskSummaryDTO {
     private String id;

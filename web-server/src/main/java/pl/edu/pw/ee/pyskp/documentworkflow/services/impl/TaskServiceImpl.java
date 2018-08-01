@@ -2,14 +2,17 @@ package pl.edu.pw.ee.pyskp.documentworkflow.services.impl;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.*;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.FileMetadataRepository;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.ProjectRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.TaskRepository;
-import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.UserProjectRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.VersionRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewTaskForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.TaskInfoDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.UserInfoDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ProjectNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.TaskNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.UserNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.ProjectService;
@@ -23,7 +26,7 @@ import java.util.stream.Collectors;
  * Created by p.pysk on 02.01.2017.
  */
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class TaskServiceImpl implements TaskService {
     @NonNull
     private final TaskRepository taskRepository;
@@ -35,16 +38,16 @@ public class TaskServiceImpl implements TaskService {
     private final ProjectService projectService;
 
     @NonNull
+    private final ProjectRepository projectRepository;
+
+    @NonNull
     private final FileMetadataRepository fileMetadataRepository;
 
     @NonNull
     private final VersionRepository versionRepository;
 
-    @NonNull
-    private final UserProjectRepository userProjectRepository;
-
     @Override
-    public Task getTask(UUID projectId, UUID taskId) {
+    public Task getTask(UUID projectId, UUID taskId) throws TaskNotFoundException {
         return taskRepository.findTaskByProjectIdAndTaskId(projectId, taskId)
                 .orElseThrow(() -> new TaskNotFoundException(taskId));
     }
@@ -58,7 +61,6 @@ public class TaskServiceImpl implements TaskService {
         task.setProjectId(projectId);
         String administratorEmail = form.getAdministratorEmail();
         task.setAdministrator(new UserSummary(userService.getUserByEmail(administratorEmail)));
-        task.setProjectName(projectService.getProjectName(projectId));
         task = taskRepository.save(task);
         projectService.updateProjectStatisticsForItsUsers(projectId);
         return task.getTaskId();
@@ -75,7 +77,8 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void addParticipantToTask(String userEmail, UUID projectId, UUID taskId) throws UserNotFoundException {
+    public void addParticipantToTask(String userEmail, UUID projectId, UUID taskId)
+            throws UserNotFoundException, TaskNotFoundException {
         User user = userService.getUserByEmail(userEmail);
         Task task = taskRepository.findTaskByProjectIdAndTaskId(projectId, taskId)
                 .orElseThrow(() -> new TaskNotFoundException(taskId));
@@ -90,15 +93,20 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskInfoDTO getTaskInfo(UUID projectId, UUID taskId) {
+    public TaskInfoDTO getTaskInfo(UUID projectId, UUID taskId) throws TaskNotFoundException {
         Task task = taskRepository.findTaskByProjectIdAndTaskId(projectId, taskId)
                 .orElseThrow(() -> new TaskNotFoundException(taskId));
+        Project project = projectRepository.findOneById(projectId)
+                .orElseThrow(() -> new ProjectNotFoundException(projectId));
         List<FileMetadata> files = fileMetadataRepository.findAllByTaskId(taskId);
-        return new TaskInfoDTO(task, files);
+        TaskInfoDTO taskInfo = new TaskInfoDTO(task, files);
+        taskInfo.setProjectName(project.getName());
+        taskInfo.setProjectAdministrator(new UserInfoDTO(project.getAdministrator()));
+        return taskInfo;
     }
 
     @Override
-    public void updateTaskStatistic(UUID projectId, UUID taskId) {
+    public void updateTaskStatistic(UUID projectId, UUID taskId) throws TaskNotFoundException {
         List<FileMetadata> files = fileMetadataRepository.findAllByTaskId(taskId);
         Task task = taskRepository.findTaskByProjectIdAndTaskId(projectId, taskId)
                 .orElseThrow(() -> new TaskNotFoundException(taskId));
@@ -113,10 +121,17 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public String getTaskName(UUID projectId, UUID taskId) {
+    public String getTaskName(UUID projectId, UUID taskId) throws TaskNotFoundException {
         return taskRepository.findTaskByProjectIdAndTaskId(projectId, taskId)
                 .map(Task::getName)
                 .orElseThrow(() -> new TaskNotFoundException(taskId));
+    }
+
+    @Override
+    public boolean existsByName(UUID projectId, String taskName) {
+        List<Task> tasks = taskRepository.findAllByProjectId(projectId);
+        return tasks.stream().map(Task::getName)
+                .anyMatch(taskName::equals);
     }
 
 }

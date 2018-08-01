@@ -10,9 +10,9 @@ import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.UserSummary;
 /**
  * Created by piotr on 01.01.17.
  */
+@NoArgsConstructor
 @Data
 @ToString
-@NoArgsConstructor
 @EqualsAndHashCode(of = "email")
 public class UserInfoDTO {
     private String firstName;

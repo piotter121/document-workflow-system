@@ -8,8 +8,8 @@ import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.DifferenceType;
 /**
  * Created by p.pysk on 09.01.2017.
  */
-@Data
 @NoArgsConstructor
+@Data
 @SuppressWarnings("WeakerAccess")
 public class DifferenceInfoDTO {
     private long previousSectionStart;
@@ -18,7 +18,7 @@ public class DifferenceInfoDTO {
     private long newSectionSize;
     private DifferenceType differenceType;
 
-    public DifferenceInfoDTO(Difference difference) {
+    DifferenceInfoDTO(Difference difference) {
         setDifferenceType(difference.getDifferenceType());
         setNewSectionSize(difference.getNewSectionSize());
         setNewSectionStart(difference.getNewSectionStart());

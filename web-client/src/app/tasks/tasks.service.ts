@@ -19,4 +19,8 @@ export class TasksService {
   getTaskInfo(projectId: string, taskId: string): Observable<TaskInfo> {
     return this.http.get<TaskInfo>(`/api/projects/${projectId}/tasks/${taskId}`);
   }
+
+  deleteTask(projectId: string, taskId: string): Observable<any> {
+    return this.http.delete<any>(`/api/projects/${projectId}/tasks/${taskId}`);
+  }
 }

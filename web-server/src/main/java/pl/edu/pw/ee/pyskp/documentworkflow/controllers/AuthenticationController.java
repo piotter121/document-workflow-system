@@ -1,5 +1,7 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.controllers;
 
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -18,21 +20,19 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
+@RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class AuthenticationController {
     private static final Logger logger = LogManager.getLogger(AuthenticationController.class);
 
+    @NonNull
     private final WebAuthenticationService authenticationService;
+
+    @NonNull
     private final UserService userService;
 
-    @Autowired
-    public AuthenticationController(WebAuthenticationService authenticationService, UserService userService) {
-        this.authenticationService = authenticationService;
-        this.userService = userService;
-    }
-
     @GetMapping("/token")
-    public ResponseEntity<Map<String, String>> getToken(
-            @RequestParam String email, @RequestParam String password) throws UserNotFoundException {
+    public ResponseEntity<Map<String, String>> getToken(@RequestParam String email, @RequestParam String password)
+            throws UserNotFoundException {
         try {
             String token = authenticationService.getToken(email, password);
 
