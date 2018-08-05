@@ -7,6 +7,7 @@ import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.FileMetadata;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Version;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,8 +44,10 @@ public class FileMetadataDTO {
         setModificationDate(fileMetadata.getLatestVersion().getSaveDate());
         setCreationDate(fileMetadata.getCreationDate());
         setMarkedToConfirm(fileMetadata.isMarkedToConfirm());
-        setVersions(versions
-                .stream().map(VersionInfoDTO::new).collect(Collectors.toList()));
+        setVersions(versions.stream()
+                .map(VersionInfoDTO::new)
+                .sorted(Comparator.comparing(VersionInfoDTO::getSaveDate).reversed())
+                .collect(Collectors.toList()));
         extension = fileMetadata.getContentType().getExtension();
         latestVersion = new VersionSummaryDTO(fileMetadata.getLatestVersion());
         numberOfVersions = fileMetadata.getNumberOfVersions();
@@ -52,11 +55,5 @@ public class FileMetadataDTO {
 
     FileMetadataDTO(FileMetadata fileMetadata) {
         this(fileMetadata, Collections.emptyList());
-    }
-
-    public List<VersionInfoDTO> getVersionSortedBySaveDateDESC() {
-        return versions.stream()
-                .sorted(comparing(VersionInfoDTO::getSaveDate).reversed())
-                .collect(toList());
     }
 }

@@ -1,7 +1,43 @@
 <div class="row">
   <div class="col-md-12">
-    <add-participant *ngIf="currentUser.equals(task.administrator)" [task]="task"></add-participant>
+    <add-participant *ngIf="currentUser.equals(task.administrator)" [(task)]="task"></add-participant>
 
-
+    <div class="row">
+      <div class="col-md-12">
+        <div *ngIf="filteredParticipants.length === 0; else participantsList" class="alert alert-info text-center">
+          <strong translate>dws.task.details.participants.list.noParticipantsMessage</strong>
+        </div>
+        <ng-template #participantsList>
+          <div class="text-center">
+            <h3 translate>dws.task.details.participants.list.header</h3>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="list-group">
+                <div *ngFor="let participant of filteredParticipants; trackBy: participant?.email"
+                     class="list-group-item flex-column">
+                  <div class="d-flex w-100 justify-content-between align-items-center">
+                    <span>
+                      {{participant.fullName}} ({{participant.email}})
+                    </span>
+                    <div>
+                      <button *ngIf="currentUser.equals(task.administrator)" role="button" type="button"
+                              class="btn btn-danger mr-1" (click)="removeParticipant(participant)">
+                        <i class="fa fa-sign-out" aria-hidden="true"></i>
+                        {{'dws.task.details.participants.list.deleteParticipant' | translate}}
+                      </button>
+                      <a class="btn btn-info" href="mailto:{{participant.email}}" target="_blank">
+                        <i class="fa fa-envelope" aria-hidden="true"></i>
+                        {{'dws.task.details.participants.list.sendEmailButton' | translate}}
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+    </div>
   </div>
 </div>

@@ -6,6 +6,7 @@ import {InvalidFeedbackComponent} from './invalid-feedback/invalid-feedback.comp
 import {AppValidatorsService} from './app-validators.service';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {GlobalsService} from './globals.service';
+import {ToastNotificationService} from './toast-notification.service';
 
 @NgModule({
   imports: [
@@ -17,7 +18,8 @@ import {GlobalsService} from './globals.service';
   ],
   providers: [
     AppValidatorsService,
-    GlobalsService
+    GlobalsService,
+    ToastNotificationService
   ],
   exports: [
     CommonModule,

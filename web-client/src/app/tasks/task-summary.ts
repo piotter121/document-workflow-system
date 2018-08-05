@@ -1,6 +1,6 @@
 import {FileSummary} from "../files/file-summary";
 
-export class TaskSummary {
+export interface TaskSummary {
   id: string;
   name: string;
   creationDate: Date;

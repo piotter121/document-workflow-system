@@ -1,13 +1,12 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.services;
 
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.FileMetadataDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewFileForm;
-import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.TaskNotFoundException;
+import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.FileNotFoundException;
+import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.UnknownContentType;
 
-import java.io.IOException;
 import java.util.UUID;
 
 /**
@@ -15,20 +14,19 @@ import java.util.UUID;
  */
 public interface FilesMetadataService {
     UUID createNewFileFromForm(NewFileForm formData, UUID projectId, UUID taskId)
-            throws UnknownContentType, IOException, TaskNotFoundException;
+            throws UnknownContentType, ResourceNotFoundException;
 
-    FileMetadataDTO getFileMetadataDTO(UUID taskId, UUID fileId);
+    FileMetadataDTO getFileMetadataDTO(UUID taskId, UUID fileId) throws FileNotFoundException;
 
-    void markFileToConfirm(UUID taskId, UUID fileId);
+    void markFileToConfirm(UUID taskId, UUID fileId) throws FileNotFoundException;
 
-    boolean hasContentTypeAs(UUID taskId, UUID fileId, MultipartFile file);
+    boolean hasContentTypeAs(UUID taskId, UUID fileId, MultipartFile file) throws FileNotFoundException;
 
-    void confirmFile(UUID taskId, UUID fileId);
+    void confirmFile(UUID taskId, UUID fileId) throws FileNotFoundException;
 
-    @Transactional(rollbackFor = Throwable.class)
-    void deleteFile(UUID projectId, UUID taskId, UUID fileId) throws TaskNotFoundException;
+    void deleteFile(UUID projectId, UUID taskId, UUID fileId) throws ResourceNotFoundException;
 
     boolean isValidVersionStringForFile(String versionString, UUID fileId);
 
-    String getFileName(UUID taskId, UUID fileId);
+    String getFileName(UUID taskId, UUID fileId) throws FileNotFoundException;
 }

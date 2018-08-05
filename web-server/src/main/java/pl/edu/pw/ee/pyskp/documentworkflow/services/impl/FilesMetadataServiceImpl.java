@@ -2,8 +2,9 @@ package pl.edu.pw.ee.pyskp.documentworkflow.services.impl;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.apache.log4j.Logger;
 import org.apache.tika.Tika;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,10 +16,7 @@ import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.UserProjectRepository
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.VersionRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.FileMetadataDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewFileForm;
-import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.FileNotFoundException;
-import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ProjectNotFoundException;
-import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.TaskNotFoundException;
-import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.UnknownContentType;
+import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.*;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.FilesMetadataService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.TaskService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
@@ -34,7 +32,7 @@ import java.util.UUID;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Service
 public class FilesMetadataServiceImpl implements FilesMetadataService {
-    private final static Logger logger = Logger.getLogger(FilesMetadataServiceImpl.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(FilesMetadataServiceImpl.class);
 
     @NonNull
     private final FileMetadataRepository fileMetadataRepository;
@@ -57,10 +55,23 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
     @NonNull
     private final TaskService taskService;
 
+    private static ContentType getContentType(MultipartFile multipartFile)
+            throws UnknownContentType {
+        Tika tika = new Tika();
+        try {
+            String contentType = tika.detect(multipartFile.getBytes());
+            return ContentType.fromName(contentType)
+                    .orElseThrow(() -> new UnknownContentType(contentType));
+        } catch (IOException e) {
+            LOGGER.error("Input/output exception during getBytes from multipartFile", e);
+            throw new RuntimeException(e);
+        }
+    }
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public UUID createNewFileFromForm(NewFileForm formData, final UUID projectId, final UUID taskID)
-            throws UnknownContentType, IOException, TaskNotFoundException {
+            throws UnknownContentType, ResourceNotFoundException {
         Task task = taskRepository.findTaskByProjectIdAndTaskId(projectId, taskID)
                 .orElseThrow(() -> new TaskNotFoundException(taskID));
         FileMetadata fileMetadata = new FileMetadata();
@@ -86,7 +97,7 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
         String currentUserEmail = userService.getCurrentUserEmail();
         UserProject userProject =
                 userProjectRepository.findUserProjectByUserEmailAndProjectId(currentUserEmail, projectId)
-                .orElseThrow(() -> new ProjectNotFoundException(projectId));
+                        .orElseThrow(() -> new ProjectNotFoundException(projectId));
         userProject.setLastModifiedFile(task.getLastModifiedFile());
         userProject.incrementNumberOfFiles();
         userProjectRepository.save(userProject);
@@ -96,7 +107,7 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
 
     @Override
     @Transactional(readOnly = true)
-    public FileMetadataDTO getFileMetadataDTO(UUID taskId, UUID fileId) {
+    public FileMetadataDTO getFileMetadataDTO(UUID taskId, UUID fileId) throws FileNotFoundException {
         FileMetadata fileMetadata = fileMetadataRepository.findOneByTaskIdAndFileId(taskId, fileId)
                 .orElseThrow(() -> new FileNotFoundException(fileId));
         List<Version> versions = versionRepository.findAllByFileId(fileId);
@@ -104,8 +115,8 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
     }
 
     @Override
-    @Transactional
-    public void markFileToConfirm(UUID taskId, UUID fileId) {
+    @Transactional(rollbackFor = FileNotFoundException.class)
+    public void markFileToConfirm(UUID taskId, UUID fileId) throws FileNotFoundException {
         FileMetadata file = fileMetadataRepository.findOneByTaskIdAndFileId(taskId, fileId)
                 .orElseThrow(() -> new FileNotFoundException(fileId));
         file.setMarkedToConfirm(true);
@@ -113,21 +124,22 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
     }
 
     @Override
-    public boolean hasContentTypeAs(UUID taskId, UUID fileId, MultipartFile file) {
+    public boolean hasContentTypeAs(UUID taskId, UUID fileId, MultipartFile file) throws FileNotFoundException {
         FileMetadata fileMetadata = fileMetadataRepository.findOneByTaskIdAndFileId(taskId, fileId)
                 .orElseThrow(() -> new FileNotFoundException(fileId));
         ContentType contentType;
         try {
             contentType = getContentType(file);
-        } catch (IOException | UnknownContentType e) {
-            logger.error(e.getLocalizedMessage(), e);
+        } catch (UnknownContentType e) {
+            LOGGER.error(e.getLocalizedMessage(), e);
             return false;
         }
         return contentType.equals(fileMetadata.getContentType());
     }
 
     @Override
-    public void confirmFile(UUID taskId, UUID fileId) {
+    @Transactional(rollbackFor = FileNotFoundException.class)
+    public void confirmFile(UUID taskId, UUID fileId) throws FileNotFoundException {
         FileMetadata fileToConfirm = fileMetadataRepository.findOneByTaskIdAndFileId(taskId, fileId)
                 .orElseThrow(() -> new FileNotFoundException(fileId));
         fileToConfirm.setConfirmed(true);
@@ -135,7 +147,8 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
     }
 
     @Override
-    public void deleteFile(UUID projectId, UUID taskId, UUID fileId) throws TaskNotFoundException {
+    @Transactional(rollbackFor = ResourceNotFoundException.class)
+    public void deleteFile(UUID projectId, UUID taskId, UUID fileId) throws ResourceNotFoundException {
         versionRepository.deleteAllByFileId(fileId);
         fileMetadataRepository.deleteFileMetadataByTaskIdAndFileId(taskId, fileId);
         taskService.updateTaskStatistic(projectId, taskId);
@@ -144,24 +157,15 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
     @Override
     public boolean isValidVersionStringForFile(String versionString, UUID fileId) {
         List<Version> versions = versionRepository.findAllByFileId(fileId);
-        if (versions.isEmpty()) throw new FileNotFoundException(fileId);
         return versions.parallelStream()
                 .map(Version::getVersionString)
                 .noneMatch(string -> string.equalsIgnoreCase(versionString));
     }
 
     @Override
-    public String getFileName(UUID taskId, UUID fileId) {
+    public String getFileName(UUID taskId, UUID fileId) throws FileNotFoundException {
         return fileMetadataRepository.findOneByTaskIdAndFileId(taskId, fileId)
                 .map(metadata -> metadata.getName() + "." + metadata.getContentType().getExtension())
                 .orElseThrow(() -> new FileNotFoundException(fileId));
-    }
-
-    private static ContentType getContentType(MultipartFile multipartFile)
-            throws UnknownContentType, IOException {
-        Tika tika = new Tika();
-        String contentType = tika.detect(multipartFile.getBytes());
-        return ContentType.fromName(contentType)
-                .orElseThrow(() -> new UnknownContentType(contentType));
     }
 }

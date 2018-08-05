@@ -35,7 +35,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateLoader {
     BrowserAnimationsModule,
     ToastrModule.forRoot({
       timeOut: 10_000,
-      positionClass: 'toast-bottom-right',
+      positionClass: 'toast-top-right',
       preventDuplicates: true
     }),
     TranslateModule.forRoot({

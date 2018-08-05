@@ -11,6 +11,7 @@ import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.ProjectRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.TaskRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.UserProjectRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ProjectNotFoundException;
+import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.TaskNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.SecurityService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
@@ -36,7 +37,7 @@ public class SecurityServiceImpl implements SecurityService {
     private final TaskRepository taskRepository;
 
     @Override
-    public boolean canAddTask(UUID projectId) {
+    public boolean canAddTask(UUID projectId) throws ProjectNotFoundException {
         return isCurrentUserProjectAdministrator(projectId);
     }
 
@@ -60,7 +61,7 @@ public class SecurityServiceImpl implements SecurityService {
     }
 
     @Override
-    public boolean hasAccessToTask(final UUID projectId, final UUID taskId) throws TaskNotFoundException {
+    public boolean hasAccessToTask(final UUID projectId, final UUID taskId) throws ResourceNotFoundException {
         Task task = taskRepository.findTaskByProjectIdAndTaskId(projectId, taskId)
                 .orElseThrow(() -> new TaskNotFoundException(taskId));
         String currentUserEmail = userService.getCurrentUserEmail();
@@ -74,7 +75,7 @@ public class SecurityServiceImpl implements SecurityService {
     }
 
     @Override
-    public boolean isCurrentUserProjectAdministrator(final UUID projectId) {
+    public boolean isCurrentUserProjectAdministrator(final UUID projectId) throws ProjectNotFoundException {
         Project project = projectRepository.findOneById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException(projectId));
         String currentUserEmail = userService.getCurrentUserEmail();

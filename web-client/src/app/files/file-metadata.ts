@@ -1,7 +1,7 @@
-import {VersionInfo} from "../versions/version-info";
-import {VersionSummary} from "../versions/version-summary";
+import {VersionInfo} from '../versions/version-info';
+import {VersionSummary} from '../versions/version-summary';
 
-export class FileMetadata {
+export interface FileMetadata {
   id: string;
   name: string;
   description: string;

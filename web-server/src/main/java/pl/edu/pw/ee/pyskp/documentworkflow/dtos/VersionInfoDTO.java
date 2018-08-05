@@ -2,7 +2,6 @@ package pl.edu.pw.ee.pyskp.documentworkflow.dtos;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.DifferenceType;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Version;
 
 import java.util.Date;
@@ -28,32 +27,8 @@ public class VersionInfoDTO {
         setSaveDate(version.getSaveDate());
         setVersionString(version.getVersionString());
         setMessage(version.getMessage());
-        setDifferences(version.getDifferences()
-                .stream().map(DifferenceInfoDTO::new).collect(toList()));
-    }
-
-    public int getNumberOfDifferences() {
-        return differences == null ? 0 : differences.size();
-    }
-
-    public long getNumberOfModifiedLines() {
-        return differences.stream()
-                .filter(difference -> difference.getDifferenceType().equals(DifferenceType.MODIFICATION))
-                .mapToLong(DifferenceInfoDTO::getNewSectionSize)
-                .sum();
-    }
-
-    public long getNumberOfInsertedLines() {
-        return differences.stream()
-                .filter(difference -> difference.getDifferenceType().equals(DifferenceType.INSERT))
-                .mapToLong(DifferenceInfoDTO::getNewSectionSize)
-                .sum();
-    }
-
-    public long getNumberOfDeletedLines() {
-        return differences.stream()
-                .filter(difference -> difference.getDifferenceType().equals(DifferenceType.DELETE))
-                .mapToLong(DifferenceInfoDTO::getPreviousSectionSize)
-                .sum();
+        setDifferences(version.getDifferences().stream()
+                .map(DifferenceInfoDTO::new)
+                .collect(toList()));
     }
 }

@@ -11,6 +11,7 @@ import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.User;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewProjectForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.ProjectInfoDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.ProjectSummaryDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ProjectNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.ProjectService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
 
@@ -47,13 +48,13 @@ public class ProjectsController {
 
     @GetMapping("/{projectId}")
     @PreAuthorize("@securityService.hasAccessToProject(#projectId)")
-    public ProjectInfoDTO getProjectInfo(@PathVariable UUID projectId) {
+    public ProjectInfoDTO getProjectInfo(@PathVariable UUID projectId) throws ProjectNotFoundException {
         return projectService.getProjectInfo(projectId);
     }
 
     @GetMapping(value = "/{projectId}/name", produces = MediaType.TEXT_PLAIN_VALUE)
     @PreAuthorize("@securityService.hasAccessToProject(#projectId)")
-    public String getProjectName(@PathVariable UUID projectId) {
+    public String getProjectName(@PathVariable UUID projectId) throws ProjectNotFoundException {
         return projectService.getProjectName(projectId);
     }
 

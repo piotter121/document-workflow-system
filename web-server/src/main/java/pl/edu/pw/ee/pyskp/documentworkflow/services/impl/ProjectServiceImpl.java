@@ -88,7 +88,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectInfoDTO getProjectInfo(UUID projectId) {
+    public ProjectInfoDTO getProjectInfo(UUID projectId) throws ProjectNotFoundException {
         Project project = projectRepository.findOneById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException(projectId));
         List<Task> projectTasks = taskRepository.findAllByProjectId(projectId);
@@ -97,14 +97,14 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public String getProjectName(UUID projectId) {
+    public String getProjectName(UUID projectId) throws ProjectNotFoundException {
         return projectRepository.findOneById(projectId)
                 .map(Project::getName)
                 .orElseThrow(() -> new ProjectNotFoundException(projectId));
     }
 
     @Override
-    public void updateProjectStatisticsForItsUsers(UUID projectId) {
+    public void updateProjectStatisticsForItsUsers(UUID projectId) throws ProjectNotFoundException {
         List<Task> tasks = taskRepository.findAllByProjectId(projectId);
         Set<String> projectParticipants = getProjectParticipants(projectId);
         List<UserProject> userProjects = userProjectRepository
@@ -134,7 +134,8 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     private List<UserProject> createMissingUserProjects(final UUID projectId, Set<String> projectParticipants,
-                                                        Set<String> currentUserProjectsEmails) {
+                                                        Set<String> currentUserProjectsEmails)
+            throws ProjectNotFoundException {
         Set<String> toCreate = new HashSet<>(projectParticipants);
         toCreate.removeAll(currentUserProjectsEmails);
         List<User> users = userRepository.findAllByEmailIn(toCreate);
@@ -144,7 +145,7 @@ public class ProjectServiceImpl implements ProjectService {
                 .collect(Collectors.toList());
     }
 
-    private Set<String> getProjectParticipants(final UUID projectId) {
+    private Set<String> getProjectParticipants(final UUID projectId) throws ProjectNotFoundException {
         String administrator = projectRepository.findOneById(projectId)
                 .map(project -> project.getAdministrator().getEmail())
                 .orElseThrow(() -> new ProjectNotFoundException(projectId));

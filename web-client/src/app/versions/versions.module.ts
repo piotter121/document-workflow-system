@@ -1,10 +1,15 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {NgModule} from '@angular/core';
+import {VersionsService} from './versions.service';
+import {SharedModule} from '../shared/shared.module';
 
 @NgModule({
   imports: [
-    CommonModule
+    SharedModule
+  ],
+  providers: [
+    VersionsService
   ],
   declarations: []
 })
-export class VersionsModule { }
+export class VersionsModule {
+}

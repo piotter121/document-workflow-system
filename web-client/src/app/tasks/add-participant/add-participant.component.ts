@@ -1,7 +1,11 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {TaskInfo} from "../task-info";
-import {AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators} from "@angular/forms";
-import {AppValidatorsService} from "../../shared/app-validators.service";
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {TaskInfo} from '../task-info';
+import {AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators} from '@angular/forms';
+import {AppValidatorsService} from '../../shared/app-validators.service';
+import {TasksService} from '../tasks.service';
+import {UserInfo} from '../../auth/user-info';
+import {ToastrService} from 'ngx-toastr';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'add-participant',
@@ -12,21 +16,26 @@ export class AddParticipantComponent implements OnInit {
 
   @Input()
   task: TaskInfo;
+  @Output()
+  taskChange: EventEmitter<TaskInfo> = new EventEmitter<TaskInfo>();
+
   isCollapsed: boolean = true;
   addParticipantForm: FormGroup;
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private appValidators: AppValidatorsService
-  ) {
+  constructor(private formBuilder: FormBuilder,
+              private appValidators: AppValidatorsService,
+              private tasksService: TasksService,
+              private toastrService: ToastrService,
+              private translate: TranslateService) {
   }
 
   ngOnInit() {
     this.addParticipantForm = this.formBuilder.group({
       participantEmail: [
         '',
-        [Validators.required, this.nonExistingParticipant().bind(this)],
-        this.appValidators.existingUserEmail()]
+        [Validators.required, Validators.email, this.nonExistingParticipant().bind(this)],
+        this.appValidators.existingUserEmail()
+      ]
     });
   }
 
@@ -46,6 +55,14 @@ export class AddParticipantComponent implements OnInit {
   }
 
   addParticipant() {
-    // TODO write this method
+    this.tasksService.addParticipantToTask(this.task.projectId, this.task.id, this.participantEmail.value)
+      .subscribe((participants: UserInfo[]) => {
+        this.translate.get('dws.task.details.participants.addParticipant.addSuccess', {
+          'email': this.participantEmail.value
+        }).subscribe(translation => this.toastrService.success(translation));
+        this.task.participants = participants;
+        this.taskChange.emit(this.task);
+        this.isCollapsed = true;
+      });
   }
 }

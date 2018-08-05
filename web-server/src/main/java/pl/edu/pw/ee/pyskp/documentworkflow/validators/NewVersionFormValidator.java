@@ -2,12 +2,15 @@ package pl.edu.pw.ee.pyskp.documentworkflow.validators;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewVersionForm;
+import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.FileNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.FilesMetadataService;
 
 /**
@@ -16,6 +19,8 @@ import pl.edu.pw.ee.pyskp.documentworkflow.services.FilesMetadataService;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Component
 public class NewVersionFormValidator implements Validator {
+    private static final Logger LOGGER = LoggerFactory.getLogger(NewVersionFormValidator.class);
+
     @NonNull
     private final FilesMetadataService filesMetadataService;
 
@@ -35,8 +40,13 @@ public class NewVersionFormValidator implements Validator {
         if (form.getFile().isEmpty()) {
             errors.rejectValue("file", "NotBlank");
         }
-        if (!filesMetadataService.hasContentTypeAs(form.getTaskId(), form.getFileId(), form.getFile())) {
-            errors.rejectValue("file", "WrongContentType");
+        try {
+            if (!filesMetadataService.hasContentTypeAs(form.getTaskId(), form.getFileId(), form.getFile())) {
+                errors.rejectValue("file", "WrongContentType");
+            }
+        } catch (FileNotFoundException e) {
+            LOGGER.error("File not found during new version validation", e);
+            errors.rejectValue("file", "FileNotFound");
         }
     }
 }

@@ -86,7 +86,15 @@
           "addParticipant": {
             "button": "Dodaj uczestnika do zadania",
             "label": "Adres e-mail użytkownika",
-            "buttonSubmit": "Dodaj"
+            "buttonSubmit": "Dodaj",
+            "addSuccess": "Pomyślnie dodano użytkownika z adresem email {{email}} do zadania"
+          },
+          "list": {
+            "noParticipantsMessage": "Brak uczestników zadania!",
+            "header": "Uczestnicy biorący udział w zadaniu",
+            "sendEmailButton": "Wyślij wiadomość e-mail",
+            "deleteParticipant": "Usuń uczestnika z zadania",
+            "deleteSuccessful": "Pomyślnie usunięto użytkownika {{fullName}} z zadania"
           }
         },
         "admin": {
@@ -122,6 +130,57 @@
         },
         "submitButton": "Dodaj",
         "cancelButton": "Zrezygnuj"
+      },
+      "details": {
+        "toolbars": {
+          "markToConfirm": "Zaznacz do zatwierdzenia",
+          "addNewVersion": "Dodaj nową wersję",
+          "confirm": "Zatwierdź plik",
+          "remove": "Usuń plik"
+        },
+        "versionList": {
+          "header": "Zapisane wersje pliku \"{{name}}\"",
+          "listItem": {
+            "versionString": "Wersja {{versionString}}",
+            "newestVersion": "Najnowsza wersja",
+            "counters": {
+              "numberOfChanges": "Ilość zmian",
+              "numberOfModifiedLines": "Ilość zmienionych linii",
+              "numberOfInsertedLines": "Ilość dodanych linii",
+              "numberOfDeleteLines": "Ilość usuniętych linii"
+            },
+            "messageFooter": "{{authorFullName}} w dniu {{saveDate}}",
+            "toolbar": {
+              "downloadVersion": "Pobierz plik",
+              "details": "Szczegóły"
+            }
+          },
+          "infoPanel": {
+            "header": "Szczegóły pliku",
+            "name": "Nazwa",
+            "description": "Opis",
+            "contentType": "Typ zawartości",
+            "creationDate": "Data utworzenia",
+            "modificationDate": "Data modyfikacji"
+          }
+        },
+        "notifications": {
+          "markToConfirm": {
+            "success": "Plik został oznaczony do zatwierdzenia",
+            "failure": "Nie udało się oznaczyć pliku do zatwierdzenia"
+          },
+          "confirm": {
+            "success": "Plik został zatwierdzony",
+            "failure": "Nie udało się zatwierdzić pliku"
+          },
+          "deleteFile": {
+            "success": "Plik \"{{name}}\" został usunięty",
+            "failure": "Nie udało się usunąć pliku \"{{name}}\""
+          },
+          "download": {
+            "failure": "Nie udało się pobrać wersji pliku"
+          }
+        }
       }
     },
     "auth": {

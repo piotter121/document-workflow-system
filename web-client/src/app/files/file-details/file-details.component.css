@@ -1,0 +1,13 @@
+#versions > .list-group-item {
+  box-shadow: 0 2px 2px 0 #555;
+  border-left: 5px solid #aaa;
+}
+
+#versions > .list-group-item:hover {
+  background-color: #fdfdfd;
+  border-left-color: #8f8f8f;
+}
+
+#versions > .list-group-item > .badge {
+  font-size: 14px;
+}
