@@ -7,16 +7,16 @@
           <div class="alert alert-danger" [hidden]="!error">
             {{'dws.httpErrors.' + error?.errorCode | translate:error?.params}}
           </div>
-          <form #loginForm="ngForm" role="form" [formGroup]="form" (ngSubmit)="login()">
+          <form #loginForm="ngForm" role="form" [formGroup]="form" (ngSubmit)="login()" autocomplete="on">
             <fieldset>
               <div class="form-group">
                 <input class="form-control" placeholder="{{'dws.auth.login.emailPlaceholder' | translate}}"
-                       type="text" formControlName="email">
+                       type="text" formControlName="email" autocomplete="username">
                 <invalid-feedback [control]="email"></invalid-feedback>
               </div>
               <div class="form-group">
                 <input class="form-control" placeholder="{{'dws.auth.login.passwordPlaceholder' | translate}}"
-                       type="password" formControlName="password">
+                       type="password" formControlName="password" autocomplete="current-password">
                 <invalid-feedback [control]="password"></invalid-feedback>
               </div>
               <div class="form-group">

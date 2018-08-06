@@ -5,13 +5,11 @@ import {FilesRoutingModule} from './files-routing.module';
 import {AddFileComponent} from './add-file/add-file.component';
 import {FilesService} from './files.service';
 import {FileDetailsComponent} from './file-details/file-details.component';
-import {VersionsModule} from '../versions/versions.module';
 
 @NgModule({
   imports: [
     SharedModule,
-    FilesRoutingModule,
-    VersionsModule
+    FilesRoutingModule
   ],
   declarations: [
     FileSummaryComponent,

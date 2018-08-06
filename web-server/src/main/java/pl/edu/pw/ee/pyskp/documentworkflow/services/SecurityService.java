@@ -14,7 +14,7 @@ public interface SecurityService {
 
     boolean hasAccessToProject(UUID projectId);
 
-    boolean isTaskParticipant(UUID projectId, UUID taskId) throws TaskNotFoundException;
+    boolean isTaskParticipant(UUID projectId, UUID taskId) throws ResourceNotFoundException;
 
     boolean hasAccessToTask(UUID projectId, UUID taskId) throws ResourceNotFoundException;
 

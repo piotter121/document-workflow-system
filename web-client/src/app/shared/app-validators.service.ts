@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {AbstractControl, AsyncValidatorFn, ValidationErrors} from '@angular/forms';
 import {Observable, of} from 'rxjs';
-import {catchError, debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
+import {catchError, map} from 'rxjs/operators';
 import {HttpClient} from '@angular/common/http';
 
 @Injectable()
@@ -12,17 +12,19 @@ export class AppValidatorsService {
   nonExistingTaskNameInProject(projectId: string): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
       const taskName: string = control.value;
-      return this.http.get<boolean>(`/api/projects/${projectId}/tasks/exists`, {
-        params: {
-          'taskName': taskName
-        }
-      }).pipe(
-        debounceTime(500),
-        distinctUntilChanged(),
+      return this.checkIfTaskExists(projectId, taskName).pipe(
         catchError(() => of(false)),
         map((exists: boolean) => exists ? {'taskExists': true} : null)
       );
     };
+  }
+
+  private checkIfTaskExists(projectId: string, taskName: string) {
+    return this.http.get<boolean>(`/api/projects/${projectId}/tasks/exists`, {
+      params: {
+        'taskName': taskName
+      }
+    });
   }
 
   private checkIfUserExists(email: string): Observable<boolean> {
@@ -30,7 +32,7 @@ export class AppValidatorsService {
       params: {
         'email': email
       }
-    }).pipe(debounceTime(500), distinctUntilChanged());
+    });
   }
 
   existingUserEmail(): AsyncValidatorFn {

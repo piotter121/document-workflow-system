@@ -50,13 +50,15 @@ public class SecurityServiceImpl implements SecurityService {
 
 
     @Override
-    public boolean isTaskParticipant(final UUID projectId, final UUID taskId) throws TaskNotFoundException {
+    public boolean isTaskParticipant(final UUID projectId, final UUID taskId) throws ResourceNotFoundException {
         final String currentUserEmail = userService.getCurrentUserEmail();
         Task task = taskRepository.findTaskByProjectIdAndTaskId(projectId, taskId)
                 .orElseThrow(() -> new TaskNotFoundException(taskId));
-        return task.getAdministrator().getEmail().equals(currentUserEmail)
-                || task.getParticipants().stream()
-                .map(UserSummary::getEmail)
+        Project project = projectRepository.findOneById(projectId)
+                .orElseThrow(() -> new ProjectNotFoundException(projectId));
+        return project.getAdministrator().getEmail().equals(currentUserEmail)
+                || task.getAdministrator().getEmail().equals(currentUserEmail)
+                || task.getParticipants().stream().map(UserSummary::getEmail)
                 .anyMatch(participant -> participant.equals(currentUserEmail));
     }
 

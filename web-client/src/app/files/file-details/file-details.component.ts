@@ -12,6 +12,7 @@ import {combineLatest, Observable} from 'rxjs';
 import {VersionInfo} from '../../versions/version-info';
 import {ToastNotificationService} from '../../shared/toast-notification.service';
 import {VersionsService} from '../../versions/versions.service';
+import {DifferenceType} from '../../versions/difference-type.enum';
 
 @Component({
   selector: 'file-details',
@@ -129,6 +130,7 @@ export class FileDetailsComponent implements OnInit {
         this.toastNotification.success('dws.files.details.notifications.deleteFile.success', {
           'name': this.file.name
         });
+        // noinspection JSIgnoredPromiseFromCall
         this.router.navigate(['/projects', this.projectId, 'tasks', this.taskId]);
       }, () => {
         this.toastNotification.error('dws.files.details.notifications.deleteFile.failure', {
@@ -139,5 +141,31 @@ export class FileDetailsComponent implements OnInit {
 
   downloadVersion(version: VersionInfo) {
     this.versionsService.downloadVersion(this.projectId, this.taskId, this.file, version);
+  }
+
+  // noinspection JSMethodCanBeStatic
+  numberOfDifferences(version: VersionInfo): number {
+    return version.differences.length || 0;
+  }
+
+  numberOfModifiedLines(version: VersionInfo): number {
+    return version.differences
+      .filter(difference => difference.differenceType === DifferenceType.Modification)
+      .map(difference => difference.newSectionSize)
+      .reduce((a, b) => a + b, 0);
+  }
+
+  numberOfInsertedLines(version: VersionInfo): number {
+    return version.differences
+      .filter(difference => difference.differenceType === DifferenceType.Insert)
+      .map(difference => difference.newSectionSize)
+      .reduce((a, b) => a + b, 0);
+  }
+
+  numberOfDeletedLines(version: VersionInfo): number {
+    return version.differences
+      .filter(difference => difference.differenceType === DifferenceType.Delete)
+      .map(difference => difference.previousSectionSize)
+      .reduce((a, b) => a + b, 0);
   }
 }

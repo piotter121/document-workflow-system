@@ -16,6 +16,7 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ToastrModule} from "ngx-toastr";
 import {FilesModule} from "./files/files.module";
 import {httpInterceptorProviders} from "./http-interceptors";
+import {VersionsModule} from './versions/versions.module';
 
 registerLocaleData(localePl, 'pl');
 
@@ -46,6 +47,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateLoader {
       }
     }),
     AuthModule,
+    VersionsModule,
     FilesModule,
     TasksModule,
     ProjectsModule,

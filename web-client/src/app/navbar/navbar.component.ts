@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, DoCheck, OnDestroy, OnInit} from '@angular/core';
 import {AuthService} from '../auth/auth.service';
 import {Router} from '@angular/router';
 import {UserInfo} from '../auth/user-info';
@@ -12,30 +12,34 @@ import {Subscription} from 'rxjs';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent implements OnInit, OnDestroy {
+export class NavbarComponent implements OnInit, OnDestroy, DoCheck {
 
   loggedIn: UserInfo;
   isCollapsed: boolean = false;
-  private titleSubscription: Subscription;
   title: NavbarData;
 
-  constructor(private authService: AuthService,
-              private router: Router,
-              private userService: UserService,
-              private globals: GlobalsService) {
+  private _titleSubscription: Subscription;
+
+  constructor(private authService: AuthService, private router: Router, private userService: UserService, private globals: GlobalsService) {
   }
 
   ngOnInit() {
     this.loggedIn = this.userService.currentUser;
-    this.titleSubscription = this.globals.title.subscribe(title => this.title = title);
+    this._titleSubscription = this.globals.title.subscribe(title => this.title = title);
+  }
+
+  ngDoCheck() {
+    if (this.userService.currentUserChanged)
+      this.loggedIn = this.userService.currentUser;
   }
 
   ngOnDestroy() {
-    this.titleSubscription.unsubscribe();
+    this._titleSubscription.unsubscribe();
   }
 
   logout() {
     this.authService.logout();
+    // noinspection JSIgnoredPromiseFromCall
     this.router.navigate(['login']);
   }
 

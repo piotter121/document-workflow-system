@@ -183,6 +183,13 @@
         }
       }
     },
+    "versions": {
+      "loading": "Ładowanie...",
+      "heading": "Zmiany wprowadzone w wersji {{versionString}}",
+      "quoteFooter": "{{fullName}} w dniu {{date}}",
+      "previousVersionString": "Poprzednia wersja - {{previousVersionString}}",
+      "currentVersionString": "Obecna wersja - {{versionString}}"
+    },
     "auth": {
       "login": {
         "loginBtn": "Zaloguj się",

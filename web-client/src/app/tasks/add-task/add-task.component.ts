@@ -34,7 +34,7 @@ export class AddTaskComponent implements OnInit {
           name: [
             '',
             [Validators.required, Validators.maxLength(50)],
-            this.appValidators.nonExistingTaskNameInProject(this.projectId)
+            this.appValidators.nonExistingTaskNameInProject(this.projectId).bind(this.appValidators)
           ],
           description: ['', [Validators.maxLength(1000)]],
           administratorEmail: ['', [Validators.email, Validators.required], this.appValidators.existingUserEmail()]

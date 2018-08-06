@@ -10,7 +10,6 @@ import java.util.Set;
  * Created by piotr on 20.01.17.
  */
 @Data
-@SuppressWarnings("UnusedReturnValue")
 public class DiffData {
     private FileContentDTO oldContent;
     private FileContentDTO newContent;

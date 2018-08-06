@@ -1,5 +1,6 @@
 import {RouterModule, Routes} from "@angular/router";
 import {NgModule} from "@angular/core";
+import {environment} from "src/environments/environment";
 
 const appRoutes: Routes = [
   {
@@ -15,7 +16,9 @@ const appRoutes: Routes = [
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(appRoutes)
+    RouterModule.forRoot(appRoutes, {
+      enableTracing: environment.routing.enableTracing
+    })
   ],
   exports: [RouterModule]
 })

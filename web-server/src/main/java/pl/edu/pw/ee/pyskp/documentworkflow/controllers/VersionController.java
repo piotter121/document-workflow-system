@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.VersionRepository;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.DiffData;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.VersionInfoDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
+import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.VersionNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.FilesMetadataService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.VersionService;
@@ -46,23 +49,27 @@ public class VersionController {
     @NonNull
     private final NewVersionFormValidator newVersionFormValidator;
 
-//    @GetMapping("/{versionSaveDateMillis}")
-//    @PreAuthorize("@securityService.hasAccessToTask(#projectId, #taskId)")
-//    public String getVersionInfo(Model model,
-//                                 @PathVariable long versionSaveDateMillis,
-//                                 @PathVariable UUID fileId,
-//                                 @PathVariable UUID taskId,
-//                                 @PathVariable UUID projectId) {
-//        model.addAttribute("version", versionService.getVersionInfo(fileId, versionSaveDateMillis));
-//        DiffData diffData = versionService.buildDiffData(fileId, versionSaveDateMillis);
+    @GetMapping("/{versionSaveDateMillis}")
+    @PreAuthorize("@securityService.hasAccessToTask(#projectId, #taskId)")
+    public VersionInfoDTO getVersionInfo(@PathVariable long versionSaveDateMillis,
+                                         @PathVariable UUID fileId,
+                                         @PathVariable UUID taskId,
+                                         @PathVariable UUID projectId) throws VersionNotFoundException {
+        return versionService.getVersionInfo(fileId, versionSaveDateMillis);
 //        model.addAttribute("diffData", diffData);
-//        addCurrentUserToModel(model);
 //        model.addAttribute("taskId", taskId.toString());
 //        model.addAttribute("projectId", projectId.toString());
 //        model.addAttribute("fileId", fileId.toString());
 //        model.addAttribute("fileName", filesMetadataService.getFileName(taskId, fileId));
 //        return "version";
-//    }
+    }
+
+    @GetMapping("/{versionSaveDateMillis}/diffData")
+    @PreAuthorize("@securityService.hasAccessToTask(#projectId, #taskId)")
+    public DiffData getDiffData(@PathVariable UUID projectId, @PathVariable UUID taskId, @PathVariable UUID fileId,
+                                @PathVariable long versionSaveDateMillis) throws VersionNotFoundException {
+        return versionService.buildDiffData(fileId, versionSaveDateMillis);
+    }
 
     @GetMapping("/{versionSaveDate}/content")
     @PreAuthorize("@securityService.hasAccessToTask(#projectId, #taskId)")

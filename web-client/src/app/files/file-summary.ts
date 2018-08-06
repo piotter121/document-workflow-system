@@ -1,4 +1,4 @@
-export class FileSummary {
+export interface FileSummary {
   name: string;
   saveDate: Date;
   author: string;

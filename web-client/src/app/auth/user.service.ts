@@ -1,17 +1,29 @@
 import {Injectable} from '@angular/core';
-import {UserInfo} from "./user-info";
-import {JwtHelperService} from "@auth0/angular-jwt";
+import {UserInfo} from './user-info';
+import {AuthService} from './auth.service';
 
 @Injectable()
 export class UserService {
 
-  constructor(
-    private jwtHelper: JwtHelperService,
-  ) {
+  private _currentUser: UserInfo = null;
+  private _currentUserChanged: boolean = false;
+
+  constructor(private authService: AuthService) {
+    this.updateCurrentUser(authService.claims);
+    authService.claimsObservable
+      .subscribe(claims => this.updateCurrentUser(claims));
+  }
+
+  private updateCurrentUser(claims: any) {
+    this._currentUserChanged = true;
+    this._currentUser = !!claims ? new UserInfo(claims.sub, claims.name) : null;
   }
 
   get currentUser(): UserInfo {
-    let claims = this.jwtHelper.decodeToken(localStorage.getItem('token'));
-    return new UserInfo(claims.sub, claims.name);
+    return this._currentUser;
+  }
+
+  get currentUserChanged(): boolean {
+    return this._currentUserChanged;
   }
 }

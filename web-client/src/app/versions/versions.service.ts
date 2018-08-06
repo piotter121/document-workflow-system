@@ -4,6 +4,26 @@ import {HttpClient} from '@angular/common/http';
 import * as FileSaver from 'file-saver';
 import {FileMetadata} from '../files/file-metadata';
 import {ToastNotificationService} from '../shared/toast-notification.service';
+import {Observable} from 'rxjs';
+import {DifferenceType} from './difference-type.enum';
+
+export interface FileContent {
+  lines: string[];
+}
+
+export interface Difference {
+  previousSectionStart: number;
+  previousSectionSize: number;
+  newSectionStart: number;
+  newSectionSize: number;
+  differenceType: DifferenceType;
+}
+
+export interface DiffData {
+  oldContent: FileContent;
+  newContent: FileContent;
+  differences: Difference[];
+}
 
 @Injectable()
 export class VersionsService {
@@ -20,5 +40,13 @@ export class VersionsService {
     }, () => {
       this.toastNotification.error('dws.files.details.notifications.download.failure');
     });
+  }
+
+  getVersionInfo(projectId: string, taskId: string, fileId: string, versionId: string): Observable<VersionInfo> {
+    return this.http.get<VersionInfo>(`/api/projects/${projectId}/tasks/${taskId}/files/${fileId}/versions/${versionId}`);
+  }
+
+  getDiffData(projectId: string, taskId: string, fileId: string, versionId: string): Observable<DiffData> {
+    return this.http.get<DiffData>(`/api/projects/${projectId}/tasks/${taskId}/files/${fileId}/versions/${versionId}/diffData`);
   }
 }
