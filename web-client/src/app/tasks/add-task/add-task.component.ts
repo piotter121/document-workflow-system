@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {TasksService} from "../tasks.service";
 import {ActivatedRoute, ParamMap, Router} from "@angular/router";
@@ -6,13 +6,14 @@ import {map} from "rxjs/operators";
 import {NewTask} from "../new-task";
 import {HttpErrorResponse} from "@angular/common/http";
 import {AppValidatorsService} from "../../shared/app-validators.service";
+import {GlobalsService} from '../../shared/globals.service';
 
 @Component({
   selector: 'app-add-task',
   templateUrl: './add-task.component.html',
   styleUrls: ['./add-task.component.css']
 })
-export class AddTaskComponent implements OnInit {
+export class AddTaskComponent implements OnInit, OnDestroy {
 
   newTask: FormGroup;
   projectId: string;
@@ -22,10 +23,12 @@ export class AddTaskComponent implements OnInit {
     private tasksService: TasksService,
     private route: ActivatedRoute,
     private router: Router,
-    private appValidators: AppValidatorsService
+    private appValidators: AppValidatorsService,
+    private globals: GlobalsService
   ) {}
 
   ngOnInit() {
+    this.globals.route = this.route;
     this.route.paramMap
       .pipe(map((paramMap: ParamMap) => paramMap.get('projectId')))
       .subscribe((projectId: string) => {
@@ -40,6 +43,10 @@ export class AddTaskComponent implements OnInit {
           administratorEmail: ['', [Validators.email, Validators.required], this.appValidators.existingUserEmail()]
         });
       });
+  }
+
+  ngOnDestroy() {
+    this.globals.route = null;
   }
 
   get name(): AbstractControl {

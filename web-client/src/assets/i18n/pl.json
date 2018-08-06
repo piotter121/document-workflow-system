@@ -211,7 +211,8 @@
     "navbar": {
       "currentUserMsg": "Zalogowany jako {{fullName}}",
       "logoutBtn": "Wyloguj",
-      "homePageLink": "Strona główna"
+      "homePageLink": "Strona główna",
+      "goBack": "Powrót"
     },
     "validators": {
       "required": "To pole jest wymagane",

@@ -14,7 +14,7 @@ import {ToastNotificationService} from './toast-notification.service';
     TranslateModule
   ],
   declarations: [
-    InvalidFeedbackComponent
+    InvalidFeedbackComponent,
   ],
   providers: [
     AppValidatorsService,

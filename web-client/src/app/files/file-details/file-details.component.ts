@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {map, switchMap} from 'rxjs/operators';
 import {FileMetadata} from '../file-metadata';
@@ -8,7 +8,7 @@ import {TasksService} from '../../tasks/tasks.service';
 import {UserService} from '../../auth/user.service';
 import {UserInfo} from '../../auth/user-info';
 import {GlobalsService} from '../../shared/globals.service';
-import {combineLatest, Observable} from 'rxjs';
+import {Observable} from 'rxjs';
 import {VersionInfo} from '../../versions/version-info';
 import {ToastNotificationService} from '../../shared/toast-notification.service';
 import {VersionsService} from '../../versions/versions.service';
@@ -19,7 +19,7 @@ import {DifferenceType} from '../../versions/difference-type.enum';
   templateUrl: './file-details.component.html',
   styleUrls: ['./file-details.component.css']
 })
-export class FileDetailsComponent implements OnInit {
+export class FileDetailsComponent implements OnInit, OnDestroy {
 
   file: FileMetadata;
   task: TaskSummary;
@@ -44,22 +44,16 @@ export class FileDetailsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.globals.route = this.route;
     this.currentUser = this.userService.currentUser;
     this.listenToIds();
     this.listenToTaskSummary();
     this.listenToTaskAdministrator();
     this.listenToFileMetadata();
-    combineLatest(this._taskSummaryObservable, this._fileMetadataObservable, this._projectIdObservable)
-      .subscribe(values => {
-        const task: TaskSummary = values[0];
-        const file: FileMetadata = values[1];
-        const projectId: string = values[2];
-        this.globals.title.next({
-          main: task.name,
-          small: file.name,
-          routerLink: ['/projects', projectId, 'tasks', task.id]
-        });
-      });
+  }
+
+  ngOnDestroy(): void {
+    this.globals.route = null;
   }
 
   private listenToTaskAdministrator() {

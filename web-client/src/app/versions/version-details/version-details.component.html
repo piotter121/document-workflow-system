@@ -1,0 +1,65 @@
+<div class="row" *ngIf="(version$ | async) as version; else loading">
+  <div class="col-12 text-center">
+    <h3 translate [translateParams]="version">dws.versions.heading</h3>
+    <blockquote class="blockquote">
+      <p>{{version.message}}</p>
+      <footer class="blockquote-footer" translate [translateParams]="{'fullName': version.author.fullName, 'date': (version.saveDate | date:'dd.MM.yyyy HH:mm')}">
+        dws.versions.quoteFooter
+      </footer>
+    </blockquote>
+  </div>
+
+  <div class="col-12">
+    <div *ngIf="(diffData$ | async) as diffData; else loading" class="row">
+      <div *ngIf="version.previousVersionString" class="col-6">
+        <div class="card bg-light">
+          <div class="card-header">
+            <h6 translate [translateParams]="version">dws.versions.previousVersionString</h6>
+          </div>
+
+          <div class="card-body">
+            <ng-template ngFor let-line [ngForOf]="diffData.oldContent.lines" let-i="index">
+              <div class="row" [ngClass]="getClassForDifferenceInOldContent(diffData, i + 1)">
+                <div class="col-1"><b>{{i + 1}}</b></div>
+                <div class="col-11" [ngSwitch]="getDiffTypeForOldVersion(diffData, i + 1)">
+                  <p *ngSwitchCase="'INSERT'"><ins>{{line}}</ins></p>
+                  <p *ngSwitchCase="'DELETE'"><del>{{line}}</del></p>
+                  <p *ngSwitchDefault>{{line}}</p>
+                </div>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+
+      <div [ngClass]="!version.previousVersionString ? 'offset-1 col-10' : 'col-6'">
+        <div class="card bg-light">
+          <div class="card-header">
+            <h6 translate [translateParams]="version">dws.versions.currentVersionString</h6>
+          </div>
+
+          <div class="card-body">
+            <ng-template ngFor let-line [ngForOf]="diffData.newContent.lines" let-i="index">
+              <div class="row" [ngClass]="getClassForDifferenceInNewContent(diffData, i + 1)">
+                <div class="col-1"><b>{{i + 1}}</b></div>
+                <div class="col-11">
+                  <div class="col-11" [ngSwitch]="getDiffTypeForNewVersion(diffData, i + 1)">
+                    <p *ngSwitchCase="'INSERT'"><ins>{{line}}</ins></p>
+                    <p *ngSwitchCase="'DELETE'"><del>{{line}}</del></p>
+                    <p *ngSwitchDefault>{{line}}</p>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="alert alert-info">
+    <p translate>dws.versions.loading</p>
+  </div>
+</ng-template>

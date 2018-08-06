@@ -1,16 +1,17 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {FilesService} from '../files.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {HttpErrorResponse} from '@angular/common/http';
 import {ToastrService} from 'ngx-toastr';
+import {GlobalsService} from '../../shared/globals.service';
 
 @Component({
   selector: 'app-add-file',
   templateUrl: './add-file.component.html',
   styleUrls: ['./add-file.component.css']
 })
-export class AddFileComponent implements OnInit {
+export class AddFileComponent implements OnInit, OnDestroy {
 
   newFile: FormGroup;
   fileToUpload: File;
@@ -22,11 +23,13 @@ export class AddFileComponent implements OnInit {
     private filesService: FilesService,
     private route: ActivatedRoute,
     private router: Router,
-    private toastService: ToastrService
+    private toastService: ToastrService,
+    private globals: GlobalsService
   ) {
   }
 
   ngOnInit() {
+    this.globals.route = this.route;
     this.newFile = this.formBuilder.group({
       name: ['', [Validators.required, Validators.maxLength(255)]],
       description: ['', Validators.maxLength(1024)],
@@ -61,5 +64,9 @@ export class AddFileComponent implements OnInit {
         (fileId: string) => this.router.navigate(['/projects', this.projectId, 'tasks', this.taskId, 'files', fileId]),
         (error: HttpErrorResponse) => this.toastService.error(error.message, error.name)
       );
+  }
+
+  ngOnDestroy(): void {
+    this.globals.route = null;
   }
 }

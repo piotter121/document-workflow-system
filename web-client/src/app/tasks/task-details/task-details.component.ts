@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable} from 'rxjs';
 import {TaskInfo} from '../task-info';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
@@ -15,7 +15,7 @@ import {UserInfo} from '../../auth/user-info';
   templateUrl: './task-details.component.html',
   styleUrls: ['./task-details.component.css']
 })
-export class TaskDetailsComponent implements OnInit {
+export class TaskDetailsComponent implements OnInit, OnDestroy {
   task$: Observable<TaskInfo>;
   task: TaskInfo;
   currentUser: UserInfo;
@@ -30,20 +30,18 @@ export class TaskDetailsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.globals.route = this.route;
     this.task$ = this.route.paramMap.pipe(switchMap((params: ParamMap) => {
       const projectId = params.get('projectId');
       const taskId = params.get('taskId');
       return this.tasksService.getTaskInfo(projectId, taskId);
     }));
-    this.task$.subscribe((task: TaskInfo) => {
-      this.task = task;
-      this.globals.title.next({
-        main: this.task.projectName,
-        small: this.task.name,
-        routerLink: ['/projects', this.task.projectId]
-      });
-    }, () => this.onGetTaskError());
+    this.task$.subscribe((task: TaskInfo) => this.task = task, () => this.onGetTaskError());
     this.currentUser = this.userService.currentUser;
+  }
+
+  ngOnDestroy() {
+    this.globals.route = null;
   }
 
   private onGetTaskError() {

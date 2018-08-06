@@ -1,14 +1,12 @@
 import {Injectable} from '@angular/core';
-import {Subject} from 'rxjs';
-import {NavbarData} from '../navbar/navbar-data';
+import {ActivatedRoute} from '@angular/router';
 
 @Injectable()
 export class GlobalsService {
 
-  title: Subject<NavbarData>;
+  route: ActivatedRoute;
 
   constructor() {
-    this.title = new Subject();
   }
 
 }
