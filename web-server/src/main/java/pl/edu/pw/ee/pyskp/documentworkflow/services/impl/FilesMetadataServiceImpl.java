@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.*;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.FileMetadataRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.TaskRepository;
@@ -55,17 +54,12 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
     @NonNull
     private final TaskService taskService;
 
-    private static ContentType getContentType(MultipartFile multipartFile)
+    private static ContentType getContentType(byte[] file)
             throws UnknownContentType {
         Tika tika = new Tika();
-        try {
-            String contentType = tika.detect(multipartFile.getBytes());
-            return ContentType.fromName(contentType)
-                    .orElseThrow(() -> new UnknownContentType(contentType));
-        } catch (IOException e) {
-            LOGGER.error("Input/output exception during getBytes from multipartFile", e);
-            throw new RuntimeException(e);
-        }
+        String contentType = tika.detect(file);
+        return ContentType.fromName(contentType)
+                .orElseThrow(() -> new UnknownContentType(contentType));
     }
 
     @Override
@@ -80,7 +74,12 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
         fileMetadata.setConfirmed(false);
         fileMetadata.setMarkedToConfirm(false);
         fileMetadata.setTaskId(taskID);
-        fileMetadata.setContentType(getContentType(formData.getFile()));
+        try {
+            fileMetadata.setContentType(getContentType(formData.getFile().getBytes()));
+        } catch (IOException e) {
+            LOGGER.error("Input/output exception occurred during getBytes method", e);
+            throw new RuntimeException(e);
+        }
         fileMetadata.setTaskName(task.getName());
         Version initVersion = versionService.createUnmanagedInitVersionOfFile(formData);
         fileMetadata.setLatestVersion(new VersionSummary(initVersion));
@@ -124,7 +123,7 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
     }
 
     @Override
-    public boolean hasContentTypeAs(UUID taskId, UUID fileId, MultipartFile file) throws FileNotFoundException {
+    public boolean hasContentTypeAs(UUID taskId, UUID fileId, byte[] file) throws FileNotFoundException {
         FileMetadata fileMetadata = fileMetadataRepository.findOneByTaskIdAndFileId(taskId, fileId)
                 .orElseThrow(() -> new FileNotFoundException(fileId));
         ContentType contentType;
@@ -152,14 +151,6 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
         versionRepository.deleteAllByFileId(fileId);
         fileMetadataRepository.deleteFileMetadataByTaskIdAndFileId(taskId, fileId);
         taskService.updateTaskStatistic(projectId, taskId);
-    }
-
-    @Override
-    public boolean isValidVersionStringForFile(String versionString, UUID fileId) {
-        List<Version> versions = versionRepository.findAllByFileId(fileId);
-        return versions.parallelStream()
-                .map(Version::getVersionString)
-                .noneMatch(string -> string.equalsIgnoreCase(versionString));
     }
 
     @Override

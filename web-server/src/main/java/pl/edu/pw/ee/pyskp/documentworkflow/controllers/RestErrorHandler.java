@@ -19,7 +19,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.ErrorMessageDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.validation.ValidationErrorDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
+import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.UnknownContentType;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.Locale;
 
@@ -61,6 +64,18 @@ public class RestErrorHandler {
         return localizedErrorMessage;
     }
 
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ValidationErrorDTO handleConstraintViolationException(ConstraintViolationException e) {
+        LOGGER.error("Constraint violation exception occurred", e);
+        ValidationErrorDTO dto = new ValidationErrorDTO();
+        for (ConstraintViolation<?> constraintViolation : e.getConstraintViolations()) {
+            dto.addFieldError(constraintViolation.getPropertyPath().toString(), constraintViolation.getMessage());
+        }
+        return dto;
+    }
+
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
@@ -69,6 +84,16 @@ public class RestErrorHandler {
         ErrorMessageDTO errorMessage = new ErrorMessageDTO();
         errorMessage.setErrorCode(ex.getClass().getSimpleName());
         errorMessage.setParams(ex.getMessageParams());
+        return errorMessage;
+    }
+
+    @ExceptionHandler(UnknownContentType.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ResponseBody
+    public ErrorMessageDTO handleUnknownContentType(UnknownContentType ex) {
+        LOGGER.error(ex.getLocalizedMessage(), ex);
+        ErrorMessageDTO errorMessage = new ErrorMessageDTO();
+        errorMessage.setErrorCode(ex.getClass().getSimpleName());
         return errorMessage;
     }
 

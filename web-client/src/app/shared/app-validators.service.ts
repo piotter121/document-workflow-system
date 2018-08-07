@@ -9,6 +9,19 @@ export class AppValidatorsService {
   constructor(private http: HttpClient) {
   }
 
+  nonExistingVersionString(projectId: string, taskId: string, fileId: string): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+      return this.http.get<boolean>(`/api/projects/${projectId}/tasks/${taskId}/files/${fileId}/versions/exists`, {
+        params: {
+          versionString: control.value
+        }
+      }).pipe(
+        catchError(() => of(false)),
+        map(exists => exists ? {'versionStringExists': true} : null)
+      );
+    }
+  }
+
   nonExistingTaskNameInProject(projectId: string): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
       const taskName: string = control.value;
@@ -19,7 +32,7 @@ export class AppValidatorsService {
     };
   }
 
-  private checkIfTaskExists(projectId: string, taskName: string) {
+  private checkIfTaskExists(projectId: string, taskName: string): Observable<boolean> {
     return this.http.get<boolean>(`/api/projects/${projectId}/tasks/exists`, {
       params: {
         'taskName': taskName

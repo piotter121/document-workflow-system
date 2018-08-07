@@ -25,6 +25,15 @@ export interface DiffData {
   differences: Difference[];
 }
 
+export interface NewVersionForm {
+  projectId: string;
+  taskId: string;
+  fileId: string;
+  file: File;
+  versionString: string;
+  message: string;
+}
+
 @Injectable()
 export class VersionsService {
 
@@ -48,5 +57,13 @@ export class VersionsService {
 
   getDiffData(projectId: string, taskId: string, fileId: string, versionId: string): Observable<DiffData> {
     return this.http.get<DiffData>(`/api/projects/${projectId}/tasks/${taskId}/files/${fileId}/versions/${versionId}/diffData`);
+  }
+
+  addNewVersion(data: NewVersionForm): Observable<number> {
+    const formData = new FormData();
+    formData.append('file', data.file);
+    formData.append('versionString', data.versionString);
+    formData.append('message', data.message);
+    return this.http.post<number>(`/api/projects/${data.projectId}/tasks/${data.taskId}/files/${data.fileId}/versions`, formData);
   }
 }

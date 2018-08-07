@@ -3,7 +3,6 @@ package pl.edu.pw.ee.pyskp.documentworkflow.data.domain;
 import com.datastax.driver.core.DataType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.validator.constraints.Length;
 import org.springframework.cassandra.core.Ordering;
 import org.springframework.cassandra.core.PrimaryKeyType;
 import org.springframework.data.cassandra.mapping.CassandraType;
@@ -32,22 +31,22 @@ public class Version {
             type = PrimaryKeyType.CLUSTERED, ordering = Ordering.DESCENDING)
     private Date saveDate;
 
-    @Length(max = 20)
     @Column("version_string")
     private String versionString;
 
-    @Length(max = 1024)
+    @Column("message")
     private String message;
 
+    @Column("author")
     private UserSummary author;
 
     @Column("file_content")
     @CassandraType(type = DataType.Name.BLOB)
     private ByteBuffer fileContent;
 
-    @Length(max = 65)
     @Column("check_sum")
     private String checkSum;
 
+    @Column("differences")
     private Set<Difference> differences;
 }

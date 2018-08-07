@@ -7,10 +7,10 @@
       "InternalServerError": "Błąd wewnętrzny serwera",
       "BadRequest": {
         "field": {
-
+          "addNewVersionOfFile.arg0": "Plik nie przeszedł walidacji"
         },
         "message": {
-
+          "notCorrectContentType": "Niepoprawny typ zawartości pliku"
         }
       }
     },
@@ -100,7 +100,11 @@
         "admin": {
           "pillTitle": "Panel administracyjny",
           "deleteTaskButton": "Usuń zadanie",
-          "deleteTaskWarning": "To usunie bezpowrotnie zadanie i wszystkie pliki utworzone w nim!"
+          "deleteTaskWarning": "To usunie bezpowrotnie zadanie i wszystkie pliki utworzone w nim!",
+          "deleteTask": {
+            "success": "Pomyślnie usunięto zadanie",
+            "failure": "Nie udało się usunąć zadania"
+          }
         },
         "card": {
           "header": "Szczegóły zadania",
@@ -184,6 +188,17 @@
       }
     },
     "versions": {
+      "add": {
+        "legend": "Uzupełnij poniższy formularz, aby dodać nową wersję pliku",
+        "labels": {
+          "file": "Plik",
+          "versionString": "Numer wersji pliku",
+          "message": "Wiadomość kontrolna"
+        },
+        "saveButton": "Zapisz",
+        "success": "Utworzono nową wersję pliku",
+        "failure": "Nie udało się utworzyć nowej wersji pliku"
+      },
       "loading": "Ładowanie...",
       "heading": "Zmiany wprowadzone w wersji {{versionString}}",
       "quoteFooter": "{{fullName}} w dniu {{date}}",
@@ -223,7 +238,8 @@
       "email": "Proszę podać poprawny adres e-mail",
       "MatchPassword": "Podane hasło jest inne!",
       "isCurrentParticipant": "Podany użytkownik jest już uczestnikiem zadania",
-      "taskExists": "Zadanie o podanej nazwie już istnieje w projekcie"
+      "taskExists": "Zadanie o podanej nazwie już istnieje w projekcie",
+      "versionStringExists": "Podany numer wersji pliku już istnieje"
     }
   }
 }

@@ -31,12 +31,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 /**
  * Created by piotr on 06.01.17.
  */
-@Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@Service
 public class VersionServiceImpl implements VersionService {
     private static final Logger LOGGER = LoggerFactory.getLogger(VersionServiceImpl.class);
 
@@ -107,20 +108,20 @@ public class VersionServiceImpl implements VersionService {
     public long addNewVersionOfFile(NewVersionForm form) throws ResourceNotFoundException {
         try {
             Version newVersion = new Version();
-            MultipartFile file = form.getFile();
+            byte[] file = form.getFile().getBytes();
             newVersion.setSaveDate(new Date());
             newVersion.setAuthor(new UserSummary(userService.getCurrentUser()));
             newVersion.setVersionString(form.getVersionString());
             newVersion.setMessage(form.getMessage());
-            newVersion.setCheckSum(calculateCheckSum(file.getBytes()));
-            newVersion.setFileContent(ByteBuffer.wrap(file.getBytes()));
+            newVersion.setCheckSum(calculateCheckSum(file));
+            newVersion.setFileContent(ByteBuffer.wrap(file));
             FileMetadata fileMetadata = getFileMetadata(form.getTaskId(), form.getFileId());
             newVersion.setFileId(form.getFileId());
             byte[] oldContent = versionRepository.findTopByFileIdOrderBySaveDateDesc(form.getFileId())
                     .map(version -> version.getFileContent().array())
                     .orElseThrow(VersionNotFoundException::new);
             Set<Difference> differences = differenceService.getDifferencesBetweenTwoFiles(
-                    new ByteArrayInputStream(oldContent), file.getInputStream());
+                    new ByteArrayInputStream(oldContent), new ByteArrayInputStream(file));
             newVersion.setDifferences(differences);
             long saveDateTime = versionRepository.save(newVersion).getSaveDate().getTime();
             fileMetadata.setLatestVersion(new VersionSummary(newVersion));
@@ -131,7 +132,7 @@ public class VersionServiceImpl implements VersionService {
 
             return saveDateTime;
         } catch (IOException e) {
-            LOGGER.error("Input/output exception during getBytes from multipartFile", e);
+            LOGGER.error("Input/output exception occurred", e);
             throw new RuntimeException(e);
         }
     }
@@ -178,8 +179,19 @@ public class VersionServiceImpl implements VersionService {
         return versionInfoDTO;
     }
 
+    @Override
+    public boolean existsByVersionString(UUID fileId, String versionString) {
+        return this.anyVersionMatch(fileId, version -> versionString.equals(version.getVersionString()));
+    }
+
+    private boolean anyVersionMatch(UUID fileId, Predicate<Version> versionPredicate) {
+        return versionRepository.findAllByFileId(fileId).stream().anyMatch(versionPredicate);
+    }
+
     private FileMetadata getFileMetadata(UUID taskId, UUID fileId) throws FileNotFoundException {
         return fileMetadataRepository.findOneByTaskIdAndFileId(taskId, fileId)
                 .orElseThrow(() -> new FileNotFoundException(fileId));
     }
+
+
 }

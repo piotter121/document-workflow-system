@@ -4,11 +4,10 @@ import {TaskInfo} from '../task-info';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {switchMap} from 'rxjs/operators';
 import {TasksService} from '../tasks.service';
-import {ToastrService} from 'ngx-toastr';
-import {TranslateService} from '@ngx-translate/core';
 import {GlobalsService} from '../../shared/globals.service';
 import {UserService} from '../../auth/user.service';
 import {UserInfo} from '../../auth/user-info';
+import {ToastNotificationService} from '../../shared/toast-notification.service';
 
 @Component({
   selector: 'app-task-details',
@@ -23,10 +22,9 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
   constructor(private route: ActivatedRoute,
               private tasksService: TasksService,
               private router: Router,
-              private toast: ToastrService,
-              private translate: TranslateService,
               private globals: GlobalsService,
-              private userService: UserService) {
+              private userService: UserService,
+              private toastNotification: ToastNotificationService) {
   }
 
   ngOnInit() {
@@ -45,6 +43,7 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
   }
 
   private onGetTaskError() {
+    // noinspection JSIgnoredPromiseFromCall
     this.router.navigate(['..', '..'], {
       relativeTo: this.route
     });
@@ -53,6 +52,10 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
   deleteTask() {
     const projectId = this.task.projectId;
     this.tasksService.deleteTask(this.task.projectId, this.task.id)
-      .subscribe(() => this.router.navigate(['/projects', projectId]));
+      .subscribe(() => {
+        this.toastNotification.success('dws.task.details.admin.deleteTask.success');
+        // noinspection JSIgnoredPromiseFromCall
+        this.router.navigate(['/projects', projectId]);
+      }, () => this.toastNotification.error('dws.task.details.admin.deleteTask.failure'));
   }
 }

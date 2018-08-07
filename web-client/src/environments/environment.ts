@@ -6,7 +6,7 @@ export const environment = {
   production: false,
   restApi: 'http://localhost:8080',
   routing: {
-    enableTracing: true
+    enableTracing: false
   }
 };
 
