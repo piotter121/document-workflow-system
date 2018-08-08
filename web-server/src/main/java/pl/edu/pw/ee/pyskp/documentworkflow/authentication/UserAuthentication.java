@@ -9,10 +9,10 @@ import java.util.Collection;
 import java.util.Collections;
 
 public class UserAuthentication implements Authentication {
-    private boolean authenticated = true;
     private final User user;
+    private boolean authenticated = true;
 
-    public UserAuthentication(User user) {
+    UserAuthentication(User user) {
         this.user = user;
     }
 

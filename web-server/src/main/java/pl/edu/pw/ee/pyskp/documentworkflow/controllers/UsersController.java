@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
 
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @RestController
-@RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 @RequestMapping("/api/user")
 public class UsersController {
 

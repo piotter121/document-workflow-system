@@ -11,6 +11,7 @@ import java.util.Date;
 @Data
 @UserDefinedType("version_summary")
 public class VersionSummary {
+    @Column("version")
     private String version;
 
     @Column("save_date")

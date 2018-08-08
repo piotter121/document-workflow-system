@@ -26,8 +26,8 @@ import javax.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.Locale;
 
-@ControllerAdvice
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@ControllerAdvice
 public class RestErrorHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(RestErrorHandler.class);
 

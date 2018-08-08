@@ -15,8 +15,4 @@ import java.util.List;
 @Data
 public class FileContentDTO {
     private List<String> lines = new ArrayList<>();
-
-    public String getLine(int i) {
-        return lines.get(i - 1);
-    }
 }

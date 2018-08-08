@@ -1,6 +1,8 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.authentication;
 
 import io.jsonwebtoken.*;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
@@ -9,21 +11,19 @@ import org.springframework.stereotype.Service;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.User;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
 
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Service
 public class TokenHandler {
     private static final Logger logger = LogManager.getLogger(TokenHandler.class);
     private static final int DEFAULT_EXPIRATION_HOURS = 12;
     private static final String secret = "jwtSecret";
 
+    @NonNull
     private final UserService userService;
-    private final JwtBuilder jwtBuilder;
 
-    @Autowired
-    public TokenHandler(UserService userService) {
-        this.userService = userService;
-        jwtBuilder = Jwts.builder().signWith(SignatureAlgorithm.HS512, secret);
-    }
+    private final JwtBuilder jwtBuilder = Jwts.builder().signWith(SignatureAlgorithm.HS512, secret);
 
+    @SuppressWarnings("WeakerAccess")
     public UserAuthentication parseAuthenticationFromToken(String token) {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
@@ -36,6 +36,7 @@ public class TokenHandler {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     public String createTokenForUser(UserAuthentication user) {
         Claims claims = Jwts.claims().setSubject(user.getPrincipal())
                 .setExpiration(DateTime.now().plusHours(DEFAULT_EXPIRATION_HOURS).toDate());

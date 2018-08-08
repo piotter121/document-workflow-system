@@ -28,16 +28,19 @@ public class FileMetadata {
     @PrimaryKeyColumn(name = "file_id", ordinal = 1)
     private UUID fileId = UUID.randomUUID();
 
+    @Column("name")
     private String name;
 
     @Column("task_name")
     private String taskName;
 
+    @Column("description")
     private String description;
 
     @Column("content_type")
     private ContentType contentType;
 
+    @Column("confirmed")
     private boolean confirmed = false;
 
     @Column("marked_to_confirm")

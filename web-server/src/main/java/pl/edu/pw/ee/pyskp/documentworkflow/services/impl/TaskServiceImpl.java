@@ -16,7 +16,6 @@ import pl.edu.pw.ee.pyskp.documentworkflow.dtos.UserInfoDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ProjectNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.TaskNotFoundException;
-import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.UserNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.ProjectService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.TaskService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
@@ -48,8 +47,7 @@ public class TaskServiceImpl implements TaskService {
     @NonNull
     private final VersionRepository versionRepository;
 
-    @Override
-    public Task getTask(UUID projectId, UUID taskId) throws TaskNotFoundException {
+    private Task getTask(UUID projectId, UUID taskId) throws TaskNotFoundException {
         return taskRepository.findTaskByProjectIdAndTaskId(projectId, taskId)
                 .orElseThrow(() -> new TaskNotFoundException(taskId));
     }

@@ -3,7 +3,6 @@ package pl.edu.pw.ee.pyskp.documentworkflow.data.domain;
 import com.datastax.driver.core.DataType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.validator.constraints.Length;
 import org.springframework.data.cassandra.mapping.CassandraType;
 import org.springframework.data.cassandra.mapping.Column;
 import org.springframework.data.cassandra.mapping.PrimaryKey;
@@ -17,19 +16,21 @@ import java.util.UUID;
  */
 @Data
 @EqualsAndHashCode(of = "id")
-@Table
+@Table("project")
 public class Project {
-    @PrimaryKey
+    @PrimaryKey("id")
     @CassandraType(type = DataType.Name.UUID)
     private UUID id = UUID.randomUUID();
 
-    @Length(min = 5, max = 40)
+    @Column("name")
     private String name;
 
+    @Column("description")
     private String description;
 
     @Column("creation_date")
     private Date creationDate;
 
+    @Column("administrator")
     private UserSummary administrator;
 }

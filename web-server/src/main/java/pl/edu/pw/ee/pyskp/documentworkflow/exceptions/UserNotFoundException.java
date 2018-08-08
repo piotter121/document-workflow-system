@@ -10,7 +10,7 @@ public class UserNotFoundException extends ResourceNotFoundException {
     private final String email;
 
     public UserNotFoundException(String email) {
-        super(String.format("Nie znaleziono użytkownika z podanym adresem e-mail: %s", email));
+        super(String.format("Didn't found user with e-mail: %s", email));
         this.email = email;
     }
 

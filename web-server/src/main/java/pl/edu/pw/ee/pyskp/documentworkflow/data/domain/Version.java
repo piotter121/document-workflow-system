@@ -20,15 +20,13 @@ import java.util.UUID;
  */
 @Data
 @EqualsAndHashCode(of = {"fileId", "saveDate"})
-@Table
+@Table("version")
 public class Version {
     @CassandraType(type = DataType.Name.UUID)
-    @PrimaryKeyColumn(name = "file_id", ordinal = 0,
-            type = PrimaryKeyType.PARTITIONED)
+    @PrimaryKeyColumn(name = "file_id", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
     private UUID fileId;
 
-    @PrimaryKeyColumn(name = "save_date", ordinal = 1,
-            type = PrimaryKeyType.CLUSTERED, ordering = Ordering.DESCENDING)
+    @PrimaryKeyColumn(name = "save_date", ordinal = 1, type = PrimaryKeyType.CLUSTERED, ordering = Ordering.DESCENDING)
     private Date saveDate;
 
     @Column("version_string")

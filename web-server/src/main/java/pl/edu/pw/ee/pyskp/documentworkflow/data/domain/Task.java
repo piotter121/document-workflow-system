@@ -3,7 +3,6 @@ package pl.edu.pw.ee.pyskp.documentworkflow.data.domain;
 import com.datastax.driver.core.DataType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.validator.constraints.Length;
 import org.springframework.cassandra.core.PrimaryKeyType;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.cassandra.mapping.CassandraType;
@@ -18,7 +17,7 @@ import java.util.*;
  */
 @Data
 @EqualsAndHashCode(of = {"projectId", "taskId"})
-@Table
+@Table("task")
 public class Task {
     @CassandraType(type = DataType.Name.UUID)
     @PrimaryKeyColumn(name = "project_id", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
@@ -28,16 +27,19 @@ public class Task {
     @PrimaryKeyColumn(name = "task_id", ordinal = 1)
     private UUID taskId = UUID.randomUUID();
 
+    @Column("name")
     private String name;
 
-    @Length(max = 1000)
+    @Column("description")
     private String description;
 
     @Column("creation_date")
     private Date creationDate = new Date();
 
+    @Column("administrator")
     private UserSummary administrator;
 
+    @Column("participants")
     private Set<UserSummary> participants = new HashSet<>();
 
     @Column("last_modified_file")

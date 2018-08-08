@@ -12,9 +12,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static java.util.Comparator.comparing;
-import static java.util.stream.Collectors.toList;
-
 /**
  * Created by piotr on 31.12.16.
  */

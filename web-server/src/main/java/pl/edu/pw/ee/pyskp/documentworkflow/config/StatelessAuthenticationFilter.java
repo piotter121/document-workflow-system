@@ -16,8 +16,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Component
-@RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class StatelessAuthenticationFilter extends GenericFilterBean {
     @NonNull
     private final TokenAuthenticationService authenticationService;

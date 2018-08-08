@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 /**
  * Created by piotr on 11.12.16.
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings("unused")
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public enum ContentType {
     WORD_2003_DOCUMENT("application/msword", "doc"),
@@ -24,6 +24,7 @@ public enum ContentType {
     @Getter
     @NonNull
     private final String name;
+
     @Getter
     @NonNull
     private final String extension;

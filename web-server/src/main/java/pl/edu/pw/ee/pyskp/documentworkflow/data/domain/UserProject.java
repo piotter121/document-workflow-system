@@ -26,6 +26,7 @@ public class UserProject {
     @PrimaryKeyColumn(name = "project_id", ordinal = 1)
     private UUID projectId;
 
+    @Column("name")
     private String name;
 
     @Column("creation_date")

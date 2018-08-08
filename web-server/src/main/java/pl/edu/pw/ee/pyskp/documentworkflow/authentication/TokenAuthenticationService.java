@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Service
-@RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class TokenAuthenticationService {
-    public static final String AUTH_HEADER_NAME = "X-AUTH-TOKEN";
+    private static final String AUTH_HEADER_NAME = "X-AUTH-TOKEN";
 
     @NonNull
     private final TokenHandler tokenHandler;

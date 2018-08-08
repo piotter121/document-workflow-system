@@ -2,7 +2,8 @@ package pl.edu.pw.ee.pyskp.documentworkflow.controllers;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,11 +23,11 @@ import java.util.UUID;
 /**
  * Created by piotr on 16.12.16.
  */
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @RestController
-@RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 @RequestMapping("/api/projects")
 public class ProjectsController {
-    private static final Logger logger = Logger.getLogger(ProjectsController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProjectsController.class);
 
     @NonNull
     private final ProjectService projectService;
@@ -61,7 +62,7 @@ public class ProjectsController {
     @DeleteMapping("/{projectId}")
     @PreAuthorize("@securityService.isCurrentUserProjectAdministrator(#projectId)")
     public void deleteProject(@PathVariable UUID projectId) {
-        logger.debug("Received HTTP DELETE request for deletion project " + projectId);
+        LOGGER.debug("Received HTTP DELETE request for deletion project " + projectId);
         projectService.deleteProject(projectId);
     }
 }

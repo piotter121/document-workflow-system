@@ -11,6 +11,7 @@ import java.util.Date;
 @Data
 @UserDefinedType("file_summary")
 public class FileSummary {
+    @Column("name")
     private String name;
 
     @Column("modification_date")
