@@ -1,8 +1,6 @@
-export class NewUser {
-  constructor(
-    public email: string,
-    public firstName: string,
-    public lastName: string,
-    public password: string
-  ) {}
+export interface NewUser {
+  email: string;
+  firstName: string;
+  lastName: string;
+  password: string;
 }

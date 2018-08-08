@@ -1,5 +1,5 @@
-export class NewTask {
-  constructor(public name: string,
-              public administratorEmail: string,
-              public description?: string) {}
+export interface NewTask {
+  name: string;
+  administratorEmail: string;
+  description?: string;
 }

@@ -1,10 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import {AuthService} from "../auth.service";
-import {Router} from "@angular/router";
-import {HttpErrorResponse} from "@angular/common/http";
-import {AbstractControl, FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {NewUser} from "./new-user";
-import {AppValidatorsService} from "../../shared/app-validators.service";
+import {Component, OnInit} from '@angular/core';
+import {AuthService} from '../auth.service';
+import {Router} from '@angular/router';
+import {HttpErrorResponse} from '@angular/common/http';
+import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AppValidatorsService} from '../../shared/app-validators.service';
 
 @Component({
   selector: 'app-register',
@@ -19,7 +18,8 @@ export class RegisterComponent implements OnInit {
   constructor(private authService: AuthService,
               private router: Router,
               private formBuilder: FormBuilder,
-              private appValidators: AppValidatorsService) { }
+              private appValidators: AppValidatorsService) {
+  }
 
   ngOnInit() {
     this.errors = [];
@@ -31,7 +31,7 @@ export class RegisterComponent implements OnInit {
       passwordRepeated: ['', [Validators.required, Validators.minLength(6)]]
     }, {
       validator: RegisterComponent.MatchPassword
-    })
+    });
   }
 
   get email() {
@@ -55,12 +55,12 @@ export class RegisterComponent implements OnInit {
   }
 
   register() {
-    this.authService.register(new NewUser(
-      this.newUser.get('email').value,
-      this.newUser.get('firstName').value,
-      this.newUser.get('lastName').value,
-      this.newUser.get('password').value
-    )).subscribe(
+    this.authService.register({
+      email: this.newUser.get('email').value,
+      firstName: this.newUser.get('firstName').value,
+      lastName: this.newUser.get('lastName').value,
+      password: this.newUser.get('password').value
+    }).subscribe(
       () => this.router.navigate(['login']),
       (error: HttpErrorResponse) => this.handleRegisterError(error)
     );
@@ -81,7 +81,7 @@ export class RegisterComponent implements OnInit {
     let passwordRepeated: AbstractControl = abstractControl.get('passwordRepeated');
     let passwordRepeatedValue: string = passwordRepeated.value;
     let notMatched: boolean = passwordValue && passwordRepeatedValue
-    && passwordValue != passwordRepeatedValue;
+      && passwordValue != passwordRepeatedValue;
     let passwordRepeatedErrors = abstractControl.get('passwordRepeated').errors;
     if (notMatched) {
       if (passwordRepeatedErrors) {
