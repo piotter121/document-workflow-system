@@ -4,46 +4,38 @@ import {TasksService} from '../tasks.service';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {map} from 'rxjs/operators';
 import {NewTask} from '../new-task';
-import {HttpErrorResponse} from '@angular/common/http';
 import {AppValidatorsService} from '../../shared/app-validators.service';
 import {GlobalsService} from '../../shared/globals.service';
+import {ToastNotificationService} from '../../shared/toast-notification.service';
 
 @Component({
-  selector: 'app-add-task',
+  selector: 'add-task',
   templateUrl: './add-task.component.html',
   styleUrls: ['./add-task.component.css']
 })
 export class AddTaskComponent implements OnInit, OnDestroy {
 
   newTask: FormGroup;
-  projectId: string;
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private tasksService: TasksService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private appValidators: AppValidatorsService,
-    private globals: GlobalsService
-  ) {
+  constructor(private formBuilder: FormBuilder,
+              private tasksService: TasksService,
+              private route: ActivatedRoute,
+              private router: Router,
+              private appValidators: AppValidatorsService,
+              private globals: GlobalsService,
+              private toastNotification: ToastNotificationService) {
   }
 
   ngOnInit() {
     this.globals.route = this.route;
+    this.newTask = this.formBuilder.group({
+      name: ['', [Validators.required, Validators.maxLength(50)]],
+      description: ['', [Validators.maxLength(1000)]],
+      administratorEmail: ['', [Validators.email, Validators.required], this.appValidators.existingUserEmail()]
+    });
     this.route.paramMap
       .pipe(map((paramMap: ParamMap) => paramMap.get('projectId')))
-      .subscribe((projectId: string) => {
-        this.projectId = projectId;
-        this.newTask = this.formBuilder.group({
-          name: [
-            '',
-            [Validators.required, Validators.maxLength(50)],
-            this.appValidators.nonExistingTaskNameInProject(this.projectId).bind(this.appValidators)
-          ],
-          description: ['', [Validators.maxLength(1000)]],
-          administratorEmail: ['', [Validators.email, Validators.required], this.appValidators.existingUserEmail()]
-        });
-      });
+      .subscribe((projectId: string) => this.name.setAsyncValidators(this.appValidators.nonExistingTaskNameInProject(projectId)));
   }
 
   ngOnDestroy() {
@@ -62,6 +54,10 @@ export class AddTaskComponent implements OnInit, OnDestroy {
     return this.newTask.get('administratorEmail');
   }
 
+  get projectId(): string {
+    return this.route.snapshot.paramMap.get('projectId');
+  }
+
   createTask() {
     let newTask: NewTask = {
       name: this.name.value,
@@ -70,8 +66,8 @@ export class AddTaskComponent implements OnInit, OnDestroy {
     };
     this.tasksService.createTask(newTask, this.projectId)
       .subscribe(
-        (taskId: string) => this.router.navigate(['/projects', this.projectId, 'tasks', taskId]),
-        (error: HttpErrorResponse) => console.error(error)
+        (taskId: string) => this.router.navigate(['../', taskId]),
+        () => this.toastNotification.error('dws.task.add.failure')
       );
   }
 }

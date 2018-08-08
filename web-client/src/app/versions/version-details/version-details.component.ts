@@ -1,11 +1,12 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ActivatedRoute, ParamMap} from '@angular/router';
+import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {VersionInfo} from '../version-info';
-import {Observable} from 'rxjs';
-import {switchMap} from 'rxjs/operators';
+import {Observable, throwError} from 'rxjs';
+import {catchError, switchMap} from 'rxjs/operators';
 import {DiffData, VersionsService} from '../versions.service';
 import {DifferenceType} from '../difference-type.enum';
 import {GlobalsService} from '../../shared/globals.service';
+import {ToastNotificationService} from '../../shared/toast-notification.service';
 
 @Component({
   selector: 'version-details',
@@ -18,8 +19,10 @@ export class VersionDetailsComponent implements OnInit, OnDestroy {
   diffData$: Observable<DiffData>;
 
   constructor(private route: ActivatedRoute,
+              private router: Router,
               private versionsService: VersionsService,
-              private globals: GlobalsService) {
+              private globals: GlobalsService,
+              private toastNotification: ToastNotificationService) {
   }
 
   ngOnInit() {
@@ -30,14 +33,23 @@ export class VersionDetailsComponent implements OnInit, OnDestroy {
       const fileId = paramMap.get('fileId');
       const versionId = paramMap.get('versionId');
       return this.versionsService.getVersionInfo(projectId, taskId, fileId, versionId);
-    }));
+    }), catchError(err => this.onCatchError(err)));
     this.diffData$ = this.route.paramMap.pipe(switchMap((paramMap: ParamMap) => {
       const projectId = paramMap.get('projectId');
       const taskId = paramMap.get('taskId');
       const fileId = paramMap.get('fileId');
       const versionId = paramMap.get('versionId');
       return this.versionsService.getDiffData(projectId, taskId, fileId, versionId);
-    }));
+    }), catchError(err => this.onCatchError(err)));
+  }
+
+  private onCatchError(err) {
+    this.toastNotification.error('dws.versions.details.getFailure');
+    // noinspection JSIgnoredPromiseFromCall
+    this.router.navigate(['../../'], {
+      relativeTo: this.route
+    });
+    return throwError(err);
   }
 
   ngOnDestroy() {

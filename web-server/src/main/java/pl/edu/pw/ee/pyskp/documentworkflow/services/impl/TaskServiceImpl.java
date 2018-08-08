@@ -11,7 +11,6 @@ import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.TaskRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.VersionRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewTaskForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.TaskInfoDTO;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.TaskSummaryDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.UserInfoDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ProjectNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
@@ -127,13 +126,6 @@ public class TaskServiceImpl implements TaskService {
         return tasks.stream()
                 .map(Task::getName)
                 .anyMatch(taskName::equals);
-    }
-
-    @Override
-    public TaskSummaryDTO getTaskSummary(UUID projectId, UUID taskId) throws TaskNotFoundException {
-        return taskRepository.findTaskByProjectIdAndTaskId(projectId, taskId)
-                .map(TaskSummaryDTO::new)
-                .orElseThrow(() -> new TaskNotFoundException(taskId));
     }
 
     @Override

@@ -33,7 +33,7 @@ export class NavbarComponent implements OnInit, DoCheck {
   logout() {
     this.authService.logout();
     // noinspection JSIgnoredPromiseFromCall
-    this.router.navigate(['login']);
+    this.router.navigate(['/login']);
   }
 
   goBack() {

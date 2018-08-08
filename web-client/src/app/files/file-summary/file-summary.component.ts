@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {FileMetadata} from "../file-metadata";
+import {FileMetadata} from '../file-metadata';
 import {DatePipe} from '@angular/common';
 
 @Component({
@@ -11,6 +11,7 @@ export class FileSummaryComponent implements OnInit {
 
   @Input()
   file: FileMetadata;
+
   lastModifiedMessageParams: any;
 
   constructor(private datePipe: DatePipe) {

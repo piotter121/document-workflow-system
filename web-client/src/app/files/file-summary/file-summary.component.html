@@ -1,14 +1,14 @@
 <div class="card bg-light">
-  <h3 class="card-header">
+  <h5 class="card-header">
     <img src="/assets/images/{{file.extension}}.png" height="25">
-    <a [routerLink]="['files', file.id]" class="ml-1">{{file.name}}</a>
-    <span *ngIf="file.markedToConfirm" class="badge text-uppercase" translate>
+    <a [routerLink]="['files', file.id]" class="mx-1">{{file.name}}</a>
+    <span *ngIf="file.markedToConfirm" class="badge badge-primary text-uppercase" translate>
       dws.files.summary.markedToConfirm
     </span>
-    <span *ngIf="file.confirmed" class="badge text-uppercase" translate>
+    <span *ngIf="file.confirmed" class="badge badge-success text-uppercase" translate>
       dws.files.summary.confirmed
     </span>
-  </h3>
+  </h5>
 
   <div class="card-body">
     <p class="card-text" translate [translateParams]="{creationDate: (file.creationDate | date:'dd.MM.yyyy HH:mm')}">

@@ -11,6 +11,8 @@ import {FieldError} from '../shared/field-error';
 @Injectable()
 export class RestErrorHandlerService implements HttpInterceptor {
 
+  private apiRegexp: RegExp = /^\/auth\/*./;
+
   constructor(private translate: TranslateService,
               private toastr: ToastrService) {
   }
@@ -52,9 +54,12 @@ export class RestErrorHandlerService implements HttpInterceptor {
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    return next.handle(req).pipe(catchError((err: HttpErrorResponse) => {
-      this.handle(err);
-      return throwError(err);
-    }));
+    if (this.apiRegexp.test(req.url))
+      return next.handle(req).pipe(catchError((err: HttpErrorResponse) => {
+        this.handle(err);
+        return throwError(err);
+      }));
+    else
+      return next.handle(req);
   }
 }

@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.TaskInfoDTO;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.TaskSummaryDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.UserInfoDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ProjectNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
@@ -32,13 +31,6 @@ public class TaskOperationsController {
     public TaskInfoDTO getTaskInfo(@PathVariable UUID taskId, @PathVariable UUID projectId)
             throws ResourceNotFoundException {
         return taskService.getTaskInfo(projectId, taskId);
-    }
-
-    @GetMapping("/summary")
-    @PreAuthorize("@securityService.isTaskParticipant(#projectId, #taskId)")
-    public TaskSummaryDTO getTaskSummary(@PathVariable UUID projectId, @PathVariable UUID taskId)
-            throws TaskNotFoundException {
-        return taskService.getTaskSummary(projectId, taskId);
     }
 
     @GetMapping("/administrator")

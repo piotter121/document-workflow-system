@@ -31,8 +31,7 @@ public class AuthenticationController {
     private final UserService userService;
 
     @GetMapping("/token")
-    public ResponseEntity<Map<String, String>> getToken(@RequestParam String email, @RequestParam String password)
-            throws UserNotFoundException {
+    public ResponseEntity<Map<String, String>> getToken(@RequestParam String email, @RequestParam String password) {
         try {
             String token = authenticationService.getToken(email, password);
 
@@ -41,7 +40,6 @@ public class AuthenticationController {
             }
         } catch (UserNotFoundException e) {
             LOGGER.warn("User not found exception", e);
-            throw e;
         } catch (Exception e) {
             LOGGER.warn("Exception during get token", e);
         }

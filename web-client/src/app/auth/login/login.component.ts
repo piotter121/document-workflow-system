@@ -1,52 +1,48 @@
 import {Component, OnInit} from '@angular/core';
-import {AbstractControl, FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {AuthService} from "../auth.service";
-import {Router} from "@angular/router";
-import {HttpErrorResponse} from "@angular/common/http";
+import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AuthService} from '../auth.service';
+import {Router} from '@angular/router';
+import {ToastNotificationService} from '../../shared/toast-notification.service';
 
 @Component({
-  selector: 'app-login',
+  selector: 'login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
 
-  form: FormGroup;
-  error: any;
+  loginForm: FormGroup;
 
   constructor(private fb: FormBuilder,
               private authService: AuthService,
-              private router: Router) {
+              private router: Router,
+              private toastNotification: ToastNotificationService) {
   }
 
   ngOnInit() {
-    this.form = this.fb.group({
+    this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
     });
   }
 
   get email(): AbstractControl {
-    return this.form.get('email');
+    return this.loginForm.get('email');
   }
 
   get password(): AbstractControl {
-    return this.form.get('password');
+    return this.loginForm.get('password');
   }
 
   login() {
-    const val = this.form.value;
-    if (val.email && val.password && this.form.valid) {
+    const val = this.loginForm.value;
+    if (val.email && val.password && this.loginForm.valid) {
       this.authService.login(val.email, val.password)
         .subscribe(
           () => this.router.navigateByUrl('/projects'),
-          (error: HttpErrorResponse) => this.handleError(error)
+          () => this.toastNotification.error('dws.auth.login.failure')
         );
     }
-  }
-
-  handleError(errorResponse: HttpErrorResponse) {
-    this.error = errorResponse.error;
   }
 
 }

@@ -1,27 +1,22 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ProjectSummary} from '../project-summary';
 import {ProjectsService} from '../projects.service';
-import {ToastrService} from 'ngx-toastr';
-import {HttpErrorResponse} from '@angular/common/http';
 import {GlobalsService} from '../../shared/globals.service';
-import {TranslateService} from '@ngx-translate/core';
 import {ActivatedRoute} from '@angular/router';
+import {ToastNotificationService} from '../../shared/toast-notification.service';
 
 @Component({
-  selector: 'app-all-projects',
+  selector: 'all-projects',
   templateUrl: './all-projects.component.html',
   styleUrls: ['./all-projects.component.css']
 })
 export class AllProjectsComponent implements OnInit, OnDestroy {
-  projects: ProjectSummary[];
+  projects: ProjectSummary[] = [];
 
-  constructor(
-    private projectsService: ProjectsService,
-    private toastService: ToastrService,
-    private globals: GlobalsService,
-    private translate: TranslateService,
-    private route: ActivatedRoute
-  ) {
+  constructor(private projectsService: ProjectsService,
+              private globals: GlobalsService,
+              private route: ActivatedRoute,
+              private toastNotification: ToastNotificationService) {
   }
 
   ngOnInit() {
@@ -35,10 +30,7 @@ export class AllProjectsComponent implements OnInit, OnDestroy {
 
   private loadProjects(): void {
     this.projectsService.getAllUserProjects()
-      .subscribe((projects: ProjectSummary[]) => {
-        this.projects = projects;
-      }, (error: HttpErrorResponse) => {
-        this.toastService.error(error.message, error.name);
-      });
+      .subscribe((projects: ProjectSummary[]) => this.projects = projects,
+        () => this.toastNotification.error('dws.project.all.failure'));
   }
 }

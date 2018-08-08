@@ -1,28 +1,27 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthService} from '../auth.service';
 import {Router} from '@angular/router';
-import {HttpErrorResponse} from '@angular/common/http';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AppValidatorsService} from '../../shared/app-validators.service';
+import {ToastNotificationService} from '../../shared/toast-notification.service';
 
 @Component({
-  selector: 'app-register',
+  selector: 'register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
 
   newUser: FormGroup;
-  errors: string[];
 
   constructor(private authService: AuthService,
               private router: Router,
               private formBuilder: FormBuilder,
-              private appValidators: AppValidatorsService) {
+              private appValidators: AppValidatorsService,
+              private toastNotification: ToastNotificationService) {
   }
 
   ngOnInit() {
-    this.errors = [];
     this.newUser = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email], this.appValidators.nonExistingUserEmail()],
       firstName: ['', Validators.required],
@@ -56,23 +55,14 @@ export class RegisterComponent implements OnInit {
 
   register() {
     this.authService.register({
-      email: this.newUser.get('email').value,
-      firstName: this.newUser.get('firstName').value,
-      lastName: this.newUser.get('lastName').value,
-      password: this.newUser.get('password').value
+      email: this.email.value,
+      firstName: this.firstName.value,
+      lastName: this.lastName.value,
+      password: this.password.value
     }).subscribe(
-      () => this.router.navigate(['login']),
-      (error: HttpErrorResponse) => this.handleRegisterError(error)
+      () => this.router.navigate(['/login']),
+      () => this.toastNotification.error('dws.auth.register.failure')
     );
-  }
-
-  private handleRegisterError(error: HttpErrorResponse) {
-    if (error.status == 400) {
-      let validationError: any = error.error;
-      this.errors = validationError.fieldErrors.map((fieldError: any) => fieldError.message);
-    } else {
-      this.errors = [error.message];
-    }
   }
 
   static MatchPassword(abstractControl: AbstractControl) {
@@ -82,17 +72,17 @@ export class RegisterComponent implements OnInit {
     let passwordRepeatedValue: string = passwordRepeated.value;
     let notMatched: boolean = passwordValue && passwordRepeatedValue
       && passwordValue != passwordRepeatedValue;
-    let passwordRepeatedErrors = abstractControl.get('passwordRepeated').errors;
+    let passwordRepeatedErrors = passwordRepeated.errors;
     if (notMatched) {
       if (passwordRepeatedErrors) {
-        abstractControl.get('passwordRepeated').errors['MatchPassword'] = true;
+        passwordRepeated.errors['MatchPassword'] = true;
       } else {
-        abstractControl.get('passwordRepeated').setErrors({
+        passwordRepeated.setErrors({
           'MatchPassword': true
         });
       }
     } else if (passwordRepeatedErrors) {
-      delete abstractControl.get('passwordRepeated').errors['MatchPassword'];
+      delete passwordRepeated.errors['MatchPassword'];
     }
   }
 }

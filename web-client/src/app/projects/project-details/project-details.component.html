@@ -1,14 +1,14 @@
-<div *ngIf="project" class="row">
+<div *ngIf="project$ | async as project" class="row">
   <div class="col-md-8">
     <div class="btn-toolbar mb-2" role="toolbar">
       <div class="btn-group" role="group">
-        <div *ngIf="isProjectAdmin; then projectAdminGroup else projectParticipantGroup"></div>
+        <div *ngIf="isProjectAdmin$ | async; then projectAdminGroup else projectParticipantGroup"></div>
         <ng-template #projectAdminGroup>
           <a [routerLink]="['tasks', 'add']" class="btn btn-success">
             <span class="fa fa-plus" aria-hidden="true"></span>
             {{'dws.project.details.toolbar.addTask' | translate}}
           </a>
-          <button class="btn btn-danger" type="button" (click)="deleteProject()">
+          <button class="btn btn-danger" type="button" (click)="deleteProject(project)">
             <span class="fa fa-trash" aria-hidden="true"></span>
             {{'dws.project.details.toolbar.deleteProject' | translate}}
           </button>
@@ -22,7 +22,7 @@
       </div>
     </div>
 
-    <div *ngIf="hasTasks; then tasksSummaries else noTasksInfo"></div>
+    <div *ngIf="hasTasks$ | async; then tasksSummaries else noTasksInfo"></div>
     <ng-template #noTasksInfo>
       <div class="alert alert-info text-center" role="alert"
            [innerHTML]="'dws.project.details.noTasksAlert' | translate"></div>

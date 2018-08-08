@@ -18,10 +18,13 @@ public class NewUserDTO {
     @Email
     @NonExistingEmail
     private String email;
+
     @NotBlank
     private String firstName;
+
     @NotBlank
     private String lastName;
+
     @NotBlank
     @Length(min = 6)
     private String password;

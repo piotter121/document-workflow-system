@@ -1,19 +1,20 @@
-<div class="row" *ngIf="file">
+<div class="row" *ngIf="(file$ | async) as file">
   <div class="col-md-8">
-    <div class="btn-toolbar mb-2" role="toolbar">
-      <div *ngIf="!file?.confirmed" class="btn-group mr-2" role="group">
-        <button *ngIf="!isCurrentUserTaskAdministrator && !file?.markedToConfirm" class="btn btn-success"
+    <div class="btn-toolbar mb-2" role="toolbar"
+         *ngIf="(isCurrentUserTaskAdministrator$  | async) as isCurrentUserTaskAdministrator">
+      <div *ngIf="!file.confirmed" class="btn-group mr-2" role="group">
+        <button *ngIf="!isCurrentUserTaskAdministrator && !file.markedToConfirm" class="btn btn-success"
                 role="button" (click)="markToConfirm()">
           <i class="fa fa-check-square-o" aria-hidden="true"></i>
           {{'dws.files.details.toolbars.markToConfirm' | translate}}
         </button>
-        <a class="btn btn-primary" [routerLink]="['.', 'versions', 'add']">
+        <a class="btn btn-primary" routerLink="./versions/add">
           <i class="fa fa-plus" aria-hidden="true"></i>
           {{'dws.files.details.toolbars.addNewVersion' | translate}}
         </a>
       </div>
       <div *ngIf="isCurrentUserTaskAdministrator" class="btn-group" role="group">
-        <button *ngIf="!file?.confirmed" role="button" type="button" class="btn btn-success" (click)="confirmFile()">
+        <button *ngIf="!file.confirmed" role="button" type="button" class="btn btn-success" (click)="confirmFile()">
           <i class="fa fa-check" aria-hidden="true"></i>
           {{'dws.files.details.toolbars.confirm' | translate}}
         </button>
@@ -25,11 +26,11 @@
     </div>
 
     <div class="text-center">
-      <h3 translate [translateParams]="{'name': file?.name}">dws.files.details.versionList.header</h3>
+      <h3 translate [translateParams]="{'name': file.name}">dws.files.details.versionList.header</h3>
     </div>
 
     <div id="versions" class="list-group">
-      <div *ngFor="let version of file?.versions; trackBy: version?.saveDate" class="list-group-item">
+      <div *ngFor="let version of file.versions; trackBy: version?.saveDate" class="list-group-item">
         <div class="d-flex align-items-center mb-2">
           <span class="badge badge-secondary badge-pill mr-1" translate [translateParams]="version">
             dws.files.details.versionList.listItem.versionString
@@ -67,11 +68,11 @@
 
         <div class="btn-toolbar" role="toolbar">
           <div class="btn-group">
-            <button role="button" type="button" class="btn btn-primary" (click)="downloadVersion(version)">
+            <button role="button" type="button" class="btn btn-primary" (click)="downloadVersion(version, file)">
               <i class="fa fa-download" aria-hidden="true"></i>
               {{'dws.files.details.versionList.listItem.toolbar.downloadVersion' | translate}}
             </button>
-            <a class="btn btn-info" [routerLink]="['.', 'versions', version.saveDate]">
+            <a class="btn btn-info" [routerLink]="['./versions', version.saveDate]">
               <i class="fa fa-info" aria-hidden="true"></i>
               {{'dws.files.details.versionList.listItem.toolbar.details' | translate}}
             </a>
@@ -91,27 +92,27 @@
         <div class="list-group-item flex-column align-items-center">
           <small translate>dws.files.details.versionList.infoPanel.name</small>
           <br/>
-          <span>{{file?.name}}</span>
+          <span>{{file.name}}</span>
         </div>
-        <div *ngIf="file?.description" class="list-group-item flex-column align-items-center">
+        <div *ngIf="file.description" class="list-group-item flex-column align-items-center">
           <small translate>dws.files.details.versionList.infoPanel.description</small>
           <br/>
-          <span>{{file?.description}}</span>
+          <span>{{file.description}}</span>
         </div>
         <div class="list-group-item flex-column align-items-center">
           <small translate>dws.files.details.versionList.infoPanel.contentType</small>
           <br/>
-          <span>{{file?.contentType}}</span>
+          <span>{{file.contentType}}</span>
         </div>
         <div class="list-group-item flex-column align-items-center">
           <small translate>dws.files.details.versionList.infoPanel.creationDate</small>
           <br/>
-          <span>{{file?.creationDate | date:'dd.MM.yyyy HH:mm'}}</span>
+          <span>{{file.creationDate | date:'dd.MM.yyyy HH:mm'}}</span>
         </div>
         <div class="list-group-item flex-column align-items-center">
           <small translate>dws.files.details.versionList.infoPanel.modificationDate</small>
           <br/>
-          <span>{{file?.modificationDate | date:'dd.MM.yyyy HH:mm'}}</span>
+          <span>{{file.modificationDate | date:'dd.MM.yyyy HH:mm'}}</span>
         </div>
       </div>
     </div>

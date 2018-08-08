@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {AbstractControl} from "@angular/forms";
+import {AbstractControl} from '@angular/forms';
 
 @Component({
   selector: 'invalid-feedback',
@@ -12,7 +12,7 @@ export class InvalidFeedbackComponent {
   control: AbstractControl;
 
   get showMessages(): boolean {
-    return this.control.invalid && (this.control.touched || this.control.dirty);
+    return !this.control.pending && this.control.invalid && (this.control.touched || this.control.dirty);
   }
 
   constructor() { }

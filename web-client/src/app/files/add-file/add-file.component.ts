@@ -1,13 +1,12 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {FilesService} from '../files.service';
-import {ActivatedRoute, Router} from '@angular/router';
-import {HttpErrorResponse} from '@angular/common/http';
-import {ToastrService} from 'ngx-toastr';
+import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {GlobalsService} from '../../shared/globals.service';
+import {ToastNotificationService} from '../../shared/toast-notification.service';
 
 @Component({
-  selector: 'app-add-file',
+  selector: 'add-file',
   templateUrl: './add-file.component.html',
   styleUrls: ['./add-file.component.css']
 })
@@ -15,17 +14,13 @@ export class AddFileComponent implements OnInit, OnDestroy {
 
   newFile: FormGroup;
   fileToUpload: File;
-  private projectId: string;
-  private taskId: string;
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private filesService: FilesService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private toastService: ToastrService,
-    private globals: GlobalsService
-  ) {
+  constructor(private formBuilder: FormBuilder,
+              private filesService: FilesService,
+              private route: ActivatedRoute,
+              private router: Router,
+              private globals: GlobalsService,
+              private toastNotification: ToastNotificationService) {
   }
 
   ngOnInit() {
@@ -34,10 +29,6 @@ export class AddFileComponent implements OnInit, OnDestroy {
       name: ['', [Validators.required, Validators.maxLength(255)]],
       description: ['', Validators.maxLength(1024)],
       versionString: ['1', [Validators.required, Validators.maxLength(20)]]
-    });
-    this.route.paramMap.subscribe(paramMap => {
-      this.projectId = paramMap.get('projectId');
-      this.taskId = paramMap.get('taskId');
     });
   }
 
@@ -59,10 +50,13 @@ export class AddFileComponent implements OnInit, OnDestroy {
     formData.append('description', this.description.value);
     formData.append('file', this.fileToUpload, this.fileToUpload.name);
     formData.append('versionString', this.versionString.value);
-    this.filesService.addFileToTask(this.projectId, this.taskId, formData)
+    const paramMap: ParamMap = this.route.snapshot.paramMap;
+    this.filesService.addFileToTask(paramMap.get('projectId'), paramMap.get('taskId'), formData)
       .subscribe(
-        (fileId: string) => this.router.navigate(['/projects', this.projectId, 'tasks', this.taskId, 'files', fileId]),
-        (error: HttpErrorResponse) => this.toastService.error(error.message, error.name)
+        (fileId: string) => this.router.navigate(['../', fileId], {
+          relativeTo: this.route
+        }),
+        () => this.toastNotification.error('dws.files.add.failure')
       );
   }
 

@@ -4,7 +4,6 @@ import {NewTask} from './new-task';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {TaskInfo} from './task-info';
-import {TaskSummary} from './task-summary';
 import {UserInfo} from '../auth/user-info';
 
 @Injectable()
@@ -24,10 +23,6 @@ export class TasksService {
 
   deleteTask(projectId: string, taskId: string): Observable<any> {
     return this.http.delete<any>(`/api/projects/${projectId}/tasks/${taskId}`);
-  }
-
-  getTaskSummary(projectId: string, taskId: string): Observable<TaskSummary> {
-    return this.http.get<TaskSummary>(`/api/projects/${projectId}/tasks/${taskId}/summary`);
   }
 
   getTaskAdministrator(projectId: string, taskId: string): Observable<UserInfo> {

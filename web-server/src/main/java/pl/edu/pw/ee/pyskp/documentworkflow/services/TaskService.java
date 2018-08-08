@@ -2,7 +2,6 @@ package pl.edu.pw.ee.pyskp.documentworkflow.services;
 
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewTaskForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.TaskInfoDTO;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.TaskSummaryDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.UserInfoDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ProjectNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
@@ -27,8 +26,6 @@ public interface TaskService {
     void updateTaskStatistic(UUID projectId, UUID taskId) throws ResourceNotFoundException;
 
     boolean existsByName(UUID projectId, String taskName);
-
-    TaskSummaryDTO getTaskSummary(UUID projectId, UUID taskId) throws TaskNotFoundException;
 
     UserInfoDTO getTaskAdministrator(UUID projectId, UUID taskId) throws TaskNotFoundException;
 

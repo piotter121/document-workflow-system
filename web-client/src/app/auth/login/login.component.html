@@ -4,10 +4,7 @@
       <div class="card">
         <h4 class="card-header" translate>dws.auth.login.header</h4>
         <div class="card-body">
-          <div class="alert alert-danger" [hidden]="!error">
-            {{'dws.httpErrors.' + error?.errorCode | translate:error?.params}}
-          </div>
-          <form #loginForm="ngForm" role="form" [formGroup]="form" (ngSubmit)="login()" autocomplete="on">
+          <form role="form" [formGroup]="loginForm" (ngSubmit)="login()" autocomplete="on">
             <fieldset>
               <div class="form-group">
                 <input class="form-control" placeholder="{{'dws.auth.login.emailPlaceholder' | translate}}"
@@ -20,7 +17,7 @@
                 <invalid-feedback [control]="password"></invalid-feedback>
               </div>
               <div class="form-group">
-                <button class="btn btn-primary btn-block" [disabled]="!loginForm.form.valid" type="submit">
+                <button class="btn btn-primary btn-block" [disabled]="!loginForm.valid" type="submit">
                   <i class="fa fa-sign-in" aria-hidden="true"></i> {{'dws.auth.login.loginBtn' | translate}}
                 </button>
               </div>

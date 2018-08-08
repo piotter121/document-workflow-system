@@ -20,7 +20,12 @@
         "toolbar": {
           "addTask": "Dodaj nowe zadanie",
           "deleteProject": "Usuń projekt",
-          "mailToAdmin": "Wyślij wiadomość do administratora projektu"
+          "mailToAdmin": "Wyślij wiadomość do administratora projektu",
+          "actions": {
+            "delete": {
+              "failure": "Nie udało się usunąć projektu"
+            }
+          }
         },
         "noTasksAlert": "<strong>Projekt nie posiada jeszcze żadnych zadań!</strong> Dodaj nowe zadanie, aby rozpocząć pracę",
         "taskList": {
@@ -33,12 +38,14 @@
           "admin": "Administrator",
           "creationDate": "Data utworzenia",
           "lastModified": "Data ostatniej modyfikacji"
-        }
+        },
+        "getFailure": "Nie udało się pobrać informacji o projekcie"
       },
       "all": {
         "createNew": "Stwórz nowy projekt",
         "header": "Projekty w których uczestniczysz",
-        "noProjectsMsg": "<strong>Brak projektów do wyświetlania.</strong> Utwórz nowy projekt, lub poproś o dodanie do istniejącego, aby rozpocząć pracę."
+        "noProjectsMsg": "<strong>Brak projektów do wyświetlania.</strong> Utwórz nowy projekt, lub poproś o dodanie do istniejącego, aby rozpocząć pracę.",
+        "failure": "Nie udało się pobrać projektów"
       },
       "summary": {
         "creationDate": "Utworzono {{creationDate}}",
@@ -48,7 +55,8 @@
         "createButton": "Utwórz",
         "descriptionLabel": "Dodatkowy opis projektu",
         "nameLabel": "Nazwa projektu",
-        "legend": "Aby dodać nowy projekt należy wypełnić poniższy formularz"
+        "legend": "Aby dodać nowy projekt należy wypełnić poniższy formularz",
+        "failure": "Nie udało się utworzyć projektu"
       }
     },
     "task": {
@@ -69,7 +77,8 @@
             "label": "Adres e-mail administratora"
           },
           "createButton": "Utwórz"
-        }
+        },
+        "failure": "Nie udało się utworzyć zadania"
       },
       "details": {
         "files": {
@@ -113,7 +122,8 @@
           "administrator": "Administrator",
           "creationDate": "Data utworzenia",
           "modificationDate": "Data modyfikacji"
-        }
+        },
+        "getFailure": "Nie udało się pobrać informacji o zadaniu"
       }
     },
     "files": {
@@ -133,7 +143,8 @@
           "versionString": "Numer inicjalnej wersji pliku"
         },
         "submitButton": "Dodaj",
-        "cancelButton": "Zrezygnuj"
+        "cancelButton": "Zrezygnuj",
+        "failure": "Wystąpił błąd podczas dodawania nowego pliku"
       },
       "details": {
         "toolbars": {
@@ -178,8 +189,8 @@
             "failure": "Nie udało się zatwierdzić pliku"
           },
           "deleteFile": {
-            "success": "Plik \"{{name}}\" został usunięty",
-            "failure": "Nie udało się usunąć pliku \"{{name}}\""
+            "success": "Plik został usunięty",
+            "failure": "Nie udało się usunąć pliku"
           },
           "download": {
             "failure": "Nie udało się pobrać wersji pliku"
@@ -203,7 +214,10 @@
       "heading": "Zmiany wprowadzone w wersji {{versionString}}",
       "quoteFooter": "{{fullName}} w dniu {{date}}",
       "previousVersionString": "Poprzednia wersja - {{previousVersionString}}",
-      "currentVersionString": "Obecna wersja - {{versionString}}"
+      "currentVersionString": "Obecna wersja - {{versionString}}",
+      "details": {
+        "getFailure": "Nie udało się pobrać informacji o wersji"
+      }
     },
     "auth": {
       "login": {
@@ -211,7 +225,8 @@
         "signInBtn": "Rejestracja",
         "emailPlaceholder": "Adres e-mail",
         "passwordPlaceholder": "Hasło",
-        "header": "Logowanie"
+        "header": "Logowanie",
+        "failure": "Nie udało się zalogować"
       },
       "register": {
         "legend": "Poniżej znajduje się formularz rejestracji w systemie. Wszystkie pola są wymagane",
@@ -220,7 +235,9 @@
         "lastNameLabel": "Nazwisko",
         "passwordLabel": "Hasło",
         "passwordRepeatedLabel": "Powtórz hasło",
-        "submitButton": "Zarejestruj się"
+        "submitButton": "Zarejestruj się",
+        "failure": "Restracja nowego użytkownika nie powiodła się",
+        "back": "Powrót"
       }
     },
     "navbar": {

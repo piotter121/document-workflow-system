@@ -4,8 +4,7 @@ import {AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators} from '
 import {AppValidatorsService} from '../../shared/app-validators.service';
 import {TasksService} from '../tasks.service';
 import {UserInfo} from '../../auth/user-info';
-import {ToastrService} from 'ngx-toastr';
-import {TranslateService} from '@ngx-translate/core';
+import {ToastNotificationService} from '../../shared/toast-notification.service';
 
 @Component({
   selector: 'add-participant',
@@ -25,8 +24,7 @@ export class AddParticipantComponent implements OnInit {
   constructor(private formBuilder: FormBuilder,
               private appValidators: AppValidatorsService,
               private tasksService: TasksService,
-              private toastrService: ToastrService,
-              private translate: TranslateService) {
+              private toastNotification: ToastNotificationService) {
   }
 
   ngOnInit() {
@@ -57,9 +55,9 @@ export class AddParticipantComponent implements OnInit {
   addParticipant() {
     this.tasksService.addParticipantToTask(this.task.projectId, this.task.id, this.participantEmail.value)
       .subscribe((participants: UserInfo[]) => {
-        this.translate.get('dws.task.details.participants.addParticipant.addSuccess', {
+        this.toastNotification.success('dws.task.details.participants.addParticipant.addSuccess', {
           'email': this.participantEmail.value
-        }).subscribe(translation => this.toastrService.success(translation));
+        });
         this.task.participants = participants;
         this.taskChange.emit(this.task);
         this.isCollapsed = true;

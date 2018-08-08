@@ -1,6 +1,6 @@
-import {FileSummary} from "../files/file-summary";
+import {FileSummary} from '../files/file-summary';
 
-export class ProjectSummary {
+export interface ProjectSummary {
   id: string;
   name: string;
   creationDate: Date;

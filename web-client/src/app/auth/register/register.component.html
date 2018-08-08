@@ -51,14 +51,16 @@
             <invalid-feedback [control]="passwordRepeated"></invalid-feedback>
           </div>
         </div>
-        <div class="alert alert-danger" [hidden]="errors?.length == 0">
-          <p *ngFor="let error of errors">
-            {{error}}
-          </p>
+        <div class="form-group row">
+          <div class="offset-2 col-5">
+            <button type="submit" class="btn btn-primary mr-1" [disabled]="newUser.invalid || newUser.pending">
+              <i class="fa fa-check" aria-hidden="true"></i> {{'dws.auth.register.submitButton' | translate}}
+            </button>
+            <a class="btn btn-outline-secondary" routerLink="/login" translate>
+              dws.auth.register.back
+            </a>
+          </div>
         </div>
-        <button type="submit" class="btn btn-secondary" [disabled]="newUser.invalid">
-          <i class="fa fa-check" aria-hidden="true"></i> {{'dws.auth.register.submitButton' | translate}}
-        </button>
       </fieldset>
     </form>
   </div>

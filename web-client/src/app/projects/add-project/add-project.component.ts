@@ -1,12 +1,12 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ProjectsService} from '../projects.service';
-import {NewProject} from '../new-project';
 import {ActivatedRoute, Router} from '@angular/router';
 import {GlobalsService} from '../../shared/globals.service';
+import {ToastNotificationService} from '../../shared/toast-notification.service';
 
 @Component({
-  selector: 'app-add-project',
+  selector: 'add-project',
   templateUrl: './add-project.component.html',
   styleUrls: ['./add-project.component.css']
 })
@@ -18,7 +18,9 @@ export class AddProjectComponent implements OnInit, OnDestroy {
               private projectsService: ProjectsService,
               private router: Router,
               private route: ActivatedRoute,
-              private globals: GlobalsService) {}
+              private globals: GlobalsService,
+              private toastNotification: ToastNotificationService) {
+  }
 
   ngOnInit() {
     this.globals.route = this.route;
@@ -41,8 +43,14 @@ export class AddProjectComponent implements OnInit, OnDestroy {
   }
 
   createProject() {
-    this.projectsService.createProject(new NewProject(
-      this.name.value, this.description.value
-    )).subscribe(projectId => this.router.navigate(['/projects', projectId]));
+    this.projectsService.createProject({
+      name: this.name.value,
+      description: this.description.value
+    }).subscribe(
+      projectId => this.router.navigate(['../', projectId], {
+        relativeTo: this.route
+      }),
+      () => this.toastNotification.error('dws.project.add.failure')
+    );
   }
 }
