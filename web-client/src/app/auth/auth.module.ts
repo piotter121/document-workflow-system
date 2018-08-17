@@ -8,7 +8,7 @@ import {AuthRoutingModule} from "./auth-routing.module";
 import {UserService} from "./user.service";
 import {SharedModule} from "../shared/shared.module";
 
-const jwtOptions: JwtModuleOptions = {
+export const jwtOptions: JwtModuleOptions = {
   config: {
     tokenGetter: () => localStorage.getItem('token'),
     headerName: 'X-AUTH-TOKEN',

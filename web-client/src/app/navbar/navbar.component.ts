@@ -1,18 +1,19 @@
-import {Component, DoCheck, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AuthService} from '../auth/auth.service';
 import {Router} from '@angular/router';
 import {UserInfo} from '../auth/user-info';
 import {UserService} from '../auth/user.service';
 import {GlobalsService} from '../shared/globals.service';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent implements OnInit, DoCheck {
+export class NavbarComponent implements OnInit {
 
-  loggedIn: UserInfo;
+  loggedIn$: Observable<UserInfo>;
   isCollapsed: boolean = false;
 
   constructor(private authService: AuthService,
@@ -22,12 +23,7 @@ export class NavbarComponent implements OnInit, DoCheck {
   }
 
   ngOnInit() {
-    this.loggedIn = this.userService.currentUser;
-  }
-
-  ngDoCheck() {
-    if (this.userService.currentUserChanged)
-      this.loggedIn = this.userService.currentUser;
+    this.loggedIn$ = this.userService.currentUser$;
   }
 
   logout() {

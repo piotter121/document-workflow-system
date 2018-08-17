@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {AuthService} from "./auth/auth.service";
-import {TranslateService} from "@ngx-translate/core";
+import {AuthService} from './auth/auth.service';
+import {TranslateService} from '@ngx-translate/core';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -9,15 +10,16 @@ import {TranslateService} from "@ngx-translate/core";
 })
 export class AppComponent implements OnInit {
 
+  isLoggedIn$: Observable<boolean>;
+
   constructor(private authService: AuthService,
-              private translate: TranslateService) {}
+              private translate: TranslateService) {
+  }
 
   ngOnInit() {
     this.translate.setDefaultLang('en');
     this.translate.use(this.translate.getBrowserLang());
+    this.isLoggedIn$ = this.authService.isAuthenticated$;
   }
 
-  isLoggedIn(): boolean {
-    return this.authService.isAuthenticated();
-  }
 }

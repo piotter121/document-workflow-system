@@ -1,29 +1,26 @@
 import {Injectable} from '@angular/core';
 import {UserInfo} from './user-info';
 import {AuthService} from './auth.service';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 @Injectable()
 export class UserService {
 
   private _currentUser: UserInfo = null;
-  private _currentUserChanged: boolean = false;
+  private readonly _currentUser$: Observable<UserInfo>;
 
   constructor(private authService: AuthService) {
-    this.updateCurrentUser(authService.claims);
-    authService.claimsObservable
-      .subscribe(claims => this.updateCurrentUser(claims));
-  }
-
-  private updateCurrentUser(claims: any) {
-    this._currentUserChanged = true;
-    this._currentUser = !!claims ? new UserInfo(claims.sub, claims.name) : null;
+    this._currentUser$ = authService.claims$
+      .pipe(map(claims => !!claims ? new UserInfo(claims.sub, claims.name) : null));
+    this._currentUser$.subscribe(userInfo => this._currentUser = userInfo);
   }
 
   get currentUser(): UserInfo {
     return this._currentUser;
   }
 
-  get currentUserChanged(): boolean {
-    return this._currentUserChanged;
+  get currentUser$(): Observable<UserInfo> {
+    return this._currentUser$;
   }
 }

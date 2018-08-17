@@ -1,16 +1,48 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { AddFileComponent } from './add-file.component';
+import {AddFileComponent} from './add-file.component';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {Component, Input} from '@angular/core';
+import {FilesService} from '../files.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import {GlobalsService} from '../../shared/globals.service';
+import {ToastNotificationService} from '../../shared/toast-notification.service';
+
+@Component({
+  selector: 'invalid-feedback',
+  template: ''
+})
+class InvalidFeedbackStubComponent {
+  @Input() control: any;
+}
 
 describe('AddFileComponent', () => {
   let component: AddFileComponent;
   let fixture: ComponentFixture<AddFileComponent>;
 
   beforeEach(async(() => {
+    const filesServiceStub: Partial<FilesService> = {};
+    const activatedRouteStub: Partial<ActivatedRoute> = {};
+    const routerStub: Partial<Router> = {};
+    const globalsStub: Partial<GlobalsService> = {route: null};
+    const toastNotificationStub: Partial<ToastNotificationService> = {};
     TestBed.configureTestingModule({
-      declarations: [ AddFileComponent ]
-    })
-    .compileComponents();
+      declarations: [
+        AddFileComponent,
+        InvalidFeedbackStubComponent
+      ],
+      imports: [
+        FormsModule,
+        ReactiveFormsModule
+      ],
+      providers: [
+        {provide: FilesService, useValue: filesServiceStub},
+        {provide: ActivatedRoute, useValue: activatedRouteStub},
+        {provide: Router, useValue: routerStub},
+        {provide: GlobalsService, useValue: globalsStub},
+        {provide: ToastNotificationService, useValue: toastNotificationStub}
+      ]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

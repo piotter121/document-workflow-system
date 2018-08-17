@@ -15,8 +15,8 @@
       {{'dws.navbar.goBack' | translate}}
     </button>
 
-    <span class="navbar-text ml-auto" *ngIf="loggedIn" translate [translateParams]="loggedIn">
-      dws.navbar.currentUserMsg
+    <span class="navbar-text ml-auto" *ngIf="loggedIn$ | async as loggedIn">
+      {{'dws.navbar.currentUserMsg' | translate:loggedIn}}
     </span>
 
     <form class="form-inline">

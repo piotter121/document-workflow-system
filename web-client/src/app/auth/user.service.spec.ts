@@ -1,11 +1,19 @@
-import { TestBed, inject } from '@angular/core/testing';
+import {inject, TestBed} from '@angular/core/testing';
 
-import { UserService } from './user.service';
+import {UserService} from './user.service';
+import {AuthService} from './auth.service';
+import {of} from 'rxjs';
 
 describe('UserService', () => {
   beforeEach(() => {
+    const authServiceStub: Partial<AuthService> = {
+      claims$: of({})
+    };
     TestBed.configureTestingModule({
-      providers: [UserService]
+      providers: [
+        UserService,
+        {provide: AuthService, useValue: authServiceStub}
+      ]
     });
   });
 

@@ -59,7 +59,7 @@ export class RegisterComponent implements OnInit {
       firstName: this.firstName.value,
       lastName: this.lastName.value,
       password: this.password.value
-    }).subscribe(
+    }).then(
       () => this.router.navigate(['/login']),
       () => this.toastNotification.error('dws.auth.register.failure')
     );
