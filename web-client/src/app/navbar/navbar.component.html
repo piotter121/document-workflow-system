@@ -10,7 +10,7 @@
       <i class="fa fa-home" aria-hidden="true"></i> {{'dws.navbar.homePageLink' | translate}}
     </a>
 
-    <button class="btn btn-secondary mr-2" (click)="goBack()" role="link" type="button" [hidden]="!globals.route">
+    <button class="btn btn-secondary mr-2" (click)="goBack()" role="link" type="button" *ngIf="activatedRoute">
       <i class="fa fa-step-backward" aria-hidden="true"></i>
       {{'dws.navbar.goBack' | translate}}
     </button>

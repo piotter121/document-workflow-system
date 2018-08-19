@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {FileMetadata} from '../file-metadata';
@@ -6,44 +6,38 @@ import {FilesService} from '../files.service';
 import {TasksService} from '../../tasks/tasks.service';
 import {UserService} from '../../auth/user.service';
 import {UserInfo} from '../../auth/user-info';
-import {GlobalsService} from '../../shared/globals.service';
 import {Observable, throwError} from 'rxjs';
 import {VersionInfo} from '../../versions/version-info';
 import {ToastNotificationService} from '../../shared/toast-notification.service';
 import {VersionsService} from '../../versions/versions.service';
 import {DifferenceType} from '../../versions/difference-type.enum';
+import {RouteComponent} from "../../shared/route-component";
 
 @Component({
   selector: 'file-details',
   templateUrl: './file-details.component.html',
   styleUrls: ['./file-details.component.css']
 })
-export class FileDetailsComponent implements OnInit, OnDestroy {
+export class FileDetailsComponent implements OnInit, RouteComponent {
 
   file$: Observable<FileMetadata>;
   private currentUser: UserInfo;
   isCurrentUserTaskAdministrator$: Observable<boolean>;
 
 
-  constructor(private route: ActivatedRoute,
+  constructor(public route: ActivatedRoute,
               private router: Router,
               private filesService: FilesService,
               private tasksService: TasksService,
               private userService: UserService,
-              private globals: GlobalsService,
               private toastNotification: ToastNotificationService,
               private versionsService: VersionsService) {
   }
 
   ngOnInit() {
-    this.globals.route = this.route;
     this.currentUser = this.userService.currentUser;
     this.listenToTaskAdministrator();
     this.listenToFileMetadata();
-  }
-
-  ngOnDestroy(): void {
-    this.globals.route = null;
   }
 
   private listenToTaskAdministrator() {

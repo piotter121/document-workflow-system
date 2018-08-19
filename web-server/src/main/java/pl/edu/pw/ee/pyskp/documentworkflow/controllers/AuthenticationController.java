@@ -51,4 +51,9 @@ public class AuthenticationController {
     public void registerNewUser(@Valid @RequestBody NewUserDTO createUser) {
         userService.createUserFromForm(createUser);
     }
+
+    @GetMapping(path = "/exists")
+    public boolean checkIfUserExists(@RequestParam String email) {
+        return userService.checkIfUserExists(email);
+    }
 }

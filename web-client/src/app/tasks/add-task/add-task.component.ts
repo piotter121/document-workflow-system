@@ -1,33 +1,31 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {TasksService} from '../tasks.service';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {map} from 'rxjs/operators';
 import {NewTask} from '../new-task';
 import {AppValidatorsService} from '../../shared/app-validators.service';
-import {GlobalsService} from '../../shared/globals.service';
 import {ToastNotificationService} from '../../shared/toast-notification.service';
+import {RouteComponent} from "../../shared/route-component";
 
 @Component({
   selector: 'add-task',
   templateUrl: './add-task.component.html',
   styleUrls: ['./add-task.component.css']
 })
-export class AddTaskComponent implements OnInit, OnDestroy {
+export class AddTaskComponent implements OnInit, RouteComponent {
 
   newTask: FormGroup;
 
   constructor(private formBuilder: FormBuilder,
               private tasksService: TasksService,
-              private route: ActivatedRoute,
+              public route: ActivatedRoute,
               private router: Router,
               private appValidators: AppValidatorsService,
-              private globals: GlobalsService,
               private toastNotification: ToastNotificationService) {
   }
 
   ngOnInit() {
-    this.globals.route = this.route;
     this.newTask = this.formBuilder.group({
       name: ['', [Validators.required, Validators.maxLength(50)]],
       description: ['', [Validators.maxLength(1000)]],
@@ -36,10 +34,6 @@ export class AddTaskComponent implements OnInit, OnDestroy {
     this.route.paramMap
       .pipe(map((paramMap: ParamMap) => paramMap.get('projectId')))
       .subscribe((projectId: string) => this.name.setAsyncValidators(this.appValidators.nonExistingTaskNameInProject(projectId)));
-  }
-
-  ngOnDestroy() {
-    this.globals.route = null;
   }
 
   get name(): AbstractControl {

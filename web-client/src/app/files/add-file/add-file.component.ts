@@ -1,30 +1,28 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {FilesService} from '../files.service';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
-import {GlobalsService} from '../../shared/globals.service';
 import {ToastNotificationService} from '../../shared/toast-notification.service';
+import {RouteComponent} from "../../shared/route-component";
 
 @Component({
   selector: 'add-file',
   templateUrl: './add-file.component.html',
   styleUrls: ['./add-file.component.css']
 })
-export class AddFileComponent implements OnInit, OnDestroy {
+export class AddFileComponent implements OnInit, RouteComponent {
 
   newFile: FormGroup;
   fileToUpload: File;
 
   constructor(private formBuilder: FormBuilder,
               private filesService: FilesService,
-              private route: ActivatedRoute,
+              public route: ActivatedRoute,
               private router: Router,
-              private globals: GlobalsService,
               private toastNotification: ToastNotificationService) {
   }
 
   ngOnInit() {
-    this.globals.route = this.route;
     this.newFile = this.formBuilder.group({
       name: ['', [Validators.required, Validators.maxLength(255)]],
       description: ['', Validators.maxLength(1024)],
@@ -58,9 +56,5 @@ export class AddFileComponent implements OnInit, OnDestroy {
         }),
         () => this.toastNotification.error('dws.files.add.failure')
       );
-  }
-
-  ngOnDestroy(): void {
-    this.globals.route = null;
   }
 }

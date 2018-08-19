@@ -5,7 +5,6 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Component, Input} from '@angular/core';
 import {FilesService} from '../files.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {GlobalsService} from '../../shared/globals.service';
 import {ToastNotificationService} from '../../shared/toast-notification.service';
 
 @Component({
@@ -24,7 +23,6 @@ describe('AddFileComponent', () => {
     const filesServiceStub: Partial<FilesService> = {};
     const activatedRouteStub: Partial<ActivatedRoute> = {};
     const routerStub: Partial<Router> = {};
-    const globalsStub: Partial<GlobalsService> = {route: null};
     const toastNotificationStub: Partial<ToastNotificationService> = {};
     TestBed.configureTestingModule({
       declarations: [
@@ -39,7 +37,6 @@ describe('AddFileComponent', () => {
         {provide: FilesService, useValue: filesServiceStub},
         {provide: ActivatedRoute, useValue: activatedRouteStub},
         {provide: Router, useValue: routerStub},
-        {provide: GlobalsService, useValue: globalsStub},
         {provide: ToastNotificationService, useValue: toastNotificationStub}
       ]
     }).compileComponents();

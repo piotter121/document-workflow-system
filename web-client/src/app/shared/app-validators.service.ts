@@ -41,7 +41,7 @@ export class AppValidatorsService {
   }
 
   private checkIfUserExists(email: string): Observable<boolean> {
-    return this.http.get<boolean>('/api/user/exists', {
+    return this.http.get<boolean>('/auth/exists', {
       params: {
         'email': email
       }

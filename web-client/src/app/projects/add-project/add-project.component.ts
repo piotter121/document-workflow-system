@@ -1,37 +1,31 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ProjectsService} from '../projects.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {GlobalsService} from '../../shared/globals.service';
 import {ToastNotificationService} from '../../shared/toast-notification.service';
+import {RouteComponent} from "../../shared/route-component";
 
 @Component({
   selector: 'add-project',
   templateUrl: './add-project.component.html',
   styleUrls: ['./add-project.component.css']
 })
-export class AddProjectComponent implements OnInit, OnDestroy {
+export class AddProjectComponent implements OnInit, RouteComponent {
 
   newProject: FormGroup;
 
   constructor(private formBuilder: FormBuilder,
               private projectsService: ProjectsService,
               private router: Router,
-              private route: ActivatedRoute,
-              private globals: GlobalsService,
+              public route: ActivatedRoute,
               private toastNotification: ToastNotificationService) {
   }
 
   ngOnInit() {
-    this.globals.route = this.route;
     this.newProject = this.formBuilder.group({
       name: ['', [Validators.required, Validators.maxLength(40)]],
       description: ['', Validators.maxLength(1024)]
     });
-  }
-
-  ngOnDestroy() {
-    this.globals.route = null;
   }
 
   get name(): AbstractControl {

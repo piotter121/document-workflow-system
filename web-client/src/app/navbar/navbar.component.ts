@@ -1,9 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {AuthService} from '../auth/auth.service';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {UserInfo} from '../auth/user-info';
 import {UserService} from '../auth/user.service';
-import {GlobalsService} from '../shared/globals.service';
 import {Observable} from 'rxjs';
 
 @Component({
@@ -13,13 +12,14 @@ import {Observable} from 'rxjs';
 })
 export class NavbarComponent implements OnInit {
 
+  @Input() activatedRoute: ActivatedRoute;
+
   loggedIn$: Observable<UserInfo>;
   isCollapsed: boolean = false;
 
   constructor(private authService: AuthService,
               private router: Router,
-              private userService: UserService,
-              public globals: GlobalsService) {
+              private userService: UserService) {
   }
 
   ngOnInit() {
@@ -34,8 +34,8 @@ export class NavbarComponent implements OnInit {
 
   goBack() {
     // noinspection JSIgnoredPromiseFromCall
-    this.router.navigate(['../..'], {
-      relativeTo: this.globals.route
+    this.router.navigate(['../'], {
+      relativeTo: this.activatedRoute
     });
   }
 

@@ -1,32 +1,30 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {VersionInfo} from '../version-info';
 import {Observable, throwError} from 'rxjs';
 import {catchError, switchMap} from 'rxjs/operators';
 import {DiffData, VersionsService} from '../versions.service';
 import {DifferenceType} from '../difference-type.enum';
-import {GlobalsService} from '../../shared/globals.service';
 import {ToastNotificationService} from '../../shared/toast-notification.service';
+import {RouteComponent} from "../../shared/route-component";
 
 @Component({
   selector: 'version-details',
   templateUrl: './version-details.component.html',
   styleUrls: ['./version-details.component.css']
 })
-export class VersionDetailsComponent implements OnInit, OnDestroy {
+export class VersionDetailsComponent implements OnInit, RouteComponent {
 
   version$: Observable<VersionInfo>;
   diffData$: Observable<DiffData>;
 
-  constructor(private route: ActivatedRoute,
+  constructor(public route: ActivatedRoute,
               private router: Router,
               private versionsService: VersionsService,
-              private globals: GlobalsService,
               private toastNotification: ToastNotificationService) {
   }
 
   ngOnInit() {
-    this.globals.route = this.route;
     this.version$ = this.route.paramMap.pipe(switchMap((paramMap: ParamMap) => {
       const projectId = paramMap.get('projectId');
       const taskId = paramMap.get('taskId');
@@ -50,10 +48,6 @@ export class VersionDetailsComponent implements OnInit, OnDestroy {
       relativeTo: this.route
     });
     return throwError(err);
-  }
-
-  ngOnDestroy() {
-    this.globals.route = null;
   }
 
   getClassForDifferenceInOldContent(diffData: DiffData, i: number): string {

@@ -5,7 +5,6 @@ import {TranslateModule} from '@ngx-translate/core';
 import {InvalidFeedbackComponent} from './invalid-feedback/invalid-feedback.component';
 import {AppValidatorsService} from './app-validators.service';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {GlobalsService} from './globals.service';
 import {ToastNotificationService} from './toast-notification.service';
 
 @NgModule({
@@ -18,7 +17,6 @@ import {ToastNotificationService} from './toast-notification.service';
   ],
   providers: [
     AppValidatorsService,
-    GlobalsService,
     ToastNotificationService
   ],
   exports: [

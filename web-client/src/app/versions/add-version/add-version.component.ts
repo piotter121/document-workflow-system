@@ -1,23 +1,22 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
-import {GlobalsService} from '../../shared/globals.service';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AppValidatorsService} from '../../shared/app-validators.service';
 import {VersionsService} from '../versions.service';
 import {ToastNotificationService} from '../../shared/toast-notification.service';
+import {RouteComponent} from "../../shared/route-component";
 
 @Component({
   selector: 'add-version',
   templateUrl: './add-version.component.html',
   styleUrls: ['./add-version.component.css']
 })
-export class AddVersionComponent implements OnInit, OnDestroy {
+export class AddVersionComponent implements OnInit, RouteComponent {
   newVersionOfFile: FormGroup;
   fileToUpload: File;
 
-  constructor(private route: ActivatedRoute,
+  constructor(public route: ActivatedRoute,
               private router: Router,
-              private globals: GlobalsService,
               private formBuilder: FormBuilder,
               private appValidators: AppValidatorsService,
               private versionsService: VersionsService,
@@ -25,7 +24,6 @@ export class AddVersionComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.globals.route = this.route;
     this.newVersionOfFile = this.formBuilder.group({
       versionString: ['', [Validators.required]],
       message: ['', [Validators.required]]
@@ -37,10 +35,6 @@ export class AddVersionComponent implements OnInit, OnDestroy {
       const nonExistingVersionString = this.appValidators.nonExistingVersionString(projectId, taskId, fileId);
       this.versionString.setAsyncValidators(nonExistingVersionString);
     });
-  }
-
-  ngOnDestroy() {
-    this.globals.route = null;
   }
 
   get versionString(): AbstractControl {

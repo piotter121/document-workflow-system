@@ -1,31 +1,25 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ProjectSummary} from '../project-summary';
 import {ProjectsService} from '../projects.service';
-import {GlobalsService} from '../../shared/globals.service';
 import {ActivatedRoute} from '@angular/router';
 import {ToastNotificationService} from '../../shared/toast-notification.service';
+import {RouteComponent} from "../../shared/route-component";
 
 @Component({
   selector: 'all-projects',
   templateUrl: './all-projects.component.html',
   styleUrls: ['./all-projects.component.css']
 })
-export class AllProjectsComponent implements OnInit, OnDestroy {
+export class AllProjectsComponent implements OnInit, RouteComponent {
   projects: ProjectSummary[] = [];
 
   constructor(private projectsService: ProjectsService,
-              private globals: GlobalsService,
-              private route: ActivatedRoute,
+              public route: ActivatedRoute,
               private toastNotification: ToastNotificationService) {
   }
 
   ngOnInit() {
-    this.globals.route = this.route;
     this.loadProjects();
-  }
-
-  ngOnDestroy() {
-    this.globals.route = null;
   }
 
   private loadProjects(): void {
