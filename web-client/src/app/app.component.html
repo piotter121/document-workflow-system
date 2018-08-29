@@ -1,4 +1,0 @@
-<app-navbar [activatedRoute]="routedComponent?.route" *ngIf="isLoggedIn$ | async"></app-navbar>
-<div class="container-fluid my-2">
-  <router-outlet (activate)="routedComponent = $event" (deactivate)="routedComponent = $event"></router-outlet>
-</div>
