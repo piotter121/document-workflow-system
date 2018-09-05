@@ -2,15 +2,13 @@ package pl.edu.pw.ee.pyskp.documentworkflow.controllers;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.FileMetadataDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.FileNotFoundException;
-import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.FilesMetadataService;
-
-import java.util.UUID;
 
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @RestController
@@ -21,29 +19,28 @@ public class FileOperationsController {
 
     @GetMapping
     @PreAuthorize("@securityService.hasAccessToTask(#projectId, #taskId)")
-    public FileMetadataDTO getFileInfo(@PathVariable UUID projectId, @PathVariable UUID fileId,
-                                       @PathVariable UUID taskId) throws FileNotFoundException {
-        return filesMetadataService.getFileMetadataDTO(taskId, fileId);
+    public FileMetadataDTO getFileInfo(@PathVariable ObjectId projectId, @PathVariable ObjectId fileId,
+                                       @PathVariable ObjectId taskId) throws FileNotFoundException {
+        return filesMetadataService.getFileMetadataDTO(fileId);
     }
 
     @DeleteMapping
-    @PreAuthorize("@securityService.isTaskAdministrator(#projectId, #taskId)")
-    public void deleteFile(@PathVariable UUID projectId, @PathVariable UUID taskId, @PathVariable UUID fileId)
-            throws ResourceNotFoundException {
-        filesMetadataService.deleteFile(projectId, taskId, fileId);
+    @PreAuthorize("@securityService.isTaskAdministrator(#taskId)")
+    public void deleteFile(@PathVariable ObjectId taskId, @PathVariable ObjectId fileId) {
+        filesMetadataService.deleteFile(fileId);
     }
 
     @PostMapping("/markToConfirm")
     @PreAuthorize("@securityService.hasAccessToTask(#projectId, #taskId)")
-    public void markFileToConfirm(@PathVariable UUID fileId, @PathVariable UUID projectId, @PathVariable UUID taskId)
+    public void markFileToConfirm(@PathVariable ObjectId fileId, @PathVariable ObjectId projectId,
+                                  @PathVariable ObjectId taskId)
             throws FileNotFoundException {
-        filesMetadataService.markFileToConfirm(taskId, fileId);
+        filesMetadataService.markFileToConfirm(fileId);
     }
 
     @PostMapping("/confirm")
-    @PreAuthorize("@securityService.isTaskAdministrator(#projectId, #taskId)")
-    public void confirm(@PathVariable UUID projectId, @PathVariable UUID taskId, @PathVariable UUID fileId)
-            throws FileNotFoundException {
-        filesMetadataService.confirmFile(taskId, fileId);
+    @PreAuthorize("@securityService.isTaskAdministrator(#taskId)")
+    public void confirm(@PathVariable ObjectId taskId, @PathVariable ObjectId fileId) throws FileNotFoundException {
+        filesMetadataService.confirmFile(fileId);
     }
 }

@@ -28,7 +28,7 @@ public class CorrectContentTypeValidator implements ConstraintValidator<CorrectC
     @Override
     public boolean isValid(NewVersionForm value, ConstraintValidatorContext context) {
         try {
-            return filesMetadataService.hasContentTypeAs(value.getTaskId(), value.getFileId(), value.getFile().getBytes());
+            return filesMetadataService.hasContentTypeAs(value.getFileId(), value.getFile().getBytes());
         } catch (FileNotFoundException | IOException e) {
             LOGGER.error("Exception occurred during checking content type", e);
             return false;

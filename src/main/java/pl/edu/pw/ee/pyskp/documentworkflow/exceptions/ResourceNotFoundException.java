@@ -6,7 +6,7 @@ import java.util.Map;
 
 @NoArgsConstructor
 public abstract class ResourceNotFoundException extends Exception {
-    ResourceNotFoundException(String message) {
+    protected ResourceNotFoundException(String message) {
         super(message);
     }
 

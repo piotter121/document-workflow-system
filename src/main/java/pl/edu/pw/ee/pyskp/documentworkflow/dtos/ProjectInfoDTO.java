@@ -1,12 +1,12 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.dtos;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.FileMetadata;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Project;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Task;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,29 +14,43 @@ import java.util.stream.Collectors;
 /**
  * Created by piotr on 29.12.16.
  */
-@NoArgsConstructor
 @Data
-@EqualsAndHashCode(of = {"id"})
 public class ProjectInfoDTO {
-    private String id;
-    private String name = "";
-    private String description = "";
-    private UserInfoDTO administrator;
-    private Date creationDate;
-    private Date lastModified;
-    private List<TaskSummaryDTO> tasks = new ArrayList<>();
+    @NonNull
+    private final String id;
 
-    public ProjectInfoDTO(Project project, List<Task> projectTasks) {
-        id = project.getId().toString();
-        name = project.getName();
-        description = project.getDescription();
-        administrator = new UserInfoDTO(project.getAdministrator());
-        creationDate = project.getCreationDate();
-        tasks = projectTasks.stream().map(TaskSummaryDTO::new).collect(Collectors.toList());
-        tasks.stream()
-                .filter(task -> task.getLastModifiedFile() != null)
-                .map(task -> task.getLastModifiedFile().getSaveDate())
-                .max(Date::compareTo)
-                .ifPresent(this::setLastModified);
+    @NonNull
+    private final String name;
+
+    private final String description;
+
+    @NonNull
+    private final UserInfoDTO administrator;
+
+    @NonNull
+    private final Date creationDate;
+
+    private final Date lastModified;
+
+    private final List<TaskSummaryDTO> tasks;
+
+    public static ProjectInfoDTO fromProjectAndTasks(Project project, Collection<Task> tasks) {
+        Date lastModified = null;
+        FileMetadata lastModifiedFile = project.getLastModifiedFile();
+        if (lastModifiedFile != null) {
+            lastModified = lastModifiedFile.getLatestVersion().getSaveDate();
+        }
+        List<TaskSummaryDTO> taskSummaryDTOS = tasks.stream()
+                .map(TaskSummaryDTO::fromTask)
+                .collect(Collectors.toList());
+        return new ProjectInfoDTO(
+                project.getId().toString(),
+                project.getName(),
+                project.getDescription(),
+                UserInfoDTO.fromUser(project.getAdministrator()),
+                project.getCreationDate(),
+                lastModified,
+                taskSummaryDTOS
+        );
     }
 }

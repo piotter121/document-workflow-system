@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -29,10 +28,10 @@ public class DifferenceServiceImpl implements DifferenceService {
         Chunk<String> original = delta.getOriginal();
         Chunk<String> revised = delta.getRevised();
         Difference difference = new Difference();
-        difference.setPreviousSectionStart(original.getPosition());
-        difference.setPreviousSectionSize(original.size());
-        difference.setNewSectionStart(revised.getPosition());
-        difference.setNewSectionSize(revised.size());
+        difference.setPreviousSectionStart((long) original.getPosition());
+        difference.setPreviousSectionSize((long) original.size());
+        difference.setNewSectionStart((long) revised.getPosition());
+        difference.setNewSectionSize((long) revised.size());
         DifferenceType differenceType = DifferenceType.fromDeltaType(delta.getType())
                 .orElseThrow(() -> new IllegalArgumentException("Delta type is null"));
         difference.setDifferenceType(differenceType);
@@ -40,21 +39,21 @@ public class DifferenceServiceImpl implements DifferenceService {
     }
 
     @Override
-    public Set<Difference> createDifferencesForNewFile(InputStream inputStream) throws IOException {
+    public List<Difference> createDifferencesForNewFile(InputStream inputStream) throws IOException {
         List<String> lines = tikaUtils.extractLines(inputStream);
         Patch<String> diff = DiffUtils.diff(Collections.emptyList(), lines);
         return diff.getDeltas().stream()
                 .map(this::mapDeltaToDifference)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Set<Difference> getDifferencesBetweenTwoFiles(
-            InputStream inputStream, InputStream anotherInputStream) throws IOException {
+    public List<Difference> getDifferencesBetweenTwoFiles(InputStream inputStream, InputStream anotherInputStream)
+            throws IOException {
         Patch<String> diff =
                 DiffUtils.diff(tikaUtils.extractLines(inputStream), tikaUtils.extractLines(anotherInputStream));
         return diff.getDeltas().stream()
                 .map(this::mapDeltaToDifference)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 }

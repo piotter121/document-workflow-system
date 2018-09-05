@@ -12,9 +12,9 @@ import java.util.Map;
 public class VersionNotFoundException extends ResourceNotFoundException {
     private String versionId = "";
 
-    public VersionNotFoundException(long versionId) {
-        super(String.format("Version with id = %d could not be found", versionId));
-        this.versionId = String.valueOf(versionId);
+    public VersionNotFoundException(String versionId) {
+        super(String.format("Version with id = %s could not be found", versionId));
+        this.versionId = versionId;
     }
 
     @Override

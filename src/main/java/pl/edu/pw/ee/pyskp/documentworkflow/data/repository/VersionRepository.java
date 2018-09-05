@@ -1,30 +1,35 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.data.repository;
 
-import org.springframework.data.cassandra.repository.CassandraRepository;
-import org.springframework.data.cassandra.repository.Query;
-import org.springframework.data.repository.query.Param;
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.FileMetadata;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Task;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Version;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by piotr on 06.01.17.
  */
-public interface VersionRepository extends CassandraRepository<Version> {
-    @Query("delete from version where file_id in (:files)")
-    void deleteAllByFileIdIn(@Param("files") Collection<UUID> filesIds);
+public interface VersionRepository extends MongoRepository<Version, ObjectId> {
+    void deleteByFile_Task_Id(ObjectId taskId);
 
-    @Query("delete from version where file_id = :file_id")
-    void deleteAllByFileId(@Param("file_id") UUID fileId);
+    void deleteByFile(FileMetadata file);
 
-    Optional<Version> findOneByFileIdAndSaveDate(UUID fileId, Date saveDate);
+    List<Version> findByFile(FileMetadata file);
 
-    List<Version> findAllByFileId(UUID fileId);
+    Integer countByFile(FileMetadata file);
 
-    @Query("select * from version where file_id = :file_id and save_date <= :save_date order by save_date desc limit 2")
-    List<Version> findTop2ByFileIdAndSaveDateLessThanEqualOrderBySaveDateDesc(@Param("file_id") UUID fileId,
-                                                                              @Param("save_date") Date saveDate);
+    List<Version> findByFile_IdAndSaveDateLessThanEqualOrderBySaveDateDesc(ObjectId fileId, Date saveDate);
 
-    @Query("select * from version where file_id = :file_id order by save_date desc limit 1")
-    Optional<Version> findTopByFileIdOrderBySaveDateDesc(@Param("file_id") UUID fileId);
+    void deleteByFileIn(List<FileMetadata> files);
+
+    Optional<Version> findOneByFile_IdAndSaveDate(ObjectId fileId, Date saveDate);
+
+    Optional<Version> findTopByFileOrderBySaveDateDesc(FileMetadata fileMetadata);
+
+    Collection<Version> findByFile_Id(ObjectId fileId);
 }

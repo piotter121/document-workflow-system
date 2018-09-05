@@ -1,33 +1,30 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.dtos;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Task;
 
 import java.util.Date;
 
-@NoArgsConstructor
+@SuppressWarnings("WeakerAccess")
 @Data
-@EqualsAndHashCode(of = "id")
 public class TaskSummaryDTO {
-    private String id;
-
-    private String name;
-
-    private Date creationDate;
-
+    private final String id;
+    private final String name;
+    private final Date creationDate;
     private FileSummaryDTO lastModifiedFile;
+    private final Integer numberOfFiles, numberOfParticipants;
 
-    private long numberOfFiles, numberOfParticipants;
-
-    public TaskSummaryDTO(Task task) {
-        id = task.getTaskId().toString();
-        name = task.getName();
-        creationDate = task.getCreationDate();
-        if (task.getLastModifiedFile() != null)
-            lastModifiedFile = new FileSummaryDTO(task.getLastModifiedFile());
-        numberOfFiles = task.getNumberOfFiles();
-        numberOfParticipants = task.getParticipants().size();
+    public static TaskSummaryDTO fromTask(Task task) {
+        TaskSummaryDTO dto = new TaskSummaryDTO(
+                task.getId().toString(),
+                task.getName(),
+                task.getCreationDate(),
+                task.getNumberOfFiles(),
+                task.getParticipants().size()
+        );
+        if (task.getLastModifiedFile() != null) {
+            dto.setLastModifiedFile(FileSummaryDTO.fromFileMetadata(task.getLastModifiedFile()));
+        }
+        return dto;
     }
 }

@@ -1,32 +1,54 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.dtos;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.UserProject;
+import lombok.NonNull;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.FileMetadata;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Project;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Version;
 
 import java.util.Date;
 
-@NoArgsConstructor
 @Data
-@EqualsAndHashCode(of = "id")
 public class ProjectSummaryDTO {
-    private String id;
-    private String name;
-    private Date creationDate;
-    private FileSummaryDTO lastModifiedFile;
-    private long numberOfParticipants;
-    private long numberOfTasks;
-    private long numberOfFiles;
+    @NonNull
+    private final String id;
 
-    public ProjectSummaryDTO(UserProject userProject) {
-        id = userProject.getProjectId().toString();
-        name = userProject.getName();
-        creationDate = userProject.getCreationDate();
-        if (userProject.getLastModifiedFile() != null)
-            lastModifiedFile = new FileSummaryDTO(userProject.getLastModifiedFile());
-        numberOfParticipants = userProject.getNumberOfParticipants();
-        numberOfTasks = userProject.getNumberOfTasks();
-        numberOfFiles = userProject.getNumberOfFiles();
+    @NonNull
+    private final String name;
+
+    @NonNull
+    private final Date creationDate;
+
+    @NonNull
+    private final Integer numberOfParticipants;
+
+    @NonNull
+    private final Integer numberOfTasks;
+
+    @NonNull
+    private final Integer numberOfFiles;
+
+    private FileSummaryDTO lastModifiedFile;
+
+    public static ProjectSummaryDTO fromProject(Project project) {
+        ProjectSummaryDTO dto = new ProjectSummaryDTO(
+                project.getId().toString(),
+                project.getName(),
+                project.getCreationDate(),
+                project.getNumberOfParticipants(),
+                project.getNumberOfTasks(),
+                project.getNumberOfFiles()
+        );
+        FileMetadata lastModifiedFile = project.getLastModifiedFile();
+        if (lastModifiedFile != null) {
+            Version lastModifiedFileLatestVersion = lastModifiedFile.getLatestVersion();
+            dto.setLastModifiedFile(new FileSummaryDTO(
+                    lastModifiedFile.getName(),
+                    lastModifiedFileLatestVersion.getSaveDate(),
+                    lastModifiedFileLatestVersion.getAuthor().getFullName(),
+                    lastModifiedFile.getTask().getName()
+            ));
+        }
+        return dto;
     }
 }

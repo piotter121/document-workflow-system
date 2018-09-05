@@ -2,6 +2,7 @@ package pl.edu.pw.ee.pyskp.documentworkflow.controllers;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +13,6 @@ import pl.edu.pw.ee.pyskp.documentworkflow.services.TaskService;
 import javax.validation.Valid;
 import java.util.Collections;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Created by p.pysk on 02.01.2017.
@@ -26,16 +26,16 @@ public class TasksController {
 
     @GetMapping("/exists")
     @PreAuthorize("@securityService.hasAccessToProject(#projectId)")
-    public boolean existsByName(@PathVariable UUID projectId, @RequestParam String taskName) {
+    public boolean existsByName(@PathVariable ObjectId projectId, @RequestParam String taskName) {
         return taskService.existsByName(projectId, taskName);
     }
 
     @PostMapping
     @PreAuthorize("@securityService.canAddTask(#projectId)")
-    public Map<String, String> processNewTaskForm(@PathVariable UUID projectId,
+    public Map<String, String> processNewTaskForm(@PathVariable ObjectId projectId,
                                                   @RequestBody @Valid NewTaskForm newTask)
             throws ResourceNotFoundException {
-        UUID taskId = taskService.createTaskFromForm(newTask, projectId);
+        ObjectId taskId = taskService.createTaskFromForm(newTask, projectId);
         return Collections.singletonMap("taskId", taskId.toString());
     }
 }

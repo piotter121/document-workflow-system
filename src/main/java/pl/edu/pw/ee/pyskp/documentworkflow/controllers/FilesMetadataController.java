@@ -2,6 +2,7 @@ package pl.edu.pw.ee.pyskp.documentworkflow.controllers;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -11,8 +12,6 @@ import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewFileForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.UnknownContentType;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.FilesMetadataService;
-
-import java.util.UUID;
 
 /**
  * Created by piotr on 04.01.17.
@@ -30,11 +29,11 @@ public class FilesMetadataController {
                                      @RequestPart(name = "description", required = false) String description,
                                      @RequestPart(name = "file") MultipartFile file,
                                      @RequestPart(name = "versionString") String versionString,
-                                     @PathVariable UUID taskId,
-                                     @PathVariable UUID projectId)
+                                     @PathVariable ObjectId taskId,
+                                     @PathVariable ObjectId projectId)
             throws UnknownContentType, ResourceNotFoundException {
         NewFileForm newFileForm = new NewFileForm(name, description, file, versionString);
-        UUID fileId = filesMetadataService.createNewFileFromForm(newFileForm, projectId, taskId);
+        ObjectId fileId = filesMetadataService.createNewFileFromForm(newFileForm, projectId, taskId);
         return fileId.toString();
     }
 }

@@ -2,6 +2,7 @@ package pl.edu.pw.ee.pyskp.documentworkflow.controllers;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -41,29 +42,30 @@ public class VersionController {
     @GetMapping("/{versionSaveDateMillis}")
     @PreAuthorize("@securityService.hasAccessToTask(#projectId, #taskId)")
     public VersionInfoDTO getVersionInfo(@PathVariable long versionSaveDateMillis,
-                                         @PathVariable UUID fileId,
-                                         @PathVariable UUID taskId,
-                                         @PathVariable UUID projectId) throws VersionNotFoundException {
+                                         @PathVariable ObjectId fileId,
+                                         @PathVariable ObjectId taskId,
+                                         @PathVariable ObjectId projectId) throws VersionNotFoundException {
         return versionService.getVersionInfo(fileId, versionSaveDateMillis);
     }
 
     @GetMapping("/{versionSaveDateMillis}/diffData")
     @PreAuthorize("@securityService.hasAccessToTask(#projectId, #taskId)")
-    public DiffData getDiffData(@PathVariable UUID projectId, @PathVariable UUID taskId, @PathVariable UUID fileId,
-                                @PathVariable long versionSaveDateMillis) throws VersionNotFoundException {
+    public DiffData getDiffData(@PathVariable ObjectId projectId, @PathVariable ObjectId taskId,
+                                @PathVariable ObjectId fileId, @PathVariable long versionSaveDateMillis)
+            throws VersionNotFoundException {
         return versionService.buildDiffData(fileId, versionSaveDateMillis);
     }
 
     @GetMapping("/{versionSaveDate}/content")
     @PreAuthorize("@securityService.hasAccessToTask(#projectId, #taskId)")
-    public ResponseEntity<InputStreamResource>
-    getVersionContent(@PathVariable long versionSaveDate, @PathVariable UUID projectId, @PathVariable UUID taskId,
-                      @PathVariable UUID fileId)
-            throws ResourceNotFoundException {
+    public ResponseEntity<InputStreamResource> getVersionContent(
+            @PathVariable long versionSaveDate, @PathVariable ObjectId projectId,
+            @PathVariable ObjectId taskId, @PathVariable ObjectId fileId
+    ) throws ResourceNotFoundException {
         InputStream fileContent = versionService.getVersionFileContent(fileId, new Date(versionSaveDate));
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        httpHeaders.setContentDispositionFormData("attachment", filesMetadataService.getFileName(taskId, fileId));
+        httpHeaders.setContentDispositionFormData("attachment", filesMetadataService.getFileName(fileId));
         return ResponseEntity.ok()
                 .headers(httpHeaders)
                 .body(new InputStreamResource(fileContent));
@@ -71,16 +73,16 @@ public class VersionController {
 
     @GetMapping("/exists")
     @PreAuthorize("@securityService.hasAccessToTask(#projectId, #taskId)")
-    public boolean exists(@PathVariable UUID projectId, @PathVariable UUID taskId, @PathVariable UUID fileId,
-                          @RequestParam String versionString) {
+    public boolean exists(@PathVariable ObjectId projectId, @PathVariable ObjectId taskId,
+                          @PathVariable ObjectId fileId, @RequestParam String versionString) {
         return versionService.existsByVersionString(fileId, versionString);
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("@securityService.hasAccessToTask(#projectId, #taskId)")
-    public long processAddingNewVersion(@PathVariable UUID taskId,
-                                        @PathVariable UUID projectId,
-                                        @PathVariable UUID fileId,
+    public long processAddingNewVersion(@PathVariable ObjectId taskId,
+                                        @PathVariable ObjectId projectId,
+                                        @PathVariable ObjectId fileId,
                                         @RequestPart("file") @NotNull MultipartFile file,
                                         @RequestPart("versionString") @NotBlank String versionString,
                                         @RequestPart("message") @NotBlank String message)

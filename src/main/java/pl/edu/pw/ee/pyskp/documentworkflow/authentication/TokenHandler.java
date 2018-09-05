@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.User;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
 
+@SuppressWarnings("WeakerAccess")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Service
 public class TokenHandler {
@@ -23,7 +24,6 @@ public class TokenHandler {
 
     private final JwtBuilder jwtBuilder = Jwts.builder().signWith(SignatureAlgorithm.HS512, secret);
 
-    @SuppressWarnings("WeakerAccess")
     public UserAuthentication parseAuthenticationFromToken(String token) {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
@@ -36,7 +36,6 @@ public class TokenHandler {
         }
     }
 
-    @SuppressWarnings("WeakerAccess")
     public String createTokenForUser(UserAuthentication user) {
         Claims claims = Jwts.claims().setSubject(user.getPrincipal())
                 .setExpiration(DateTime.now().plusHours(DEFAULT_EXPIRATION_HOURS).toDate());

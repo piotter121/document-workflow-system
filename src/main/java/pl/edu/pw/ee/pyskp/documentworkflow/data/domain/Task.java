@@ -1,64 +1,42 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.data.domain;
 
-import com.datastax.driver.core.DataType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.springframework.cassandra.core.PrimaryKeyType;
-import org.springframework.data.annotation.Transient;
-import org.springframework.data.cassandra.mapping.CassandraType;
-import org.springframework.data.cassandra.mapping.Column;
-import org.springframework.data.cassandra.mapping.PrimaryKeyColumn;
-import org.springframework.data.cassandra.mapping.Table;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by piotr on 11.12.16.
  */
 @Data
-@EqualsAndHashCode(of = {"projectId", "taskId"})
-@Table("task")
+@EqualsAndHashCode(of = "id")
+@Document
 public class Task {
-    @CassandraType(type = DataType.Name.UUID)
-    @PrimaryKeyColumn(name = "project_id", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
-    private UUID projectId;
+    @Id
+    private ObjectId id;
 
-    @CassandraType(type = DataType.Name.UUID)
-    @PrimaryKeyColumn(name = "task_id", ordinal = 1)
-    private UUID taskId = UUID.randomUUID();
+    @DBRef(lazy = true)
+    @Indexed
+    private Project project;
 
-    @Column("name")
-    private String name;
+    private String name, description;
 
-    @Column("description")
-    private String description;
+    private Date creationDate;
 
-    @Column("creation_date")
-    private Date creationDate = new Date();
+    @DBRef
+    private User administrator;
 
-    @Column("administrator")
-    private UserSummary administrator;
+    @DBRef
+    private List<User> participants;
 
-    @Column("participants")
-    private Set<UserSummary> participants = new HashSet<>();
+    @DBRef
+    private FileMetadata lastModifiedFile;
 
-    @Column("last_modified_file")
-    private FileSummary lastModifiedFile;
-
-    @Column("number_of_files")
-    private long numberOfFiles = 0;
-
-    @Transient
-    public Date getModificationDate() {
-        return lastModifiedFile == null ? creationDate : lastModifiedFile.getModificationDate();
-    }
-
-    @Transient
-    public void incrementNumberOfFiles() {
-        numberOfFiles++;
-    }
-
-    public Set<UserSummary> getParticipants() {
-        return participants == null ? Collections.emptySet() : participants;
-    }
+    private Integer numberOfFiles;
 }

@@ -1,50 +1,43 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.data.domain;
 
-import com.datastax.driver.core.DataType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.springframework.cassandra.core.Ordering;
-import org.springframework.cassandra.core.PrimaryKeyType;
-import org.springframework.data.cassandra.mapping.CassandraType;
-import org.springframework.data.cassandra.mapping.Column;
-import org.springframework.data.cassandra.mapping.PrimaryKeyColumn;
-import org.springframework.data.cassandra.mapping.Table;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.IndexDirection;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.nio.ByteBuffer;
 import java.util.Date;
-import java.util.Set;
-import java.util.UUID;
+import java.util.List;
 
 /**
  * Created by piotr on 11.12.16.
  */
 @Data
-@EqualsAndHashCode(of = {"fileId", "saveDate"})
-@Table("version")
+@EqualsAndHashCode(of = "id")
+@Document
 public class Version {
-    @CassandraType(type = DataType.Name.UUID)
-    @PrimaryKeyColumn(name = "file_id", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
-    private UUID fileId;
+    @Id
+    private ObjectId id;
 
-    @PrimaryKeyColumn(name = "save_date", ordinal = 1, type = PrimaryKeyType.CLUSTERED, ordering = Ordering.DESCENDING)
+    @DBRef(lazy = true)
+    private FileMetadata file;
+
+    @Indexed(direction = IndexDirection.DESCENDING)
     private Date saveDate;
 
-    @Column("version_string")
     private String versionString;
 
-    @Column("message")
     private String message;
 
-    @Column("author")
-    private UserSummary author;
+    @DBRef
+    private User author;
 
-    @Column("file_content")
-    @CassandraType(type = DataType.Name.BLOB)
-    private ByteBuffer fileContent;
+    private byte[] fileContent;
 
-    @Column("check_sum")
     private String checkSum;
 
-    @Column("differences")
-    private Set<Difference> differences;
+    private List<Difference> differences;
 }

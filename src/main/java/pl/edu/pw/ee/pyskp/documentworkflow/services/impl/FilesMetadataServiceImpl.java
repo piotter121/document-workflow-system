@@ -3,27 +3,38 @@ package pl.edu.pw.ee.pyskp.documentworkflow.services.impl;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.tika.Tika;
+import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.*;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.ContentType;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.FileMetadata;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Task;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Version;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.FileMetadataRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.TaskRepository;
-import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.UserProjectRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.VersionRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.FileMetadataDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewFileForm;
-import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.*;
+import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.FileNotFoundException;
+import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
+import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.TaskNotFoundException;
+import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.UnknownContentType;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.FilesMetadataService;
-import pl.edu.pw.ee.pyskp.documentworkflow.services.TaskService;
-import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.VersionService;
+import pl.edu.pw.ee.pyskp.documentworkflow.services.events.FileCreatedEvent;
+import pl.edu.pw.ee.pyskp.documentworkflow.services.events.FileDeletedEvent;
+import pl.edu.pw.ee.pyskp.documentworkflow.services.events.VersionCreatedEvent;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 
 /**
  * Created by piotr on 06.01.17.
@@ -46,13 +57,7 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
     private final TaskRepository taskRepository;
 
     @NonNull
-    private final UserProjectRepository userProjectRepository;
-
-    @NonNull
-    private final UserService userService;
-
-    @NonNull
-    private final TaskService taskService;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     private static ContentType getContentType(byte[] file)
             throws UnknownContentType {
@@ -63,100 +68,112 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public UUID createNewFileFromForm(NewFileForm formData, final UUID projectId, final UUID taskID)
+    @Transactional(rollbackFor = {UnknownContentType.class, ResourceNotFoundException.class})
+    public ObjectId createNewFileFromForm(NewFileForm formData, ObjectId projectId, ObjectId taskId)
             throws UnknownContentType, ResourceNotFoundException {
-        Task task = taskRepository.findTaskByProjectIdAndTaskId(projectId, taskID)
-                .orElseThrow(() -> new TaskNotFoundException(taskID));
-        FileMetadata fileMetadata = new FileMetadata();
-        fileMetadata.setName(formData.getName());
-        fileMetadata.setDescription(formData.getDescription());
-        fileMetadata.setConfirmed(false);
-        fileMetadata.setMarkedToConfirm(false);
-        fileMetadata.setTaskId(taskID);
+        Task task = taskRepository.findOne(taskId);
+        if (task == null) {
+            throw new TaskNotFoundException(taskId.toString());
+        }
+
+        FileMetadata newFile = new FileMetadata();
+        newFile.setTask(task);
+        newFile.setName(formData.getName());
+        newFile.setDescription(formData.getDescription());
+        newFile.setConfirmed(false);
+        newFile.setMarkedToConfirm(false);
+        newFile.setCreationDate(new Date());
         try {
-            fileMetadata.setContentType(getContentType(formData.getFile().getBytes()));
+            newFile.setContentType(getContentType(formData.getFile().getBytes()));
         } catch (IOException e) {
             LOGGER.error("Input/output exception occurred during getBytes method", e);
             throw new RuntimeException(e);
         }
-        fileMetadata.setTaskName(task.getName());
-        Version initVersion = versionService.createUnmanagedInitVersionOfFile(formData);
-        fileMetadata.setLatestVersion(new VersionSummary(initVersion));
-        fileMetadata = fileMetadataRepository.save(fileMetadata);
-        UUID fileId = fileMetadata.getFileId();
+        newFile = fileMetadataRepository.save(newFile);
 
-        initVersion.setFileId(fileId);
-        versionRepository.save(initVersion);
+        Version initVersion = versionService.createInitVersionOfFile(formData);
+        initVersion.setFile(newFile);
+        initVersion = versionRepository.save(initVersion);
 
-        task.setLastModifiedFile(new FileSummary(fileMetadata));
-        task.incrementNumberOfFiles();
-        task = taskRepository.save(task);
+        newFile.setLatestVersion(initVersion);
+        newFile.setNumberOfVersions(1);
+        fileMetadataRepository.save(newFile);
 
-        String currentUserEmail = userService.getCurrentUserEmail();
-        UserProject userProject =
-                userProjectRepository.findUserProjectByUserEmailAndProjectId(currentUserEmail, projectId)
-                        .orElseThrow(() -> new ProjectNotFoundException(projectId));
-        userProject.setLastModifiedFile(task.getLastModifiedFile());
-        userProject.incrementNumberOfFiles();
-        userProjectRepository.save(userProject);
+        applicationEventPublisher.publishEvent(new FileCreatedEvent(this, newFile));
 
-        return fileId;
+        return newFile.getId();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public FileMetadataDTO getFileMetadataDTO(UUID taskId, UUID fileId) throws FileNotFoundException {
-        FileMetadata fileMetadata = fileMetadataRepository.findOneByTaskIdAndFileId(taskId, fileId)
-                .orElseThrow(() -> new FileNotFoundException(fileId));
-        List<Version> versions = versionRepository.findAllByFileId(fileId);
-        return new FileMetadataDTO(fileMetadata, versions);
+    public FileMetadataDTO getFileMetadataDTO(ObjectId fileId) throws FileNotFoundException {
+        FileMetadata fileMetadata = getFileMetadata(fileId);
+        List<Version> versions = versionRepository.findByFile(fileMetadata);
+        return FileMetadataDTO.fromFileMetadataAndVersions(fileMetadata, versions);
+    }
+
+    private FileMetadata getFileMetadata(ObjectId fileId) throws FileNotFoundException {
+        FileMetadata fileMetadata = fileMetadataRepository.findOne(fileId);
+        if (fileMetadata == null) {
+            throw new FileNotFoundException(fileId.toString());
+        }
+        return fileMetadata;
     }
 
     @Override
     @Transactional(rollbackFor = FileNotFoundException.class)
-    public void markFileToConfirm(UUID taskId, UUID fileId) throws FileNotFoundException {
-        FileMetadata file = fileMetadataRepository.findOneByTaskIdAndFileId(taskId, fileId)
-                .orElseThrow(() -> new FileNotFoundException(fileId));
+    public void markFileToConfirm(ObjectId fileId) throws FileNotFoundException {
+        FileMetadata file = getFileMetadata(fileId);
         file.setMarkedToConfirm(true);
         fileMetadataRepository.save(file);
     }
 
     @Override
-    public boolean hasContentTypeAs(UUID taskId, UUID fileId, byte[] file) throws FileNotFoundException {
-        FileMetadata fileMetadata = fileMetadataRepository.findOneByTaskIdAndFileId(taskId, fileId)
-                .orElseThrow(() -> new FileNotFoundException(fileId));
-        ContentType contentType;
+    public boolean hasContentTypeAs(ObjectId fileId, byte[] file) throws FileNotFoundException {
         try {
-            contentType = getContentType(file);
+            FileMetadata fileMetadata = getFileMetadata(fileId);
+            return getContentType(file).equals(fileMetadata.getContentType());
         } catch (UnknownContentType e) {
             LOGGER.error(e.getLocalizedMessage(), e);
             return false;
         }
-        return contentType.equals(fileMetadata.getContentType());
     }
 
     @Override
     @Transactional(rollbackFor = FileNotFoundException.class)
-    public void confirmFile(UUID taskId, UUID fileId) throws FileNotFoundException {
-        FileMetadata fileToConfirm = fileMetadataRepository.findOneByTaskIdAndFileId(taskId, fileId)
-                .orElseThrow(() -> new FileNotFoundException(fileId));
+    public void confirmFile(ObjectId fileId) throws FileNotFoundException {
+        FileMetadata fileToConfirm = getFileMetadata(fileId);
         fileToConfirm.setConfirmed(true);
         fileMetadataRepository.save(fileToConfirm);
     }
 
     @Override
     @Transactional(rollbackFor = ResourceNotFoundException.class)
-    public void deleteFile(UUID projectId, UUID taskId, UUID fileId) throws ResourceNotFoundException {
-        versionRepository.deleteAllByFileId(fileId);
-        fileMetadataRepository.deleteFileMetadataByTaskIdAndFileId(taskId, fileId);
-        taskService.updateTaskStatistic(projectId, taskId);
+    public void deleteFile(ObjectId fileId) {
+        FileMetadata fileToDelete = fileMetadataRepository.findOne(fileId);
+        versionRepository.deleteByFile(fileToDelete);
+        fileMetadataRepository.delete(fileToDelete);
+
+        applicationEventPublisher.publishEvent(new FileDeletedEvent(this, fileToDelete));
     }
 
     @Override
-    public String getFileName(UUID taskId, UUID fileId) throws FileNotFoundException {
-        return fileMetadataRepository.findOneByTaskIdAndFileId(taskId, fileId)
+    public String getFileName(ObjectId fileId) throws FileNotFoundException {
+        return Optional.ofNullable(fileMetadataRepository.findOne(fileId))
                 .map(metadata -> metadata.getName() + "." + metadata.getContentType().getExtension())
-                .orElseThrow(() -> new FileNotFoundException(fileId));
+                .orElseThrow(() -> new FileNotFoundException(fileId.toString()));
+    }
+
+    @Override
+    @Transactional
+    @EventListener
+    @Order(1)
+    public void processVersionCreatedEvent(VersionCreatedEvent event) {
+        Version createdVersion = event.getCreatedVersion();
+        FileMetadata modifiedFile = event.getModifiedFile();
+        modifiedFile.setLatestVersion(createdVersion);
+        Integer numberOfVersions = versionRepository.countByFile(modifiedFile);
+        modifiedFile.setNumberOfVersions(numberOfVersions);
+        fileMetadataRepository.save(modifiedFile);
     }
 }

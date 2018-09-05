@@ -48,6 +48,6 @@ public class UserAuthentication implements Authentication {
 
     @Override
     public String getName() {
-        return user.getFirstName() + " " + user.getLastName();
+        return user.getFullName();
     }
 }

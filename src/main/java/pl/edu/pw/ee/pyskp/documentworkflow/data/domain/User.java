@@ -1,33 +1,34 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.data.domain;
 
-import com.datastax.driver.core.DataType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.springframework.data.cassandra.mapping.CassandraType;
-import org.springframework.data.cassandra.mapping.Column;
-import org.springframework.data.cassandra.mapping.PrimaryKey;
-import org.springframework.data.cassandra.mapping.Table;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * Created by piotr on 11.12.16.
  */
 @Data
 @EqualsAndHashCode(of = "email")
-@Table("user")
+@Document
 public class User {
-    @PrimaryKey("email")
-    @CassandraType(type = DataType.Name.TEXT)
+    @Id
+    private ObjectId id;
+
+    @Indexed(unique = true)
     private String email;
 
-    @Column("password")
-    @CassandraType(type = DataType.Name.TEXT)
     private String password;
 
-    @Column("first_name")
-    @CassandraType(type = DataType.Name.TEXT)
     private String firstName;
 
-    @Column("last_name")
-    @CassandraType(type = DataType.Name.TEXT)
     private String lastName;
+
+    @Transient
+    public String getFullName() {
+        return firstName.concat(" ").concat(lastName);
+    }
 }

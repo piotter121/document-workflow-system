@@ -81,8 +81,7 @@ public class RestErrorHandler {
     @ResponseBody
     public ErrorMessageDTO handleNotFoundException(ResourceNotFoundException ex) {
         LOGGER.error("Processing resource not found exception", ex);
-        ErrorMessageDTO errorMessage = new ErrorMessageDTO();
-        errorMessage.setErrorCode(ex.getClass().getSimpleName());
+        ErrorMessageDTO errorMessage = new ErrorMessageDTO(ex.getClass().getSimpleName());
         errorMessage.setParams(ex.getMessageParams());
         return errorMessage;
     }
@@ -92,9 +91,7 @@ public class RestErrorHandler {
     @ResponseBody
     public ErrorMessageDTO handleUnknownContentType(UnknownContentType ex) {
         LOGGER.error(ex.getLocalizedMessage(), ex);
-        ErrorMessageDTO errorMessage = new ErrorMessageDTO();
-        errorMessage.setErrorCode(ex.getClass().getSimpleName());
-        return errorMessage;
+        return new ErrorMessageDTO(ex.getClass().getSimpleName());
     }
 
     @ExceptionHandler(AccessDeniedException.class)
@@ -102,8 +99,6 @@ public class RestErrorHandler {
     @ResponseBody
     public ErrorMessageDTO handleAccessDeniedException(AccessDeniedException ex) {
         LOGGER.error("Processing access denied exception", ex);
-        ErrorMessageDTO errorMessage = new ErrorMessageDTO();
-        errorMessage.setErrorCode(ex.getClass().getSimpleName());
-        return errorMessage;
+        return new ErrorMessageDTO(ex.getClass().getSimpleName());
     }
 }

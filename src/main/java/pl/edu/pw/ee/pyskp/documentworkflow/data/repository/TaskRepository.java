@@ -1,25 +1,19 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.data.repository;
 
-import org.springframework.data.cassandra.repository.CassandraRepository;
-import org.springframework.data.cassandra.repository.Query;
-import org.springframework.data.repository.query.Param;
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Project;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Task;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 /**
  * Created by piotr on 13.12.16.
  */
-public interface TaskRepository extends CassandraRepository<Task> {
-    List<Task> findAllByProjectId(UUID projectId);
+public interface TaskRepository extends MongoRepository<Task, ObjectId> {
+    List<Task> findByProject(Project project);
 
-    Optional<Task> findTaskByProjectIdAndTaskId(UUID projectId, UUID taskId);
+    List<Task> findByParticipants_EmailContainingOrAdministrator_Email(String participantEmail, String adminEmail);
 
-    @Query("delete from task where project_id = :project_id")
-    void deleteAllByProjectId(@Param("project_id") UUID projectId);
-
-    @Query("delete from task where project_id = :project_id and task_id = :task_id")
-    void deleteTaskByProjectIdAndTaskId(@Param("project_id") UUID projectId, @Param("task_id") UUID taskId);
+    List<Task> findByProject_Id(ObjectId projectId);
 }

@@ -2,16 +2,27 @@ package pl.edu.pw.ee.pyskp.documentworkflow.services.impl;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
-import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.*;
-import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.*;
+import org.springframework.transaction.annotation.Transactional;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.FileMetadata;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Project;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Task;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.User;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.FileMetadataRepository;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.ProjectRepository;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.TaskRepository;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.VersionRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewProjectForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.ProjectInfoDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.ProjectSummaryDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ProjectNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.ProjectService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
+import pl.edu.pw.ee.pyskp.documentworkflow.services.events.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -33,132 +44,193 @@ public class ProjectServiceImpl implements ProjectService {
     private final TaskRepository taskRepository;
 
     @NonNull
-    private final UserProjectRepository userProjectRepository;
-
-    @NonNull
     private final FileMetadataRepository fileMetadataRepository;
 
     @NonNull
     private final VersionRepository versionRepository;
 
-    @NonNull
-    private final UserRepository userRepository;
-
     @Override
     public List<ProjectSummaryDTO> getUserParticipatedProjects(String userEmail) {
-        Stream<UserProject> userProjects = userProjectRepository.findAllByUserEmail(userEmail);
-        return userProjects.map(ProjectSummaryDTO::new).collect(Collectors.toList());
+        List<Project> administratedProjects = projectRepository.findByAdministrator_Email(userEmail);
+        Set<Project> userProjects = new HashSet<>(administratedProjects);
+
+        List<Task> participatedTasks =
+                taskRepository.findByParticipants_EmailContainingOrAdministrator_Email(userEmail, userEmail);
+        List<Project> participatedProjects = participatedTasks.stream()
+                .map(Task::getProject)
+                .distinct()
+                .collect(Collectors.toList());
+        userProjects.addAll(participatedProjects);
+
+        return userProjects.stream()
+                .map(ProjectSummaryDTO::fromProject)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public UUID createNewProjectFromForm(NewProjectForm formDTO) {
+    @Transactional
+    public ObjectId createNewProjectFromForm(NewProjectForm formDTO) {
         User currentUser = userService.getCurrentUser();
         Project project = new Project();
         project.setName(formDTO.getName().trim());
         project.setDescription(formDTO.getDescription().trim());
-        project.setAdministrator(new UserSummary(currentUser));
+        project.setAdministrator(currentUser);
         project.setCreationDate(new Date());
-        Project createdProject = projectRepository.save(project);
-        UserProject userProject = new UserProject(currentUser, createdProject);
-        userProjectRepository.save(userProject);
-        return createdProject.getId();
+        project.setNumberOfFiles(0);
+        project.setNumberOfParticipants(1);
+        project.setNumberOfTasks(0);
+        project = projectRepository.save(project);
+        return project.getId();
+    }
+
+    private Project getProject(ObjectId projectId) throws ProjectNotFoundException {
+        Project project = projectRepository.findOne(projectId);
+        if (project == null) {
+            throw new ProjectNotFoundException(projectId.toString());
+        }
+        return project;
     }
 
     @Override
-    public void deleteProject(UUID projectId) {
-        List<Task> tasks = taskRepository.findAllByProjectId(projectId);
-        List<UUID> tasksIds = tasks.stream()
-                .map(Task::getTaskId).collect(Collectors.toList());
-        Set<String> participantsEmails = tasks.stream().flatMap(task -> task.getParticipants().stream())
-                .map(UserSummary::getEmail)
-                .collect(Collectors.toSet());
-        participantsEmails.addAll(tasks.stream()
-                .map(task -> task.getAdministrator().getEmail())
-                .collect(Collectors.toList()));
-        List<UUID> filesIds = fileMetadataRepository.findAllByTaskIdIn(tasksIds).stream()
-                .map(FileMetadata::getFileId).collect(Collectors.toList());
-        versionRepository.deleteAllByFileIdIn(filesIds);
-        fileMetadataRepository.deleteAllByTaskIdIn(tasksIds);
-        taskRepository.deleteAllByProjectId(projectId);
-        projectRepository.deleteOneById(projectId);
+    @Transactional
+    public void deleteProject(ObjectId projectId) {
+        Project project = projectRepository.findOne(projectId);
+        if (project == null) {
+            return;
+        }
 
-        String currentUserEmail = userService.getCurrentUserEmail();
-        userProjectRepository.deleteUserProjectByUserEmailAndProjectId(currentUserEmail, projectId);
-        userProjectRepository.deleteAllByUserEmailInAndProjectId(participantsEmails, projectId);
+        List<Task> tasks = taskRepository.findByProject(project);
+
+        List<FileMetadata> files = fileMetadataRepository.findByTaskIn(tasks);
+
+        versionRepository.deleteByFileIn(files);
+        fileMetadataRepository.delete(files);
+        taskRepository.delete(tasks);
+        projectRepository.delete(project);
     }
 
     @Override
-    public ProjectInfoDTO getProjectInfo(UUID projectId) throws ProjectNotFoundException {
-        Project project = projectRepository.findOneById(projectId)
-                .orElseThrow(() -> new ProjectNotFoundException(projectId));
-        List<Task> projectTasks = taskRepository.findAllByProjectId(projectId);
-        projectTasks.sort(Comparator.comparing(Task::getModificationDate));
-        return new ProjectInfoDTO(project, projectTasks);
+    public ProjectInfoDTO getProjectInfo(ObjectId projectId) throws ProjectNotFoundException {
+        Project project = this.getProject(projectId);
+        List<Task> projectTasks = taskRepository.findByProject(project);
+        projectTasks.sort(Comparator.comparing((Task task) -> {
+            FileMetadata lastModifiedFile = task.getLastModifiedFile();
+            if (lastModifiedFile != null) {
+                return lastModifiedFile.getLatestVersion().getSaveDate();
+            } else {
+                return task.getCreationDate();
+            }
+        }).reversed());
+        return ProjectInfoDTO.fromProjectAndTasks(project, projectTasks);
     }
 
     @Override
-    public String getProjectName(UUID projectId) throws ProjectNotFoundException {
-        return projectRepository.findOneById(projectId)
-                .map(Project::getName)
-                .orElseThrow(() -> new ProjectNotFoundException(projectId));
+    public String getProjectName(ObjectId projectId) throws ProjectNotFoundException {
+        return getProject(projectId).getName();
     }
 
     @Override
-    public void updateProjectStatisticsForItsUsers(UUID projectId) throws ProjectNotFoundException {
-        List<Task> tasks = taskRepository.findAllByProjectId(projectId);
-        Set<String> projectParticipants = getProjectParticipants(projectId);
-        List<UserProject> userProjects = userProjectRepository
-                .findAllByUserEmailInAndProjectId(projectParticipants, projectId);
-        Set<String> currentUserProjectsEmails = userProjects.stream()
-                .map(UserProject::getUserEmail)
-                .collect(Collectors.toSet());
-        List<UserProject> newUserProjects =
-                createMissingUserProjects(projectId, projectParticipants, currentUserProjectsEmails);
-        userProjects.addAll(newUserProjects);
-        FileSummary lastModifiedFile = tasks.stream()
+    @Transactional
+    @EventListener
+    @Order(2)
+    public void processFileCreatedEvent(FileCreatedEvent event) {
+        FileMetadata createdFile = event.getCreatedFile();
+        Project project = createdFile.getTask().getProject();
+        project.setLastModifiedFile(createdFile);
+        project.setNumberOfFiles(project.getNumberOfFiles() + 1);
+    }
+
+    @Override
+    @Transactional
+    @EventListener
+    @Order(2)
+    public void processFileDeletedEvent(FileDeletedEvent event) {
+        Project project = event.getDeletedFile().getTask().getProject();
+        List<Task> projectTasks = taskRepository.findByProject(project);
+        Integer numberOfProjectFiles = fileMetadataRepository.countByTaskIn(projectTasks);
+        project.setNumberOfFiles(numberOfProjectFiles);
+        FileMetadata lastModifiedFile = projectTasks.stream()
                 .map(Task::getLastModifiedFile)
                 .filter(Objects::nonNull)
-                .max(Comparator.comparing(FileSummary::getModificationDate))
+                .max(Comparator.comparing(file -> file.getLatestVersion().getSaveDate()))
                 .orElse(null);
-        long numberOfParticipants = projectParticipants.size();
-        long numberOfTasks = tasks.size();
-        long numberOfFiles = tasks.stream().mapToLong(Task::getNumberOfFiles)
-                .sum();
-        for (UserProject userProject : userProjects) {
-            userProject.setLastModifiedFile(lastModifiedFile);
-            userProject.setNumberOfParticipants(numberOfParticipants);
-            userProject.setNumberOfTasks(numberOfTasks);
-            userProject.setNumberOfFiles(numberOfFiles);
-        }
-        userProjectRepository.save(userProjects);
+        project.setLastModifiedFile(lastModifiedFile);
+        projectRepository.save(project);
     }
 
-    private List<UserProject> createMissingUserProjects(final UUID projectId, Set<String> projectParticipants,
-                                                        Set<String> currentUserProjectsEmails)
-            throws ProjectNotFoundException {
-        Set<String> toCreate = new HashSet<>(projectParticipants);
-        toCreate.removeAll(currentUserProjectsEmails);
-        List<User> users = userRepository.findAllByEmailIn(toCreate);
-        Project project = projectRepository.findOneById(projectId)
-                .orElseThrow(() -> new ProjectNotFoundException(projectId));
-        return users.stream().map(user -> new UserProject(user, project))
-                .collect(Collectors.toList());
+    @Override
+    @Transactional
+    @EventListener
+    public void processTaskCreatedEvent(TaskCreatedEvent event) {
+        Task createdTask = event.getCreatedTask();
+        Project project = createdTask.getProject();
+        project.setNumberOfTasks(project.getNumberOfTasks() + 1);
+        List<Task> projectTasks = taskRepository.findByProject(project);
+        int numberOfProjectParticipants = getNumberOfProjectParticipants(projectTasks, project);
+        project.setNumberOfParticipants(numberOfProjectParticipants);
+        projectRepository.save(project);
     }
 
-    private Set<String> getProjectParticipants(final UUID projectId) throws ProjectNotFoundException {
-        String administrator = projectRepository.findOneById(projectId)
-                .map(project -> project.getAdministrator().getEmail())
-                .orElseThrow(() -> new ProjectNotFoundException(projectId));
-        List<Task> tasks = taskRepository.findAllByProjectId(projectId);
-        Stream<String> participantsEmailsStream = tasks.stream()
-                .filter(task -> Objects.nonNull(task.getParticipants()))
-                .flatMap(task -> task.getParticipants().stream())
-                .map(UserSummary::getEmail);
-        Stream<String> administratorsStream = tasks.stream()
-                .map(task -> task.getAdministrator().getEmail());
-        Set<String> toReturn = Stream.concat(participantsEmailsStream, administratorsStream)
+    @Override
+    @Transactional
+    @EventListener
+    public void processTaskDeletedEvent(TaskDeletedEvent event) {
+        Task deletedTask = event.getDeletedTask();
+        Project project = deletedTask.getProject();
+        project.setNumberOfTasks(project.getNumberOfTasks() - 1);
+        List<Task> projectTasks = taskRepository.findByProject(project);
+        int numberOfProjectParticipants = getNumberOfProjectParticipants(projectTasks, project);
+        project.setNumberOfParticipants(numberOfProjectParticipants);
+        project.setNumberOfFiles(project.getNumberOfFiles() - deletedTask.getNumberOfFiles());
+        FileMetadata lastModifiedFile = projectTasks.stream()
+                .map(Task::getLastModifiedFile)
+                .max(Comparator.comparing((FileMetadata file) -> file.getLatestVersion().getSaveDate()).reversed())
+                .orElse(null);
+        project.setLastModifiedFile(lastModifiedFile);
+        projectRepository.save(project);
+    }
+
+    @Override
+    @Transactional
+    @EventListener
+    public void processParticipantAddedToTaskEvent(ParticipantAddedToTaskEvent event) {
+        Task modifiedTask = event.getModifiedTask();
+        updateProjectNumberOfParticipants(modifiedTask);
+    }
+
+    @Override
+    @Transactional
+    @EventListener
+    public void processParticipantRemovedFromTaskEvent(ParticipantRemovedFromTaskEvent event) {
+        Task modifiedTask = event.getModifiedTask();
+        updateProjectNumberOfParticipants(modifiedTask);
+    }
+
+    @Override
+    @Transactional
+    @EventListener
+    @Order(3)
+    public void processVersionCreatedEvent(VersionCreatedEvent event) {
+        FileMetadata modifiedFile = event.getModifiedFile();
+        Task task = modifiedFile.getTask();
+        Project project = task.getProject();
+        project.setLastModifiedFile(modifiedFile);
+        projectRepository.save(project);
+    }
+
+    private void updateProjectNumberOfParticipants(Task modifiedTask) {
+        Project project = modifiedTask.getProject();
+        List<Task> projectTasks = taskRepository.findByProject(project);
+        int numberOfProjectParticipants = getNumberOfProjectParticipants(projectTasks, project);
+        project.setNumberOfParticipants(numberOfProjectParticipants);
+        projectRepository.save(project);
+    }
+
+    private int getNumberOfProjectParticipants(Collection<Task> projectTasks, Project project) {
+        Set<User> projectParticipants = projectTasks.stream()
+                .flatMap(task -> Stream.concat(task.getParticipants().stream(), Stream.of(task.getAdministrator())))
                 .collect(Collectors.toSet());
-        toReturn.add(administrator);
-        return toReturn;
+        projectParticipants.add(project.getAdministrator());
+        return projectParticipants.size();
     }
 }
