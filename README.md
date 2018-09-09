@@ -1,12 +1,13 @@
-# Document-workflow-system
+# Document-workflow-system web-server
 
-<h3>System obiegu dokumentów wspomagający prowadzenie projektów badawczych</h3>
+Projekt powstał w ramach mojej pracy inżynierskiej o pt.: 
+_System obiegu dokumentów wspomagający prowadzenie projektów badawczych_
 
-<p>Celem pracy jest zbudowanie systemu, który pomoże prowadzić dokumentację projektów badawczych. 
-Podstawowymi problemami, które taki system powinien rozwiązywać jest:
+Jest to system, który pomoże prowadzić dokumentację projektów badawczych. 
+Podstawowymi problemami, które taki system rozwiązuje są:
 <ul>
-<li>śledzenie, kto i jakie zmiany wykonał,</li>
-<li>śledzenie, która wersja jest aktualna/najnowsza.</li>
+    <li>śledzenie, kto i jakie zmiany wykonał,</li>
+    <li>śledzenie, która wersja jest aktualna/najnowsza.</li>
 </ul>
-</p>
-<p>Idealnie byłoby, gdyby taki system nie wymagał wprowadzania danych we własnych formularzach, a pozwalał na wymianę plików .XLS, .DOC (ew. .ODS, .ODT).</p>
+
+Ten projekt jest **serwerem aplikacyjnym** całego systemu.
