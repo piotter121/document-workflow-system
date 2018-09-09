@@ -14,6 +14,7 @@ import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewProjectForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.ProjectInfoDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.ProjectSummaryDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ProjectNotFoundException;
+import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.UserNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.ProjectService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
 
@@ -36,7 +37,7 @@ public class ProjectsController {
     private final UserService userService;
 
     @GetMapping
-    public List<ProjectSummaryDTO> getUserProjects() {
+    public List<ProjectSummaryDTO> getUserProjects() throws UserNotFoundException {
         User currentUser = userService.getCurrentUser();
         return projectService.getUserParticipatedProjects(currentUser.getEmail());
     }

@@ -90,9 +90,10 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional
     public void deleteTask(ObjectId taskId) {
-        versionRepository.deleteByFile_Task_Id(taskId);
-        fileMetadataRepository.deleteByTask_Id(taskId);
         Task taskToDelete = taskRepository.findOne(taskId);
+        List<FileMetadata> taskFiles = fileMetadataRepository.findByTask(taskToDelete);
+        versionRepository.deleteByFileIn(taskFiles);
+        fileMetadataRepository.deleteByTask_Id(taskId);
         taskRepository.delete(taskId);
 
         applicationEventPublisher.publishEvent(new TaskDeletedEvent(this, taskToDelete));

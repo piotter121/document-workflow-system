@@ -5,6 +5,7 @@ import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewProjectForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.ProjectInfoDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.ProjectSummaryDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ProjectNotFoundException;
+import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.UserNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.events.*;
 
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.List;
  * Created by piotr on 29.12.16.
  */
 public interface ProjectService {
-    List<ProjectSummaryDTO> getUserParticipatedProjects(String userEmail);
+    List<ProjectSummaryDTO> getUserParticipatedProjects(String userEmail) throws UserNotFoundException;
 
     ObjectId createNewProjectFromForm(NewProjectForm form);
 

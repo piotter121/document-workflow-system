@@ -3,7 +3,6 @@ package pl.edu.pw.ee.pyskp.documentworkflow.data.repository;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.FileMetadata;
-import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Task;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Version;
 
 import java.util.Collection;
@@ -15,8 +14,6 @@ import java.util.Optional;
  * Created by piotr on 06.01.17.
  */
 public interface VersionRepository extends MongoRepository<Version, ObjectId> {
-    void deleteByFile_Task_Id(ObjectId taskId);
-
     void deleteByFile(FileMetadata file);
 
     List<Version> findByFile(FileMetadata file);

@@ -12,14 +12,12 @@ import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.FileMetadata;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Project;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Task;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.User;
-import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.FileMetadataRepository;
-import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.ProjectRepository;
-import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.TaskRepository;
-import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.VersionRepository;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.*;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewProjectForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.ProjectInfoDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.ProjectSummaryDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ProjectNotFoundException;
+import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.UserNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.ProjectService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.events.*;
@@ -49,13 +47,18 @@ public class ProjectServiceImpl implements ProjectService {
     @NonNull
     private final VersionRepository versionRepository;
 
+    @NonNull
+    private final UserRepository userRepository;
+
     @Override
-    public List<ProjectSummaryDTO> getUserParticipatedProjects(String userEmail) {
-        List<Project> administratedProjects = projectRepository.findByAdministrator_Email(userEmail);
+    public List<ProjectSummaryDTO> getUserParticipatedProjects(String userEmail) throws UserNotFoundException {
+        User user = userRepository.findOneByEmail(userEmail)
+                .orElseThrow(() -> new UserNotFoundException(userEmail));
+        List<Project> administratedProjects = projectRepository.findByAdministrator(user);
         Set<Project> userProjects = new HashSet<>(administratedProjects);
 
         List<Task> participatedTasks =
-                taskRepository.findByParticipants_EmailContainingOrAdministrator_Email(userEmail, userEmail);
+                taskRepository.findByParticipantsContainingOrAdministrator(user, user);
         List<Project> participatedProjects = participatedTasks.stream()
                 .map(Task::getProject)
                 .distinct()
