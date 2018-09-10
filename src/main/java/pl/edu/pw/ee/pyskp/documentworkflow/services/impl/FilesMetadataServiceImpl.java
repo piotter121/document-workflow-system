@@ -2,7 +2,6 @@ package pl.edu.pw.ee.pyskp.documentworkflow.services.impl;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.apache.tika.Tika;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +15,7 @@ import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.VersionRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.FileMetadataDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewFileForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.*;
-import pl.edu.pw.ee.pyskp.documentworkflow.services.FilesMetadataService;
-import pl.edu.pw.ee.pyskp.documentworkflow.services.TaskService;
-import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
-import pl.edu.pw.ee.pyskp.documentworkflow.services.VersionService;
+import pl.edu.pw.ee.pyskp.documentworkflow.services.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -54,10 +50,12 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
     @NonNull
     private final TaskService taskService;
 
-    private static ContentType getContentType(byte[] file)
+    @NonNull
+    private final TikaService tikaService;
+
+    private ContentType getContentType(byte[] file)
             throws UnknownContentType {
-        Tika tika = new Tika();
-        String contentType = tika.detect(file);
+        String contentType = tikaService.detectMediaType(file);
         return ContentType.fromName(contentType)
                 .orElseThrow(() -> new UnknownContentType(contentType));
     }
