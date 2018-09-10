@@ -20,10 +20,10 @@ import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.FileNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.VersionNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.DifferenceService;
+import pl.edu.pw.ee.pyskp.documentworkflow.services.TikaService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.VersionService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.events.VersionCreatedEvent;
-import pl.edu.pw.ee.pyskp.documentworkflow.utils.TikaUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -43,7 +43,6 @@ import java.util.function.Predicate;
 public class VersionServiceImpl implements VersionService {
     private static final String DEFAULT_MESSAGE = "Dodanie pliku";
     private static final Logger LOGGER = LoggerFactory.getLogger(VersionServiceImpl.class);
-    private static MessageDigest sha256 = initializeSHA256();
 
     @NonNull
     private final UserService userService;
@@ -60,9 +59,12 @@ public class VersionServiceImpl implements VersionService {
     @NonNull
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    private final TikaUtils tikaUtils = new TikaUtils();
+    @NonNull
+    private final TikaService tikaService;
 
-    private static MessageDigest initializeSHA256() {
+    private final MessageDigest sha256 = initializeSHA256();
+
+    private MessageDigest initializeSHA256() {
         try {
             return MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
@@ -71,9 +73,7 @@ public class VersionServiceImpl implements VersionService {
         }
     }
 
-    private static String calculateCheckSum(byte[] bytes) {
-        if (sha256 == null)
-            sha256 = initializeSHA256();
+    private String calculateCheckSum(byte[] bytes) {
         return String.format("%064x", new BigInteger(sha256.digest(bytes)));
     }
 
@@ -158,7 +158,7 @@ public class VersionServiceImpl implements VersionService {
     private List<String> getLines(Version version) {
         byte[] bytes = version.getFileContent();
         try {
-            return tikaUtils.extractLines(new ByteArrayInputStream(bytes));
+            return tikaService.extractLines(new ByteArrayInputStream(bytes));
         } catch (IOException e) {
             LOGGER.error("Input/output exception occurred during extraction of lines");
             throw new RuntimeException(e);

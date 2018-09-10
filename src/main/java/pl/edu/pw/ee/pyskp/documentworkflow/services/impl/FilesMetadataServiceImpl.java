@@ -2,7 +2,6 @@ package pl.edu.pw.ee.pyskp.documentworkflow.services.impl;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.apache.tika.Tika;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +29,7 @@ import pl.edu.pw.ee.pyskp.documentworkflow.services.VersionService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.events.FileCreatedEvent;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.events.FileDeletedEvent;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.events.VersionCreatedEvent;
+import pl.edu.pw.ee.pyskp.documentworkflow.services.TikaService;
 
 import java.io.IOException;
 import java.util.Date;
@@ -59,10 +59,12 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
     @NonNull
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    private static ContentType getContentType(byte[] file)
+    @NonNull
+    private final TikaService tikaService;
+
+    private ContentType getContentType(byte[] file)
             throws UnknownContentType {
-        Tika tika = new Tika();
-        String contentType = tika.detect(file);
+        String contentType = tikaService.detectMediaType(file);
         return ContentType.fromName(contentType)
                 .orElseThrow(() -> new UnknownContentType(contentType));
     }
