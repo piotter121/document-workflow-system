@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -27,6 +26,25 @@ import java.util.stream.Collectors;
 public class DifferenceServiceImpl implements DifferenceService {
 
     private final TikaService tikaService;
+
+    @Override
+    public List<Difference> createDifferencesForNewFile(InputStream inputStream) throws IOException {
+        List<String> lines = tikaService.extractLines(inputStream);
+        Patch<String> diff = DiffUtils.diff(Collections.emptyList(), lines);
+        return diff.getDeltas().stream()
+                .map(this::mapDeltaToDifference)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Difference> getDifferencesBetweenTwoFiles(
+            InputStream inputStream, InputStream anotherInputStream) throws IOException {
+        Patch<String> diff =
+                DiffUtils.diff(tikaService.extractLines(inputStream), tikaService.extractLines(anotherInputStream));
+        return diff.getDeltas().stream()
+                .map(this::mapDeltaToDifference)
+                .collect(Collectors.toList());
+    }
 
     private Difference mapDeltaToDifference(Delta<String> delta) {
         Chunk<String> original = delta.getOriginal();
@@ -42,22 +60,4 @@ public class DifferenceServiceImpl implements DifferenceService {
         return difference;
     }
 
-    @Override
-    public Set<Difference> createDifferencesForNewFile(InputStream inputStream) throws IOException {
-        List<String> lines = tikaService.extractLines(inputStream);
-        Patch<String> diff = DiffUtils.diff(Collections.emptyList(), lines);
-        return diff.getDeltas().stream()
-                .map(this::mapDeltaToDifference)
-                .collect(Collectors.toSet());
-    }
-
-    @Override
-    public Set<Difference> getDifferencesBetweenTwoFiles(
-            InputStream inputStream, InputStream anotherInputStream) throws IOException {
-        Patch<String> diff =
-                DiffUtils.diff(tikaService.extractLines(inputStream), tikaService.extractLines(anotherInputStream));
-        return diff.getDeltas().stream()
-                .map(this::mapDeltaToDifference)
-                .collect(Collectors.toSet());
-    }
 }

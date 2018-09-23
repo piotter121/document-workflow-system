@@ -9,13 +9,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.TaskInfoDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.UserInfoDTO;
-import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ProjectNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.TaskNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.TaskService;
 
 import java.util.List;
-import java.util.UUID;
 
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @RestController
@@ -27,38 +25,37 @@ public class TaskOperationsController {
     private final TaskService taskService;
 
     @GetMapping
-    @PreAuthorize("@securityService.isTaskParticipant(#projectId, #taskId)")
-    public TaskInfoDTO getTaskInfo(@PathVariable UUID taskId, @PathVariable UUID projectId)
-            throws ResourceNotFoundException {
-        return taskService.getTaskInfo(projectId, taskId);
+    @PreAuthorize("@securityService.isTaskParticipant(#taskId)")
+    public TaskInfoDTO getTaskInfo(@PathVariable Long taskId) throws ResourceNotFoundException {
+        return taskService.getTaskInfo(taskId);
     }
 
     @GetMapping("/administrator")
-    @PreAuthorize("@securityService.isTaskParticipant(#projectId, #taskId)")
-    public UserInfoDTO getTaskAdministrator(@PathVariable UUID projectId, @PathVariable UUID taskId)
-            throws TaskNotFoundException {
-        return taskService.getTaskAdministrator(projectId, taskId);
+    @PreAuthorize("@securityService.isTaskParticipant(#taskId)")
+    public UserInfoDTO getTaskAdministrator(@PathVariable Long taskId) throws TaskNotFoundException {
+        return taskService.getTaskAdministrator(taskId);
     }
 
     @DeleteMapping
     @PreAuthorize("@securityService.isCurrentUserProjectAdministrator(#projectId)")
-    public void deleteTask(@PathVariable UUID taskId, @PathVariable UUID projectId) throws ProjectNotFoundException {
-        if (LOGGER.isDebugEnabled())
+    public void deleteTask(@PathVariable Long taskId, @PathVariable Long projectId) {
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Received HTTP DELETE request for deletion task of id=" + taskId);
-        taskService.deleteTask(projectId, taskId);
+        }
+        taskService.deleteTask(taskId);
     }
 
     @PutMapping("/participants")
-    @PreAuthorize("@securityService.isTaskAdministrator(#projectId, #taskId)")
-    public List<UserInfoDTO> addParticipantsToTask(@RequestBody String email, @PathVariable UUID projectId,
-                                                   @PathVariable UUID taskId) throws ResourceNotFoundException {
-        return taskService.addParticipantToTask(email, projectId, taskId);
+    @PreAuthorize("@securityService.isTaskAdministrator(#taskId)")
+    public List<UserInfoDTO> addParticipantsToTask(@RequestBody String email, @PathVariable Long taskId)
+            throws ResourceNotFoundException {
+        return taskService.addParticipantToTask(email, taskId);
     }
 
     @DeleteMapping("/participants")
-    @PreAuthorize("@securityService.isTaskAdministrator(#projectId, #taskId)")
-    public List<UserInfoDTO> removeParticipantFromTask(@RequestParam String email, @PathVariable UUID projectId,
-                                                       @PathVariable UUID taskId) throws ResourceNotFoundException {
-        return taskService.removeParticipantFromTask(email, projectId, taskId);
+    @PreAuthorize("@securityService.isTaskAdministrator(#taskId)")
+    public List<UserInfoDTO> removeParticipantFromTask(@RequestParam String email, @PathVariable Long taskId)
+            throws ResourceNotFoundException {
+        return taskService.removeParticipantFromTask(email, taskId);
     }
 }

@@ -1,13 +1,17 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.services;
 
 import org.springframework.validation.annotation.Validated;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Project;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Task;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.FileMetadataDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.FileSummaryDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewFileForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.FileNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.UnknownContentType;
 
 import javax.validation.Valid;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -15,18 +19,26 @@ import java.util.UUID;
  */
 @Validated
 public interface FilesMetadataService {
-    UUID createNewFileFromForm(@Valid NewFileForm formData, UUID projectId, UUID taskId)
+    Long createNewFileFromForm(@Valid NewFileForm formData, Long taskId)
             throws UnknownContentType, ResourceNotFoundException;
 
-    FileMetadataDTO getFileMetadataDTO(UUID taskId, UUID fileId) throws FileNotFoundException;
+    FileMetadataDTO getFileMetadataDTO(Long fileId) throws FileNotFoundException;
 
-    void markFileToConfirm(UUID taskId, UUID fileId) throws FileNotFoundException;
+    void markFileToConfirm(Long fileId) throws FileNotFoundException;
 
-    boolean hasContentTypeAs(UUID taskId, UUID fileId, byte[] file) throws FileNotFoundException;
+    boolean hasContentTypeAs(Long fileId, byte[] file) throws FileNotFoundException;
 
-    void confirmFile(UUID taskId, UUID fileId) throws FileNotFoundException;
+    void confirmFile(Long fileId) throws FileNotFoundException;
 
-    void deleteFile(UUID projectId, UUID taskId, UUID fileId) throws ResourceNotFoundException;
+    void deleteFile(Long fileId);
 
-    String getFileName(UUID taskId, UUID fileId) throws FileNotFoundException;
+    String getFileName(Long fileId) throws FileNotFoundException;
+
+    int getNumberOfFiles(Task task);
+
+    int getNumberOfFiles(Project project);
+
+    Optional<FileSummaryDTO> getLastModifiedFileSummary(Task task);
+
+    Optional<FileSummaryDTO> getLastModifiedFileSummary(Project project);
 }

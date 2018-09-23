@@ -1,16 +1,21 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.dtos;
 
-import lombok.Data;
+import lombok.NonNull;
+import lombok.Value;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Difference;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Created by piotr on 20.01.17.
  */
-@Data
-public class DiffData {
+@Value
+public final class DiffData {
+    @NonNull
+    private final List<Difference> differences;
+
+    @NonNull
+    private final FileContentDTO newContent;
+
     private FileContentDTO oldContent;
-    private FileContentDTO newContent;
-    private Set<Difference> differences;
 }

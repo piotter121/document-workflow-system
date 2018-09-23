@@ -1,12 +1,12 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.dtos;
 
-import lombok.Data;
+import lombok.Value;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@Data
+@Value
 public class ErrorMessageDTO {
-    private String errorCode;
-    private Map<String, String> params = new HashMap<>();
+    String errorCode;
+    Map<String, String> params = new HashMap<>();
 }

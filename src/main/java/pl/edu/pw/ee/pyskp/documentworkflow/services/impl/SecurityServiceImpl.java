@@ -4,19 +4,17 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Project;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Task;
-import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.UserSummary;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.User;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.ProjectRepository;
-import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.TaskRepository;
-import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.UserProjectRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ProjectNotFoundException;
-import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.TaskNotFoundException;
+import pl.edu.pw.ee.pyskp.documentworkflow.services.ProjectService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.SecurityService;
+import pl.edu.pw.ee.pyskp.documentworkflow.services.TaskService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
-
-import java.util.UUID;
 
 /**
  * Created by piotr on 06.01.17.
@@ -28,66 +26,59 @@ public class SecurityServiceImpl implements SecurityService {
     private final UserService userService;
 
     @NonNull
-    private final UserProjectRepository userProjectRepository;
-
-    @NonNull
     private final ProjectRepository projectRepository;
 
     @NonNull
-    private final TaskRepository taskRepository;
+    private final TaskService taskService;
+
+    @NonNull
+    private final ProjectService projectService;
 
     @Override
-    public boolean canAddTask(UUID projectId) throws ProjectNotFoundException {
+    @Transactional(readOnly = true)
+    public boolean canAddTask(Long projectId) throws ProjectNotFoundException {
         return isCurrentUserProjectAdministrator(projectId);
     }
 
     @Override
-    public boolean hasAccessToProject(UUID projectId) {
+    @Transactional(readOnly = true)
+    public boolean hasAccessToProject(Long projectId) {
         String currentUserEmail = userService.getCurrentUserEmail();
-        return userProjectRepository.findUserProjectByUserEmailAndProjectId(currentUserEmail, projectId)
-                .isPresent();
-    }
-
-
-    @Override
-    public boolean isTaskParticipant(final UUID projectId, final UUID taskId) throws ResourceNotFoundException {
-        final String currentUserEmail = userService.getCurrentUserEmail();
-        Task task = taskRepository.findTaskByProjectIdAndTaskId(projectId, taskId)
-                .orElseThrow(() -> new TaskNotFoundException(taskId));
-        Project project = projectRepository.findOneById(projectId)
-                .orElseThrow(() -> new ProjectNotFoundException(projectId));
-        return project.getAdministrator().getEmail().equals(currentUserEmail)
-                || task.getAdministrator().getEmail().equals(currentUserEmail)
-                || task.getParticipants().stream().map(UserSummary::getEmail)
-                .anyMatch(participant -> participant.equals(currentUserEmail));
+        return projectRepository.hasAccessToProject(currentUserEmail, projectId);
     }
 
     @Override
-    public boolean hasAccessToTask(final UUID projectId, final UUID taskId) throws ResourceNotFoundException {
-        Task task = taskRepository.findTaskByProjectIdAndTaskId(projectId, taskId)
-                .orElseThrow(() -> new TaskNotFoundException(taskId));
+    @Transactional(readOnly = true)
+    public boolean isTaskParticipant(Long taskId) throws TaskNotFoundException {
         String currentUserEmail = userService.getCurrentUserEmail();
-        boolean isAdministrator = task.getAdministrator().getEmail().equals(currentUserEmail);
-        boolean isParticipant = task.getParticipants().stream().map(UserSummary::getEmail)
-                .anyMatch(currentUserEmail::equals);
-        return isAdministrator || isParticipant
-                || projectRepository.findOneById(projectId)
-                .orElseThrow(() -> new ProjectNotFoundException(projectId))
-                .getAdministrator().getEmail().equals(currentUserEmail);
+        Task task = taskService.getTaskWithFetchedParticipants(taskId);
+        Project project = task.getProject();
+        return project.getAdministrator().getEmail().equals(currentUserEmail) ||
+                task.getAdministrator().getEmail().equals(currentUserEmail) ||
+                task.getParticipants()
+                        .stream()
+                        .map(User::getEmail)
+                        .anyMatch(currentUserEmail::equals);
     }
 
     @Override
-    public boolean isCurrentUserProjectAdministrator(final UUID projectId) throws ProjectNotFoundException {
-        Project project = projectRepository.findOneById(projectId)
-                .orElseThrow(() -> new ProjectNotFoundException(projectId));
+    @Transactional(readOnly = true)
+    public boolean hasAccessToTask(Long taskId) throws TaskNotFoundException {
+        return isTaskParticipant(taskId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean isCurrentUserProjectAdministrator(Long projectId) throws ProjectNotFoundException {
+        Project project = projectService.getProject(projectId);
         String currentUserEmail = userService.getCurrentUserEmail();
         return project.getAdministrator().getEmail().equals(currentUserEmail);
     }
 
     @Override
-    public boolean isTaskAdministrator(final UUID projectId, final UUID taskId) throws TaskNotFoundException {
-        Task task = taskRepository.findTaskByProjectIdAndTaskId(projectId, taskId)
-                .orElseThrow(() -> new TaskNotFoundException(taskId));
+    @Transactional(readOnly = true)
+    public boolean isTaskAdministrator(Long taskId) throws TaskNotFoundException {
+        Task task = taskService.getTask(taskId);
         String currentUserLogin = userService.getCurrentUserEmail();
         return task.getAdministrator().getEmail().equals(currentUserLogin);
     }

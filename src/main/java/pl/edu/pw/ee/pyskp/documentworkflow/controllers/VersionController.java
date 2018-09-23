@@ -21,12 +21,12 @@ import pl.edu.pw.ee.pyskp.documentworkflow.services.VersionService;
 
 import javax.validation.constraints.NotNull;
 import java.io.InputStream;
-import java.util.Date;
-import java.util.UUID;
+import java.time.OffsetDateTime;
 
 /**
  * Created by p.pysk on 16.01.2017.
  */
+@SuppressWarnings("MVCPathVariableInspection")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @RestController
 @RequestMapping("/api/projects/{projectId}/tasks/{taskId}/files/{fileId}/versions")
@@ -38,56 +38,51 @@ public class VersionController {
     @NonNull
     private final FilesMetadataService filesMetadataService;
 
-    @GetMapping("/{versionSaveDateMillis}")
-    @PreAuthorize("@securityService.hasAccessToTask(#projectId, #taskId)")
-    public VersionInfoDTO getVersionInfo(@PathVariable long versionSaveDateMillis,
-                                         @PathVariable UUID fileId,
-                                         @PathVariable UUID taskId,
-                                         @PathVariable UUID projectId) throws VersionNotFoundException {
-        return versionService.getVersionInfo(fileId, versionSaveDateMillis);
+    @GetMapping("/{versionSaveDate}")
+    @PreAuthorize("@securityService.hasAccessToTask(#taskId)")
+    public VersionInfoDTO getVersionInfo(@PathVariable OffsetDateTime versionSaveDate,
+                                         @PathVariable Long fileId,
+                                         @PathVariable Long taskId) throws VersionNotFoundException {
+        return versionService.getVersionInfo(fileId, versionSaveDate);
     }
 
-    @GetMapping("/{versionSaveDateMillis}/diffData")
-    @PreAuthorize("@securityService.hasAccessToTask(#projectId, #taskId)")
-    public DiffData getDiffData(@PathVariable UUID projectId, @PathVariable UUID taskId, @PathVariable UUID fileId,
-                                @PathVariable long versionSaveDateMillis) throws VersionNotFoundException {
-        return versionService.buildDiffData(fileId, versionSaveDateMillis);
+    @GetMapping("/{versionSaveDate}/diffData")
+    @PreAuthorize("@securityService.hasAccessToTask(#taskId)")
+    public DiffData getDiffData(@PathVariable Long taskId, @PathVariable Long fileId,
+                                @PathVariable OffsetDateTime versionSaveDate) throws VersionNotFoundException {
+        return versionService.buildDiffData(fileId, versionSaveDate);
     }
 
     @GetMapping("/{versionSaveDate}/content")
-    @PreAuthorize("@securityService.hasAccessToTask(#projectId, #taskId)")
-    public ResponseEntity<InputStreamResource>
-    getVersionContent(@PathVariable long versionSaveDate, @PathVariable UUID projectId, @PathVariable UUID taskId,
-                      @PathVariable UUID fileId)
+    @PreAuthorize("@securityService.hasAccessToTask(#taskId)")
+    public ResponseEntity<InputStreamResource> getVersionContent(@PathVariable OffsetDateTime versionSaveDate,
+                                                                 @PathVariable Long taskId,
+                                                                 @PathVariable Long fileId)
             throws ResourceNotFoundException {
-        InputStream fileContent = versionService.getVersionFileContent(fileId, new Date(versionSaveDate));
+        InputStream fileContent = versionService.getVersionFileContent(fileId, versionSaveDate);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        httpHeaders.setContentDispositionFormData("attachment", filesMetadataService.getFileName(taskId, fileId));
+        httpHeaders.setContentDispositionFormData("attachment", filesMetadataService.getFileName(fileId));
         return ResponseEntity.ok()
                 .headers(httpHeaders)
                 .body(new InputStreamResource(fileContent));
     }
 
     @GetMapping("/exists")
-    @PreAuthorize("@securityService.hasAccessToTask(#projectId, #taskId)")
-    public boolean exists(@PathVariable UUID projectId, @PathVariable UUID taskId, @PathVariable UUID fileId,
-                          @RequestParam String versionString) {
+    @PreAuthorize("@securityService.hasAccessToTask(#taskId)")
+    public boolean exists(@PathVariable Long taskId, @PathVariable Long fileId, @RequestParam String versionString) {
         return versionService.existsByVersionString(fileId, versionString);
     }
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("@securityService.hasAccessToTask(#projectId, #taskId)")
-    public long processAddingNewVersion(@PathVariable UUID taskId,
-                                        @PathVariable UUID projectId,
-                                        @PathVariable UUID fileId,
-                                        @RequestPart("file") @NotNull MultipartFile file,
-                                        @RequestPart("versionString") @NotBlank String versionString,
-                                        @RequestPart("message") @NotBlank String message)
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
+    @PreAuthorize("@securityService.hasAccessToTask(#taskId)")
+    public OffsetDateTime processAddingNewVersion(@PathVariable Long taskId,
+                                                  @PathVariable Long fileId,
+                                                  @RequestPart("file") @NotNull MultipartFile file,
+                                                  @RequestPart("versionString") @NotBlank String versionString,
+                                                  @RequestPart("message") @NotBlank String message)
             throws ResourceNotFoundException {
         NewVersionForm versionForm = new NewVersionForm();
-        versionForm.setProjectId(projectId);
-        versionForm.setTaskId(taskId);
         versionForm.setFileId(fileId);
         versionForm.setFile(file);
         versionForm.setVersionString(versionString);

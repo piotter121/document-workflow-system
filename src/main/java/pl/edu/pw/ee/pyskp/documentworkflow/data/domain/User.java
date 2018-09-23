@@ -1,33 +1,47 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.data.domain;
 
-import com.datastax.driver.core.DataType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.springframework.data.cassandra.mapping.CassandraType;
-import org.springframework.data.cassandra.mapping.Column;
-import org.springframework.data.cassandra.mapping.PrimaryKey;
-import org.springframework.data.cassandra.mapping.Table;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by piotr on 11.12.16.
  */
 @Data
-@EqualsAndHashCode(of = "email")
-@Table("user")
+@EqualsAndHashCode(of = "id")
+@Entity
+@Table(name = "user")
 public class User {
-    @PrimaryKey("email")
-    @CassandraType(type = DataType.Name.TEXT)
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    @Column(name = "email", nullable = false, unique = true, length = 1000)
     private String email;
 
-    @Column("password")
-    @CassandraType(type = DataType.Name.TEXT)
+    @Column(name = "password", nullable = false, length = 100)
     private String password;
 
-    @Column("first_name")
-    @CassandraType(type = DataType.Name.TEXT)
+    @Column(name = "first_name", nullable = false)
     private String firstName;
 
-    @Column("last_name")
-    @CassandraType(type = DataType.Name.TEXT)
+    @Column(name = "last_name", nullable = false)
     private String lastName;
+
+    @ManyToMany(mappedBy = "participants", cascade = CascadeType.MERGE)
+    private List<Task> participatedTasks = new ArrayList<>();
+
+    @OneToMany(mappedBy = "administrator")
+    private List<Task> administratedTasks = new ArrayList<>();
+
+    @OneToMany(mappedBy = "administrator")
+    private List<Project> administratedProjects = new ArrayList<>();
+
+    @Transient
+    public String getFullName() {
+        return firstName.concat(" ").concat(lastName);
+    }
 }

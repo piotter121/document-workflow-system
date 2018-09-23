@@ -1,33 +1,22 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.dtos;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Task;
+import lombok.NonNull;
+import lombok.Value;
 
-import java.util.Date;
+import java.time.OffsetDateTime;
 
-@NoArgsConstructor
-@Data
-@EqualsAndHashCode(of = "id")
+@Value
 public class TaskSummaryDTO {
+    @NonNull
     private String id;
 
+    @NonNull
     private String name;
 
-    private Date creationDate;
+    @NonNull
+    private OffsetDateTime creationDate;
 
     private FileSummaryDTO lastModifiedFile;
 
-    private long numberOfFiles, numberOfParticipants;
-
-    public TaskSummaryDTO(Task task) {
-        id = task.getTaskId().toString();
-        name = task.getName();
-        creationDate = task.getCreationDate();
-        if (task.getLastModifiedFile() != null)
-            lastModifiedFile = new FileSummaryDTO(task.getLastModifiedFile());
-        numberOfFiles = task.getNumberOfFiles();
-        numberOfParticipants = task.getParticipants().size();
-    }
+    private int numberOfFiles, numberOfParticipants;
 }

@@ -1,36 +1,38 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.data.domain;
 
-import com.datastax.driver.core.DataType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.springframework.data.cassandra.mapping.CassandraType;
-import org.springframework.data.cassandra.mapping.Column;
-import org.springframework.data.cassandra.mapping.PrimaryKey;
-import org.springframework.data.cassandra.mapping.Table;
 
-import java.util.Date;
-import java.util.UUID;
+import javax.persistence.*;
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by piotr on 11.12.16.
  */
 @Data
 @EqualsAndHashCode(of = "id")
-@Table("project")
+@Entity
+@Table(name = "project")
 public class Project {
-    @PrimaryKey("id")
-    @CassandraType(type = DataType.Name.UUID)
-    private UUID id = UUID.randomUUID();
+    @Id
+    @GeneratedValue
+    private Long id;
 
-    @Column("name")
+    @Column(name = "name", nullable = false, length = 40)
     private String name;
 
-    @Column("description")
+    @Column(name = "description", length = 1024)
     private String description;
 
-    @Column("creation_date")
-    private Date creationDate;
+    @Column(name = "creation_date", nullable = false, updatable = false)
+    private OffsetDateTime creationDate;
 
-    @Column("administrator")
-    private UserSummary administrator;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "administrator_id", nullable = false)
+    private User administrator;
+
+    @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE)
+    private List<Task> tasks = new ArrayList<>();
 }

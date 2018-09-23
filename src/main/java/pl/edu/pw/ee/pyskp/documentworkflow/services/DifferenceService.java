@@ -4,15 +4,15 @@ import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Difference;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Created by piotr on 06.01.17.
  */
 public interface DifferenceService {
-    Set<Difference> createDifferencesForNewFile(InputStream inputStream) throws IOException;
+    List<Difference> createDifferencesForNewFile(InputStream inputStream) throws IOException;
 
-    Set<Difference> getDifferencesBetweenTwoFiles(
+    List<Difference> getDifferencesBetweenTwoFiles(
             InputStream inputStream, InputStream anotherInputStream) throws IOException;
 
 }

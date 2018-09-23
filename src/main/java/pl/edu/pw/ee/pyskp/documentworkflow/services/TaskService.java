@@ -1,34 +1,39 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.services;
 
+import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Project;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Task;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewTaskForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.TaskInfoDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.TaskSummaryDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.UserInfoDTO;
-import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ProjectNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.TaskNotFoundException;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by piotr on 31.12.16.
  */
 public interface TaskService {
-    UUID createTaskFromForm(NewTaskForm formDTO, UUID projectId) throws ResourceNotFoundException;
+    Long createTaskFromForm(NewTaskForm formDTO, Long projectId) throws ResourceNotFoundException;
 
-    void deleteTask(UUID projectId, UUID taskId) throws ProjectNotFoundException;
+    void deleteTask(Long taskId);
 
-    List<UserInfoDTO> addParticipantToTask(String userEmail, UUID projectId, UUID taskId)
-            throws ResourceNotFoundException;
+    List<UserInfoDTO> addParticipantToTask(String userEmail, Long taskId) throws ResourceNotFoundException;
 
-    TaskInfoDTO getTaskInfo(UUID projectId, UUID taskId) throws ResourceNotFoundException;
+    TaskInfoDTO getTaskInfo(Long taskId) throws TaskNotFoundException;
 
-    void updateTaskStatistic(UUID projectId, UUID taskId) throws ResourceNotFoundException;
+    boolean existsByName(Long projectId, String taskName);
 
-    boolean existsByName(UUID projectId, String taskName);
+    UserInfoDTO getTaskAdministrator(Long taskId) throws TaskNotFoundException;
 
-    UserInfoDTO getTaskAdministrator(UUID projectId, UUID taskId) throws TaskNotFoundException;
+    List<UserInfoDTO> removeParticipantFromTask(String email, Long taskId) throws ResourceNotFoundException;
 
-    List<UserInfoDTO> removeParticipantFromTask(String email, UUID projectId, UUID taskId)
-            throws ResourceNotFoundException;
+    TaskSummaryDTO getTaskSummary(Task task);
+
+    int getNumberOfTasks(Project project);
+
+    Task getTask(Long taskId) throws TaskNotFoundException;
+
+    Task getTaskWithFetchedParticipants(Long taskId) throws TaskNotFoundException;
 }

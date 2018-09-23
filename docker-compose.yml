@@ -1,11 +1,44 @@
 version: '3.7'
 services:
-  db:
+  cassandra-db:
     image: cassandra:3.11
     volumes:
-      - db-volume:/var/lib/cassandra
+      - cassandra-volume:/var/lib/cassandra
     ports:
       - "9042:9042"
+    deploy:
+      replicas: 1
+
+  postgres-db:
+    image: postgres:10
+    deploy:
+      replicas: 1
+    volumes:
+      - postgres-volume:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: postgres
+    networks:
+      pg-network:
+        aliases:
+          - postgres
+
+  pg-admin:
+    image: dpage/pgadmin4
+    deploy:
+      replicas: 1
+    ports:
+      - "80:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.pl
+      PGADMIN_DEFAULT_PASSWORD: admin
+    networks:
+      - pg-network
 
 volumes:
-  db-volume:
+  cassandra-volume:
+  postgres-volume:
+
+networks:
+  pg-network:

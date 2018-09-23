@@ -1,64 +1,53 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.data.domain;
 
-import com.datastax.driver.core.DataType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.springframework.cassandra.core.PrimaryKeyType;
-import org.springframework.data.annotation.Transient;
-import org.springframework.data.cassandra.mapping.CassandraType;
-import org.springframework.data.cassandra.mapping.Column;
-import org.springframework.data.cassandra.mapping.PrimaryKeyColumn;
-import org.springframework.data.cassandra.mapping.Table;
 
-import java.util.*;
+import javax.persistence.*;
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by piotr on 11.12.16.
  */
 @Data
-@EqualsAndHashCode(of = {"projectId", "taskId"})
-@Table("task")
+@EqualsAndHashCode(of = "id")
+@Entity
+@Table(name = "task")
 public class Task {
-    @CassandraType(type = DataType.Name.UUID)
-    @PrimaryKeyColumn(name = "project_id", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
-    private UUID projectId;
+    @Id
+    @GeneratedValue
+    private Long id;
 
-    @CassandraType(type = DataType.Name.UUID)
-    @PrimaryKeyColumn(name = "task_id", ordinal = 1)
-    private UUID taskId = UUID.randomUUID();
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "project_id", nullable = false)
+    private Project project;
 
-    @Column("name")
+    @Column(name = "name", nullable = false, length = 50)
     private String name;
 
-    @Column("description")
+    @Column(name = "description", length = 1000)
     private String description;
 
-    @Column("creation_date")
-    private Date creationDate = new Date();
+    @Column(name = "creation_date", nullable = false, updatable = false)
+    private OffsetDateTime creationDate;
 
-    @Column("administrator")
-    private UserSummary administrator;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "administrator_id", nullable = false)
+    private User administrator;
 
-    @Column("participants")
-    private Set<UserSummary> participants = new HashSet<>();
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(
+            name = "task_participant",
+            joinColumns = @JoinColumn(name = "task_id", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "participant_id", nullable = false),
+            uniqueConstraints = @UniqueConstraint(columnNames = {"participant_id", "task_id"})
+    )
+    @OrderBy("firstName ASC, lastName ASC")
+    private List<User> participants = new ArrayList<>();
 
-    @Column("last_modified_file")
-    private FileSummary lastModifiedFile;
-
-    @Column("number_of_files")
-    private long numberOfFiles = 0;
-
-    @Transient
-    public Date getModificationDate() {
-        return lastModifiedFile == null ? creationDate : lastModifiedFile.getModificationDate();
-    }
-
-    @Transient
-    public void incrementNumberOfFiles() {
-        numberOfFiles++;
-    }
-
-    public Set<UserSummary> getParticipants() {
-        return participants == null ? Collections.emptySet() : participants;
-    }
+    @OneToMany(mappedBy = "task", cascade = CascadeType.REMOVE)
+    @OrderBy("latestVersion.saveDate DESC")
+    private List<FileMetadata> files = new ArrayList<>();
 }

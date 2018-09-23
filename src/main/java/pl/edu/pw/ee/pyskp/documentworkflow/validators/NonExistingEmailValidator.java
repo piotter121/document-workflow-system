@@ -18,7 +18,7 @@ public class NonExistingEmailValidator implements ConstraintValidator<NonExistin
 
     @Override
     public boolean isValid(String email, ConstraintValidatorContext context) {
-        return !userRepository.findOneByEmail(email).isPresent();
+        return !userRepository.existsByEmail(email);
     }
 
 }

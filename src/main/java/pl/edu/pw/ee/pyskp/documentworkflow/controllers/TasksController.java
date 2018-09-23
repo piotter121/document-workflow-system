@@ -12,7 +12,6 @@ import pl.edu.pw.ee.pyskp.documentworkflow.services.TaskService;
 import javax.validation.Valid;
 import java.util.Collections;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Created by p.pysk on 02.01.2017.
@@ -26,16 +25,15 @@ public class TasksController {
 
     @GetMapping("/exists")
     @PreAuthorize("@securityService.hasAccessToProject(#projectId)")
-    public boolean existsByName(@PathVariable UUID projectId, @RequestParam String taskName) {
+    public boolean existsByName(@PathVariable Long projectId, @RequestParam String taskName) {
         return taskService.existsByName(projectId, taskName);
     }
 
     @PostMapping
     @PreAuthorize("@securityService.canAddTask(#projectId)")
-    public Map<String, String> processNewTaskForm(@PathVariable UUID projectId,
-                                                  @RequestBody @Valid NewTaskForm newTask)
+    public Map<String, Long> processNewTaskForm(@PathVariable Long projectId, @RequestBody @Valid NewTaskForm newTask)
             throws ResourceNotFoundException {
-        UUID taskId = taskService.createTaskFromForm(newTask, projectId);
-        return Collections.singletonMap("taskId", taskId.toString());
+        Long taskId = taskService.createTaskFromForm(newTask, projectId);
+        return Collections.singletonMap("taskId", taskId);
     }
 }

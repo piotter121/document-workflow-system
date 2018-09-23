@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Project;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Task;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.User;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.UserRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewUserDTO;
@@ -34,7 +37,7 @@ public class UserServiceImpl implements UserService {
     public User getCurrentUser() {
         String currentUserEmail = getCurrentUserEmail();
         return userRepository.findOneByEmail(currentUserEmail)
-                .orElse(null);
+                .orElseThrow(() -> new RuntimeException(new UserNotFoundException(currentUserEmail)));
     }
 
     @Override
@@ -53,7 +56,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean checkIfUserExists(String email) {
         return userRepository.findOneByEmail(email).isPresent();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public int getNumberOfParticipants(Task task) {
+        return userRepository.countDistinctByAdministratedTasksContainsOrParticipatedTasksContains(task, task);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public int getNumberOfParticipants(Project project) {
+        return userRepository.countDistinctByAdministratedProjectsContainsOrAdministratedTasks_ProjectOrParticipatedTasks_Project(project, project, project);
     }
 }

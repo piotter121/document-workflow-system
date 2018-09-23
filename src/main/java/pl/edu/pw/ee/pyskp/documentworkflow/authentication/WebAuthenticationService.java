@@ -27,9 +27,10 @@ public class WebAuthenticationService {
             return null;
 
         User user = userService.getUserByEmail(email);
-        if (passwordEncoder.matches(password, user.getPassword()))
+        if (passwordEncoder.matches(password, user.getPassword())) {
             return tokenHandler.createTokenForUser(new UserAuthentication(user));
-        else
+        } else {
             return null;
+        }
     }
 }

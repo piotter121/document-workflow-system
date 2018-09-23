@@ -1,28 +1,27 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.data.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.cassandra.mapping.Column;
-import org.springframework.data.cassandra.mapping.UserDefinedType;
 
-import java.util.Date;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import java.time.OffsetDateTime;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
-@UserDefinedType("version_summary")
+@Embeddable
 public class VersionSummary {
-    @Column("version")
-    private String version;
+    @Column(name = "version_string")
+    private String versionString;
 
-    @Column("save_date")
-    private Date saveDate;
+    @Column(name = "save_date")
+    private OffsetDateTime saveDate;
 
-    @Column("modification_author")
-    private UserSummary modificationAuthor;
-
-    public VersionSummary(Version version) {
-        this.version = version.getVersionString();
-        this.saveDate = version.getSaveDate();
-        this.modificationAuthor = version.getAuthor();
-    }
+    @ManyToOne
+    @JoinColumn(name = "modification_author_id", nullable = false)
+    private User modificationAuthor;
 }

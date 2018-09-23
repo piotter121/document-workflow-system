@@ -1,24 +1,21 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.services;
 
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ProjectNotFoundException;
-import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.TaskNotFoundException;
-
-import java.util.UUID;
 
 /**
  * Created by piotr on 06.01.17.
  */
 public interface SecurityService {
-    boolean canAddTask(UUID projectId) throws ProjectNotFoundException;
+    boolean canAddTask(Long projectId) throws ProjectNotFoundException;
 
-    boolean hasAccessToProject(UUID projectId);
+    boolean hasAccessToProject(Long projectId);
 
-    boolean isTaskParticipant(UUID projectId, UUID taskId) throws ResourceNotFoundException;
+    boolean isTaskParticipant(Long taskId) throws TaskNotFoundException;
 
-    boolean hasAccessToTask(UUID projectId, UUID taskId) throws ResourceNotFoundException;
+    boolean hasAccessToTask(Long taskId) throws TaskNotFoundException;
 
-    boolean isCurrentUserProjectAdministrator(UUID projectId) throws ProjectNotFoundException;
+    boolean isCurrentUserProjectAdministrator(Long projectId) throws ProjectNotFoundException;
 
-    boolean isTaskAdministrator(UUID projectId, UUID taskId) throws TaskNotFoundException;
+    boolean isTaskAdministrator(Long taskId) throws TaskNotFoundException;
 }

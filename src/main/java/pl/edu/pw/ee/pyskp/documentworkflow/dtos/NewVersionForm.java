@@ -6,7 +6,6 @@ import pl.edu.pw.ee.pyskp.documentworkflow.validators.CorrectContentType;
 import pl.edu.pw.ee.pyskp.documentworkflow.validators.UniqueVersionString;
 
 import javax.validation.constraints.NotNull;
-import java.util.UUID;
 
 /**
  * Created by piotr on 19.01.17.
@@ -16,7 +15,7 @@ import java.util.UUID;
 @CorrectContentType
 public class NewVersionForm {
     @NotNull
-    private UUID fileId, taskId, projectId;
+    private Long fileId;
 
     @NotNull
     private MultipartFile file;

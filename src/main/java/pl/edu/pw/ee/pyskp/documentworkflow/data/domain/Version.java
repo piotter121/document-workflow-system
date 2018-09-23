@@ -11,9 +11,8 @@ import org.springframework.data.cassandra.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.mapping.Table;
 
 import java.nio.ByteBuffer;
-import java.util.Date;
-import java.util.Set;
-import java.util.UUID;
+import java.time.OffsetDateTime;
+import java.util.List;
 
 /**
  * Created by piotr on 11.12.16.
@@ -22,20 +21,24 @@ import java.util.UUID;
 @EqualsAndHashCode(of = {"fileId", "saveDate"})
 @Table("version")
 public class Version {
-    @CassandraType(type = DataType.Name.UUID)
+    @CassandraType(type = DataType.Name.BIGINT)
     @PrimaryKeyColumn(name = "file_id", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
-    private UUID fileId;
+    private Long fileId;
 
+    @CassandraType(type = DataType.Name.TIMESTAMP)
     @PrimaryKeyColumn(name = "save_date", ordinal = 1, type = PrimaryKeyType.CLUSTERED, ordering = Ordering.DESCENDING)
-    private Date saveDate;
+    private OffsetDateTime saveDate;
 
     @Column("version_string")
+    @CassandraType(type = DataType.Name.TEXT)
     private String versionString;
 
     @Column("message")
+    @CassandraType(type = DataType.Name.TEXT)
     private String message;
 
     @Column("author")
+    @CassandraType(type = DataType.Name.UDT, userTypeName = "user_summary")
     private UserSummary author;
 
     @Column("file_content")
@@ -43,8 +46,10 @@ public class Version {
     private ByteBuffer fileContent;
 
     @Column("check_sum")
+    @CassandraType(type = DataType.Name.TEXT)
     private String checkSum;
 
     @Column("differences")
-    private Set<Difference> differences;
+    @CassandraType(type = DataType.Name.LIST, typeArguments = DataType.Name.UDT, userTypeName = "difference")
+    private List<Difference> differences;
 }

@@ -18,7 +18,6 @@ import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by piotr on 16.12.16.
@@ -37,32 +36,33 @@ public class ProjectsController {
 
     @GetMapping
     public List<ProjectSummaryDTO> getUserProjects() {
-        User currentUser = userService.getCurrentUser();
-        return projectService.getUserParticipatedProjects(currentUser.getEmail());
+        String currentUserEmail = userService.getCurrentUserEmail();
+        return projectService.getUserParticipatedProjects(currentUserEmail);
     }
 
     @PostMapping
-    public String processCreationOfNewProject(@RequestBody @Valid NewProjectForm newProject) {
-        UUID createdProjectId = projectService.createNewProjectFromForm(newProject);
-        return createdProjectId.toString();
+    public Long processCreationOfNewProject(@RequestBody @Valid NewProjectForm newProject) {
+        return projectService.createNewProjectFromForm(newProject);
     }
 
     @GetMapping("/{projectId}")
     @PreAuthorize("@securityService.hasAccessToProject(#projectId)")
-    public ProjectInfoDTO getProjectInfo(@PathVariable UUID projectId) throws ProjectNotFoundException {
+    public ProjectInfoDTO getProjectInfo(@PathVariable Long projectId) throws ProjectNotFoundException {
         return projectService.getProjectInfo(projectId);
     }
 
     @GetMapping(value = "/{projectId}/name", produces = MediaType.TEXT_PLAIN_VALUE)
     @PreAuthorize("@securityService.hasAccessToProject(#projectId)")
-    public String getProjectName(@PathVariable UUID projectId) throws ProjectNotFoundException {
+    public String getProjectName(@PathVariable Long projectId) throws ProjectNotFoundException {
         return projectService.getProjectName(projectId);
     }
 
     @DeleteMapping("/{projectId}")
     @PreAuthorize("@securityService.isCurrentUserProjectAdministrator(#projectId)")
-    public void deleteProject(@PathVariable UUID projectId) {
-        LOGGER.debug("Received HTTP DELETE request for deletion project " + projectId);
+    public void deleteProject(@PathVariable Long projectId) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Received HTTP DELETE request for deletion project " + projectId);
+        }
         projectService.deleteProject(projectId);
     }
 }

@@ -1,21 +1,24 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.dtos;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.NonNull;
+import lombok.Value;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.VersionSummary;
 
-import java.util.Date;
+import java.time.OffsetDateTime;
 
-@Data
-@EqualsAndHashCode
-@SuppressWarnings("WeakerAccess")
+@Value
 public class VersionSummaryDTO {
-    private String version, author;
-    private Date saveDate;
+    @NonNull
+    String version, author;
 
-    VersionSummaryDTO(VersionSummary version) {
-        this.version = version.getVersion();
-        this.author = version.getModificationAuthor().getFullName();
-        this.saveDate = version.getSaveDate();
+    @NonNull
+    OffsetDateTime saveDate;
+
+    public static VersionSummaryDTO fromVersionSummaryEntity(VersionSummary versionSummary) {
+        return new VersionSummaryDTO(
+                versionSummary.getVersionString(),
+                versionSummary.getModificationAuthor().getFullName(),
+                versionSummary.getSaveDate()
+        );
     }
 }

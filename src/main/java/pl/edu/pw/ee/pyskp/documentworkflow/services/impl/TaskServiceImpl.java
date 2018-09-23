@@ -4,22 +4,24 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.*;
-import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.FileMetadataRepository;
+import org.springframework.transaction.annotation.Transactional;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.FileMetadata;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Project;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Task;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.User;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.ProjectRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.TaskRepository;
-import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.VersionRepository;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewTaskForm;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.TaskInfoDTO;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.UserInfoDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.*;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ProjectNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.TaskNotFoundException;
-import pl.edu.pw.ee.pyskp.documentworkflow.services.ProjectService;
-import pl.edu.pw.ee.pyskp.documentworkflow.services.TaskService;
-import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
+import pl.edu.pw.ee.pyskp.documentworkflow.services.*;
 
-import java.util.*;
+import java.time.OffsetDateTime;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -35,123 +37,189 @@ public class TaskServiceImpl implements TaskService {
     private final UserService userService;
 
     @NonNull
-    private final ProjectService projectService;
+    private final FilesMetadataService filesService;
+
+    @NonNull
+    private final VersionService versionService;
 
     @NonNull
     private final ProjectRepository projectRepository;
 
-    @NonNull
-    private final FileMetadataRepository fileMetadataRepository;
-
-    @NonNull
-    private final VersionRepository versionRepository;
-
-    private Task getTask(UUID projectId, UUID taskId) throws TaskNotFoundException {
-        return taskRepository.findTaskByProjectIdAndTaskId(projectId, taskId)
-                .orElseThrow(() -> new TaskNotFoundException(taskId));
-    }
-
     @Override
-    public UUID createTaskFromForm(NewTaskForm form, UUID projectId) throws ResourceNotFoundException {
+    public Long createTaskFromForm(NewTaskForm form, Long projectId) throws ResourceNotFoundException {
+        Project project = projectRepository.findOne(projectId);
+        if (project == null) {
+            throw new ProjectNotFoundException(projectId.toString());
+        }
         Task task = new Task();
         task.setName(form.getName());
         task.setDescription(form.getDescription());
-        task.setCreationDate(new Date());
-        task.setProjectId(projectId);
+        task.setCreationDate(OffsetDateTime.now());
+        task.setProject(project);
         String administratorEmail = form.getAdministratorEmail();
-        task.setAdministrator(new UserSummary(userService.getUserByEmail(administratorEmail)));
-        task = taskRepository.save(task);
-        projectService.updateProjectStatisticsForItsUsers(projectId);
-        return task.getTaskId();
+        task.setAdministrator(userService.getUserByEmail(administratorEmail));
+        return taskRepository.save(task).getId();
     }
 
     @Override
-    public void deleteTask(UUID projectId, UUID taskId) throws ProjectNotFoundException {
-        List<UUID> fileIds = fileMetadataRepository.findAllByTaskId(taskId).stream()
-                .map(FileMetadata::getFileId).collect(Collectors.toList());
-        versionRepository.deleteAllByFileIdIn(fileIds);
-        fileMetadataRepository.deleteAllByTaskId(taskId);
-        taskRepository.deleteTaskByProjectIdAndTaskId(projectId, taskId);
-        projectService.updateProjectStatisticsForItsUsers(projectId);
+    public void deleteTask(Long taskId) {
+        versionService.deleteTaskFilesVersions(taskId);
+        taskRepository.delete(taskId);
     }
 
     @Override
-    public List<UserInfoDTO> addParticipantToTask(String userEmail, UUID projectId, UUID taskId)
-            throws ResourceNotFoundException {
+    public List<UserInfoDTO> addParticipantToTask(String userEmail, Long taskId) throws ResourceNotFoundException {
         User user = userService.getUserByEmail(userEmail);
-        Task task = getTask(projectId, taskId);
-        UserSummary newParticipant = new UserSummary(user);
-        Set<UserSummary> currentParticipants = new HashSet<>(task.getParticipants());
-        boolean added = currentParticipants.add(newParticipant);
-        task.setParticipants(currentParticipants);
-        task = taskRepository.save(task);
-        if (added) {
-            projectService.updateProjectStatisticsForItsUsers(projectId);
+        Task task = getTaskWithFetchedParticipants(taskId);
+        if (!task.getParticipants().contains(user)) {
+            task.getParticipants().add(user);
         }
+        task = taskRepository.save(task);
         return task.getParticipants().stream()
-                .map(UserInfoDTO::new)
-                .sorted(Comparator.comparing(UserInfoDTO::getFullName))
+                .map(UserInfoDTO::fromUser)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public TaskInfoDTO getTaskInfo(UUID projectId, UUID taskId) throws ResourceNotFoundException {
-        Task task = getTask(projectId, taskId);
-        Project project = projectRepository.findOneById(projectId)
-                .orElseThrow(() -> new ProjectNotFoundException(projectId));
-        List<FileMetadata> files = fileMetadataRepository.findAllByTaskId(taskId);
-        TaskInfoDTO taskInfo = new TaskInfoDTO(task, files);
-        taskInfo.setProjectName(project.getName());
-        taskInfo.setProjectAdministrator(new UserInfoDTO(project.getAdministrator()));
-        return taskInfo;
+    @Transactional(readOnly = true)
+    public Task getTaskWithFetchedParticipants(Long taskId) throws TaskNotFoundException {
+        return taskRepository.findOneWithFetchedParticipants(taskId)
+                .orElseThrow(() -> new TaskNotFoundException(taskId.toString()));
     }
 
     @Override
-    public void updateTaskStatistic(UUID projectId, UUID taskId) throws ResourceNotFoundException {
-        List<FileMetadata> files = fileMetadataRepository.findAllByTaskId(taskId);
-        Task task = getTask(projectId, taskId);
-        task.setNumberOfFiles(files.size());
-        FileSummary lastModifiedFile = files.stream()
+    public TaskInfoDTO getTaskInfo(Long taskId) throws TaskNotFoundException {
+        Task task = getTask(taskId);
+        Project project = task.getProject();
+        User projectAdministrator = project.getAdministrator();
+        User administrator = task.getAdministrator();
+        return new TaskInfoDTO(
+                task.getId().toString(),
+                task.getName(),
+                task.getDescription(),
+                project.getId().toString(),
+                project.getName(),
+                UserInfoDTO.fromUser(projectAdministrator),
+                UserInfoDTO.fromUser(administrator),
+                task.getCreationDate(),
+                getModificationDate(task),
+                getUserInfo(task.getParticipants()),
+                getLastModifiedFile(task.getFiles()),
+                getFileInfoDTOs(task)
+        );
+    }
+
+    private List<FileMetadataDTO> getFileInfoDTOs(Task task) {
+        List<FileMetadata> files = task.getFiles();
+        return files.stream()
+                .map(fileMetadata -> new FileMetadataDTO(
+                        fileMetadata.getId().toString(),
+                        fileMetadata.getName(),
+                        fileMetadata.getDescription(),
+                        fileMetadata.getContentType().getName(),
+                        fileMetadata.getContentType().getExtension(),
+                        fileMetadata.getConfirmed(),
+                        fileMetadata.getMarkedToConfirm(),
+                        fileMetadata.getCreationDate(),
+                        fileMetadata.getLatestVersion().getSaveDate(),
+                        VersionSummaryDTO.fromVersionSummaryEntity(fileMetadata.getLatestVersion()),
+                        getNumberOfVersions(fileMetadata),
+                        Collections.emptyList()
+                )).collect(Collectors.toList());
+    }
+
+    private int getNumberOfVersions(FileMetadata fileMetadata) {
+        return versionService.getNumberOfVersions(fileMetadata);
+    }
+
+    private FileSummaryDTO getLastModifiedFile(Collection<FileMetadata> files) {
+        return files.stream()
                 .max(Comparator.comparing(file -> file.getLatestVersion().getSaveDate()))
-                .map(FileSummary::new)
-                .orElse(null);
-        task.setLastModifiedFile(lastModifiedFile);
-        taskRepository.save(task);
-        projectService.updateProjectStatisticsForItsUsers(projectId);
+                .map(file -> new FileSummaryDTO(
+                        file.getName(),
+                        file.getLatestVersion().getSaveDate(),
+                        file.getLatestVersion().getModificationAuthor().getFullName(),
+                        file.getTask().getName()
+                )).orElse(null);
     }
 
-    @Override
-    public boolean existsByName(UUID projectId, String taskName) {
-        List<Task> tasks = taskRepository.findAllByProjectId(projectId);
-        return tasks.stream()
-                .map(Task::getName)
-                .anyMatch(taskName::equals);
+    private OffsetDateTime getModificationDate(Task task) {
+        return task.getFiles().stream()
+                .map(fileMetadata -> fileMetadata.getLatestVersion().getSaveDate())
+                .max(OffsetDateTime::compareTo)
+                .orElse(task.getCreationDate());
     }
 
-    @Override
-    public UserInfoDTO getTaskAdministrator(UUID projectId, UUID taskId) throws TaskNotFoundException {
-        return taskRepository.findTaskByProjectIdAndTaskId(projectId, taskId)
-                .map(task -> new UserInfoDTO(task.getAdministrator()))
-                .orElseThrow(() -> new TaskNotFoundException(taskId));
-    }
-
-    @Override
-    public List<UserInfoDTO> removeParticipantFromTask(String email, UUID projectId, UUID taskId)
-            throws ResourceNotFoundException {
-        User user = userService.getUserByEmail(email);
-        Task task = getTask(projectId, taskId);
-        UserSummary newParticipant = new UserSummary(user);
-        Set<UserSummary> currentParticipants = task.getParticipants();
-        boolean removed = currentParticipants.remove(newParticipant);
-        task.setParticipants(currentParticipants);
-        task = taskRepository.save(task);
-        if (removed) {
-            projectService.updateProjectStatisticsForItsUsers(projectId);
-        }
-        return task.getParticipants().stream()
-                .map(UserInfoDTO::new)
-                .sorted(Comparator.comparing(UserInfoDTO::getFullName))
+    private List<UserInfoDTO> getUserInfo(List<User> participants) {
+        return participants.stream()
+                .map(UserInfoDTO::fromUser)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean existsByName(Long projectId, String taskName) {
+        return taskRepository.existsByProject_IdAndName(projectId, taskName);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserInfoDTO getTaskAdministrator(Long taskId) throws TaskNotFoundException {
+        Task task = getTask(taskId);
+        return UserInfoDTO.fromUser(task.getAdministrator());
+    }
+
+    @Override
+    @Transactional(rollbackFor = ResourceNotFoundException.class)
+    public List<UserInfoDTO> removeParticipantFromTask(String email, Long taskId) throws ResourceNotFoundException {
+        User user = userService.getUserByEmail(email);
+        Task task = getTaskWithFetchedParticipants(taskId);
+        task.getParticipants().remove(user);
+        task = taskRepository.save(task);
+        return task.getParticipants().stream()
+                .map(UserInfoDTO::fromUser)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Task getTask(Long taskId) throws TaskNotFoundException {
+        Task task = taskRepository.findOne(taskId);
+        if (task == null) {
+            throw new TaskNotFoundException(taskId.toString());
+        }
+        return task;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public TaskSummaryDTO getTaskSummary(Task task) {
+        return new TaskSummaryDTO(
+                task.getId().toString(),
+                task.getName(),
+                task.getCreationDate(),
+                getLastModifiedFile(task),
+                getNumberOfFiles(task),
+                getNumberOfParticipants(task)
+        );
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public int getNumberOfTasks(Project project) {
+        return taskRepository.countDistinctByProject(project);
+    }
+
+    private int getNumberOfParticipants(Task task) {
+        return userService.getNumberOfParticipants(task);
+    }
+
+    private int getNumberOfFiles(Task task) {
+        return filesService.getNumberOfFiles(task);
+    }
+
+    private FileSummaryDTO getLastModifiedFile(Task task) {
+        return filesService.getLastModifiedFileSummary(task).orElse(null);
     }
 
 }
