@@ -12,9 +12,10 @@ import pl.edu.pw.ee.pyskp.documentworkflow.dtos.*;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ProjectNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.*;
 
-import java.time.OffsetDateTime;
+import java.sql.Timestamp;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -55,12 +56,12 @@ public class ProjectServiceImpl implements ProjectService {
         return projectRepository.findParticipatedProjects(userEmail)
                 .map(this::getProjectSummaryDTO)
                 .sorted(Comparator
-                        .comparing((Function<ProjectSummaryDTO, OffsetDateTime>) this::getModificationDate)
+                        .comparing((Function<ProjectSummaryDTO, Timestamp>) this::getModificationDate)
                         .reversed())
                 .collect(Collectors.toList());
     }
 
-    private OffsetDateTime getModificationDate(ProjectSummaryDTO projectSummary) {
+    private Timestamp getModificationDate(ProjectSummaryDTO projectSummary) {
         if (projectSummary.getLastModifiedFile() != null) {
             return projectSummary.getLastModifiedFile().getSaveDate();
         } else {
@@ -76,7 +77,7 @@ public class ProjectServiceImpl implements ProjectService {
                 getNumberOfParticipants(project),
                 getNumberOfTasks(project),
                 getNumberOfFiles(project),
-                getLastModifiedFile(project)
+                getLastModifiedFile(project).orElse(null)
         );
     }
 
@@ -92,8 +93,8 @@ public class ProjectServiceImpl implements ProjectService {
         return filesMetadataService.getNumberOfFiles(project);
     }
 
-    private FileSummaryDTO getLastModifiedFile(Project project) {
-        return filesMetadataService.getLastModifiedFileSummary(project).orElse(null);
+    private Optional<FileSummaryDTO> getLastModifiedFile(Project project) {
+        return filesMetadataService.getLastModifiedFileSummary(project);
     }
 
     @Override
@@ -104,8 +105,12 @@ public class ProjectServiceImpl implements ProjectService {
         project.setName(formDTO.getName().trim());
         project.setDescription(formDTO.getDescription().trim());
         project.setAdministrator(currentUser);
-        project.setCreationDate(OffsetDateTime.now());
+        project.setCreationDate(getNowTimestamp());
         return projectRepository.save(project).getId();
+    }
+
+    private Timestamp getNowTimestamp() {
+        return new Timestamp(System.currentTimeMillis());
     }
 
     @Override
@@ -118,14 +123,15 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     @Transactional(readOnly = true)
     public ProjectInfoDTO getProjectInfo(Long projectId) throws ProjectNotFoundException {
-        Project project = projectRepository.findOneByIdFetchedTasks(projectId)
-                .orElseThrow(() -> new ProjectNotFoundException(projectId.toString()));
+        Project project = getProject(projectId);
         User administrator = project.getAdministrator();
-        OffsetDateTime modificationDate = getLastModifiedFile(project).getSaveDate();
+        Timestamp modificationDate = getLastModifiedFile(project)
+                .map(FileSummaryDTO::getSaveDate)
+                .orElseGet(project::getCreationDate);
         List<TaskSummaryDTO> taskSummaryDTOS = project.getTasks().stream()
                 .map(taskService::getTaskSummary)
                 .sorted(Comparator
-                        .comparing((Function<TaskSummaryDTO, OffsetDateTime>) this::getModificationDate)
+                        .comparing((Function<TaskSummaryDTO, Timestamp>) this::getModificationDate)
                         .reversed())
                 .collect(Collectors.toList());
         return new ProjectInfoDTO(
@@ -139,7 +145,7 @@ public class ProjectServiceImpl implements ProjectService {
         );
     }
 
-    private OffsetDateTime getModificationDate(TaskSummaryDTO taskSummaryDTO) {
+    private Timestamp getModificationDate(TaskSummaryDTO taskSummaryDTO) {
         if (taskSummaryDTO.getLastModifiedFile() != null) {
             return taskSummaryDTO.getLastModifiedFile().getSaveDate();
         } else {

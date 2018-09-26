@@ -21,7 +21,7 @@ import pl.edu.pw.ee.pyskp.documentworkflow.services.VersionService;
 
 import javax.validation.constraints.NotNull;
 import java.io.InputStream;
-import java.time.OffsetDateTime;
+import java.util.Date;
 
 /**
  * Created by p.pysk on 16.01.2017.
@@ -40,26 +40,24 @@ public class VersionController {
 
     @GetMapping("/{versionSaveDate}")
     @PreAuthorize("@securityService.hasAccessToTask(#taskId)")
-    public VersionInfoDTO getVersionInfo(@PathVariable OffsetDateTime versionSaveDate,
-                                         @PathVariable Long fileId,
+    public VersionInfoDTO getVersionInfo(@PathVariable Long versionSaveDate, @PathVariable Long fileId,
                                          @PathVariable Long taskId) throws VersionNotFoundException {
-        return versionService.getVersionInfo(fileId, versionSaveDate);
+        return versionService.getVersionInfo(fileId, new Date(versionSaveDate));
     }
 
     @GetMapping("/{versionSaveDate}/diffData")
     @PreAuthorize("@securityService.hasAccessToTask(#taskId)")
     public DiffData getDiffData(@PathVariable Long taskId, @PathVariable Long fileId,
-                                @PathVariable OffsetDateTime versionSaveDate) throws VersionNotFoundException {
-        return versionService.buildDiffData(fileId, versionSaveDate);
+                                @PathVariable Long versionSaveDate) throws VersionNotFoundException {
+        return versionService.buildDiffData(fileId, new Date(versionSaveDate));
     }
 
     @GetMapping("/{versionSaveDate}/content")
     @PreAuthorize("@securityService.hasAccessToTask(#taskId)")
-    public ResponseEntity<InputStreamResource> getVersionContent(@PathVariable OffsetDateTime versionSaveDate,
-                                                                 @PathVariable Long taskId,
-                                                                 @PathVariable Long fileId)
+    public ResponseEntity<InputStreamResource> getVersionContent(@PathVariable Long versionSaveDate,
+                                                                 @PathVariable Long taskId, @PathVariable Long fileId)
             throws ResourceNotFoundException {
-        InputStream fileContent = versionService.getVersionFileContent(fileId, versionSaveDate);
+        InputStream fileContent = versionService.getVersionFileContent(fileId, new Date(versionSaveDate));
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         httpHeaders.setContentDispositionFormData("attachment", filesMetadataService.getFileName(fileId));
@@ -76,18 +74,17 @@ public class VersionController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
     @PreAuthorize("@securityService.hasAccessToTask(#taskId)")
-    public OffsetDateTime processAddingNewVersion(@PathVariable Long taskId,
-                                                  @PathVariable Long fileId,
-                                                  @RequestPart("file") @NotNull MultipartFile file,
-                                                  @RequestPart("versionString") @NotBlank String versionString,
-                                                  @RequestPart("message") @NotBlank String message)
+    public Long processAddingNewVersion(@PathVariable Long taskId, @PathVariable Long fileId,
+                                        @RequestPart("file") @NotNull MultipartFile file,
+                                        @RequestPart("versionString") @NotBlank String versionString,
+                                        @RequestPart("message") @NotBlank String message)
             throws ResourceNotFoundException {
         NewVersionForm versionForm = new NewVersionForm();
         versionForm.setFileId(fileId);
         versionForm.setFile(file);
         versionForm.setVersionString(versionString);
         versionForm.setMessage(message);
-        return versionService.addNewVersionOfFile(versionForm);
+        return versionService.addNewVersionOfFile(versionForm).getTime();
     }
 
 }

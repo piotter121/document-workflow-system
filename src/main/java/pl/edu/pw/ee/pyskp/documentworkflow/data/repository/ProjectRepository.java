@@ -9,8 +9,6 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 public interface ProjectRepository extends JpaRepository<Project, Long> {
-    @Query("select p from Project p left join fetch p.tasks")
-    Optional<Project> findOneByIdFetchedTasks(Long id);
 
     @Query("select p " +
             "from Project p " +

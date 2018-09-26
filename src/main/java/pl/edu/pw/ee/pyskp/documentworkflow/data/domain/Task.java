@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
-import java.time.OffsetDateTime;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +31,7 @@ public class Task {
     private String description;
 
     @Column(name = "creation_date", nullable = false, updatable = false)
-    private OffsetDateTime creationDate;
+    private Timestamp creationDate;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "administrator_id", nullable = false)

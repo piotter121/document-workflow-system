@@ -3,7 +3,7 @@ package pl.edu.pw.ee.pyskp.documentworkflow.dtos;
 import lombok.NonNull;
 import lombok.Value;
 
-import java.time.OffsetDateTime;
+import java.sql.Timestamp;
 
 @Value
 public class TaskSummaryDTO {
@@ -14,7 +14,7 @@ public class TaskSummaryDTO {
     private String name;
 
     @NonNull
-    private OffsetDateTime creationDate;
+    private Timestamp creationDate;
 
     private FileSummaryDTO lastModifiedFile;
 

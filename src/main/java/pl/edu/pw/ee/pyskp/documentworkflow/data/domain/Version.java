@@ -11,7 +11,8 @@ import org.springframework.data.cassandra.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.mapping.Table;
 
 import java.nio.ByteBuffer;
-import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,7 +28,7 @@ public class Version {
 
     @CassandraType(type = DataType.Name.TIMESTAMP)
     @PrimaryKeyColumn(name = "save_date", ordinal = 1, type = PrimaryKeyType.CLUSTERED, ordering = Ordering.DESCENDING)
-    private OffsetDateTime saveDate;
+    private Date saveDate;
 
     @Column("version_string")
     @CassandraType(type = DataType.Name.TEXT)

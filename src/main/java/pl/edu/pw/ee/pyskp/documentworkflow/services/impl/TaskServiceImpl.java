@@ -15,9 +15,12 @@ import pl.edu.pw.ee.pyskp.documentworkflow.dtos.*;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ProjectNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.TaskNotFoundException;
-import pl.edu.pw.ee.pyskp.documentworkflow.services.*;
+import pl.edu.pw.ee.pyskp.documentworkflow.services.FilesMetadataService;
+import pl.edu.pw.ee.pyskp.documentworkflow.services.TaskService;
+import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
+import pl.edu.pw.ee.pyskp.documentworkflow.services.VersionService;
 
-import java.time.OffsetDateTime;
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -54,11 +57,15 @@ public class TaskServiceImpl implements TaskService {
         Task task = new Task();
         task.setName(form.getName());
         task.setDescription(form.getDescription());
-        task.setCreationDate(OffsetDateTime.now());
+        task.setCreationDate(getNowTimestamp());
         task.setProject(project);
         String administratorEmail = form.getAdministratorEmail();
         task.setAdministrator(userService.getUserByEmail(administratorEmail));
         return taskRepository.save(task).getId();
+    }
+
+    private Timestamp getNowTimestamp() {
+        return new Timestamp(System.currentTimeMillis());
     }
 
     @Override
@@ -70,7 +77,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<UserInfoDTO> addParticipantToTask(String userEmail, Long taskId) throws ResourceNotFoundException {
         User user = userService.getUserByEmail(userEmail);
-        Task task = getTaskWithFetchedParticipants(taskId);
+        Task task = getTask(taskId);
         if (!task.getParticipants().contains(user)) {
             task.getParticipants().add(user);
         }
@@ -78,13 +85,6 @@ public class TaskServiceImpl implements TaskService {
         return task.getParticipants().stream()
                 .map(UserInfoDTO::fromUser)
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Task getTaskWithFetchedParticipants(Long taskId) throws TaskNotFoundException {
-        return taskRepository.findOneWithFetchedParticipants(taskId)
-                .orElseThrow(() -> new TaskNotFoundException(taskId.toString()));
     }
 
     @Override
@@ -143,10 +143,10 @@ public class TaskServiceImpl implements TaskService {
                 )).orElse(null);
     }
 
-    private OffsetDateTime getModificationDate(Task task) {
+    private Timestamp getModificationDate(Task task) {
         return task.getFiles().stream()
                 .map(fileMetadata -> fileMetadata.getLatestVersion().getSaveDate())
-                .max(OffsetDateTime::compareTo)
+                .max(Timestamp::compareTo)
                 .orElse(task.getCreationDate());
     }
 
@@ -173,7 +173,7 @@ public class TaskServiceImpl implements TaskService {
     @Transactional(rollbackFor = ResourceNotFoundException.class)
     public List<UserInfoDTO> removeParticipantFromTask(String email, Long taskId) throws ResourceNotFoundException {
         User user = userService.getUserByEmail(email);
-        Task task = getTaskWithFetchedParticipants(taskId);
+        Task task = getTask(taskId);
         task.getParticipants().remove(user);
         task = taskRepository.save(task);
         return task.getParticipants().stream()

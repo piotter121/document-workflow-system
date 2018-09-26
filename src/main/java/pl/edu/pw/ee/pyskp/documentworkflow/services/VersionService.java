@@ -11,7 +11,7 @@ import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.VersionNotFoundException;
 
 import javax.validation.Valid;
 import java.io.InputStream;
-import java.time.OffsetDateTime;
+import java.util.Date;
 
 /**
  * Created by piotr on 06.01.17.
@@ -20,13 +20,13 @@ import java.time.OffsetDateTime;
 public interface VersionService {
     void createInitVersionOfFile(NewFileForm form, FileMetadata fileMetadata);
 
-    InputStream getVersionFileContent(long fileId, OffsetDateTime saveDate) throws VersionNotFoundException;
+    InputStream getVersionFileContent(long fileId, Date saveDate) throws VersionNotFoundException;
 
-    OffsetDateTime addNewVersionOfFile(@Valid NewVersionForm form) throws ResourceNotFoundException;
+    Date addNewVersionOfFile(@Valid NewVersionForm form) throws ResourceNotFoundException;
 
-    DiffData buildDiffData(long fileId, OffsetDateTime versionSaveDate) throws VersionNotFoundException;
+    DiffData buildDiffData(long fileId, Date versionSaveDate) throws VersionNotFoundException;
 
-    VersionInfoDTO getVersionInfo(long fileId, OffsetDateTime versionSaveDate) throws VersionNotFoundException;
+    VersionInfoDTO getVersionInfo(long fileId, Date versionSaveDate) throws VersionNotFoundException;
 
     boolean existsByVersionString(long fileId, String versionString);
 

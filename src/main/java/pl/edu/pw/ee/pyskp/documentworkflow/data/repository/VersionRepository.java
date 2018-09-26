@@ -5,8 +5,8 @@ import org.springframework.data.cassandra.repository.Query;
 import org.springframework.data.repository.query.Param;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Version;
 
-import java.time.OffsetDateTime;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,13 +20,13 @@ public interface VersionRepository extends CassandraRepository<Version> {
     @Query("delete from version where file_id = :file_id")
     void deleteAllByFileId(@Param("file_id") Long fileId);
 
-    Optional<Version> findOneByFileIdAndSaveDate(Long fileId, OffsetDateTime saveDate);
+    Optional<Version> findOneByFileIdAndSaveDate(Long fileId, Date saveDate);
 
     List<Version> findAllByFileId(Long fileId);
 
     @Query("select * from version where file_id = :file_id and save_date <= :save_date order by save_date desc limit 2")
     List<Version> findTop2ByFileIdAndSaveDateLessThanEqualOrderBySaveDateDesc(@Param("file_id") Long fileId,
-                                                                              @Param("save_date") OffsetDateTime saveDate);
+                                                                              @Param("save_date") Date saveDate);
 
     @Query("select * from version where file_id = :file_id order by save_date desc limit 1")
     Optional<Version> findTopByFileIdOrderBySaveDateDesc(@Param("file_id") Long fileId);

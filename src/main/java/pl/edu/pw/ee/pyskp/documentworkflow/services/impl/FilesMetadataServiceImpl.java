@@ -22,7 +22,8 @@ import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.VersionService;
 
 import java.io.IOException;
-import java.time.OffsetDateTime;
+import java.sql.Timestamp;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -74,7 +75,7 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
         fileMetadata.setDescription(formData.getDescription());
         fileMetadata.setConfirmed(false);
         fileMetadata.setMarkedToConfirm(false);
-        fileMetadata.setCreationDate(OffsetDateTime.now());
+        fileMetadata.setCreationDate(getNowTimestamp());
         fileMetadata.setTask(task);
         try {
             fileMetadata.setContentType(getContentType(formData.getFile().getBytes()));
@@ -82,13 +83,17 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
             LOGGER.error("Input/output exception occurred during getBytes method", e);
             throw new RuntimeException(e);
         }
-        VersionSummary versionSummary = new VersionSummary(formData.getVersionString(), OffsetDateTime.now(), currentUser);
+        VersionSummary versionSummary = new VersionSummary(formData.getVersionString(), getNowTimestamp(), currentUser);
         fileMetadata.setLatestVersion(versionSummary);
         fileMetadata = fileMetadataRepository.save(fileMetadata);
 
         versionService.createInitVersionOfFile(formData, fileMetadata);
 
         return fileMetadata.getId();
+    }
+
+    private Timestamp getNowTimestamp() {
+        return new Timestamp(System.currentTimeMillis());
     }
 
     @Override
@@ -133,6 +138,9 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
     }
 
     private List<DifferenceInfoDTO> mapDifferencesToDTOs(List<Difference> differences) {
+        if (differences == null) {
+            return Collections.emptyList();
+        }
         return differences.stream()
                 .map(difference -> new DifferenceInfoDTO(
                         difference.getPreviousSectionStart(),

@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.User;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewProjectForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.ProjectInfoDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.ProjectSummaryDTO;

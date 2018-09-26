@@ -4,7 +4,7 @@ import lombok.NonNull;
 import lombok.Value;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.VersionSummary;
 
-import java.time.OffsetDateTime;
+import java.sql.Timestamp;
 
 @Value
 public class VersionSummaryDTO {
@@ -12,7 +12,7 @@ public class VersionSummaryDTO {
     String version, author;
 
     @NonNull
-    OffsetDateTime saveDate;
+    Timestamp saveDate;
 
     public static VersionSummaryDTO fromVersionSummaryEntity(VersionSummary versionSummary) {
         return new VersionSummaryDTO(

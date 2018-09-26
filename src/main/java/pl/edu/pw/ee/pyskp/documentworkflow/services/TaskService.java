@@ -34,6 +34,4 @@ public interface TaskService {
     int getNumberOfTasks(Project project);
 
     Task getTask(Long taskId) throws TaskNotFoundException;
-
-    Task getTaskWithFetchedParticipants(Long taskId) throws TaskNotFoundException;
 }

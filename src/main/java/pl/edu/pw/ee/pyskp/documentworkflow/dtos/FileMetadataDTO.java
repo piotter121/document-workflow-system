@@ -3,7 +3,7 @@ package pl.edu.pw.ee.pyskp.documentworkflow.dtos;
 import lombok.NonNull;
 import lombok.Value;
 
-import java.time.OffsetDateTime;
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -22,7 +22,7 @@ public class FileMetadataDTO {
     boolean confirmed, markedToConfirm;
 
     @NonNull
-    OffsetDateTime creationDate, modificationDate;
+    Timestamp creationDate, modificationDate;
 
     @NonNull
     VersionSummaryDTO latestVersion;

@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
-import java.time.OffsetDateTime;
+import java.sql.Timestamp;
 
 /**
  * Created by piotr on 11.12.16.
@@ -39,7 +39,7 @@ public class FileMetadata {
     private Boolean markedToConfirm = false;
 
     @Column(name = "creation_date", nullable = false)
-    private OffsetDateTime creationDate;
+    private Timestamp creationDate;
 
     @Embedded
     private VersionSummary latestVersion;

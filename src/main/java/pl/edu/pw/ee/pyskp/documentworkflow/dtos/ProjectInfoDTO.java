@@ -3,7 +3,7 @@ package pl.edu.pw.ee.pyskp.documentworkflow.dtos;
 import lombok.NonNull;
 import lombok.Value;
 
-import java.time.OffsetDateTime;
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -23,9 +23,9 @@ public class ProjectInfoDTO {
     UserInfoDTO administrator;
 
     @NonNull
-    OffsetDateTime creationDate;
+    Timestamp creationDate;
 
-    OffsetDateTime lastModified;
+    Timestamp lastModified;
 
     List<TaskSummaryDTO> tasks;
 }

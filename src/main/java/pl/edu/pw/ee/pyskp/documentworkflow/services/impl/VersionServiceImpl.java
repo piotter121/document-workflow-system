@@ -27,7 +27,9 @@ import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.time.OffsetDateTime;
+import java.sql.Timestamp;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -75,7 +77,7 @@ public class VersionServiceImpl implements VersionService {
         try {
             Version version = new Version();
             version.setFileId(fileMetadata.getId());
-            version.setSaveDate(OffsetDateTime.now());
+            version.setSaveDate(getNowTimestamp());
             version.setVersionString(form.getVersionString());
             version.setMessage(form.getVersionMessage());
             version.setAuthor(new UserSummary(userService.getCurrentUser()));
@@ -94,9 +96,13 @@ public class VersionServiceImpl implements VersionService {
         }
     }
 
+    private Timestamp getNowTimestamp() {
+        return new Timestamp(System.currentTimeMillis());
+    }
+
     @Override
     @Transactional(readOnly = true)
-    public InputStream getVersionFileContent(long fileId, final OffsetDateTime saveDate)
+    public InputStream getVersionFileContent(long fileId, final Date saveDate)
             throws VersionNotFoundException {
         Version version = versionRepository.findOneByFileIdAndSaveDate(fileId, saveDate)
                 .orElseThrow(() -> new VersionNotFoundException(saveDate.toString()));
@@ -105,15 +111,15 @@ public class VersionServiceImpl implements VersionService {
 
     @Override
     @Transactional(rollbackFor = ResourceNotFoundException.class)
-    public OffsetDateTime addNewVersionOfFile(NewVersionForm form) throws ResourceNotFoundException {
+    public Date addNewVersionOfFile(NewVersionForm form) throws ResourceNotFoundException {
         try {
             Version newVersion = new Version();
-            byte[] file = form.getFile().getBytes();
-            newVersion.setSaveDate(OffsetDateTime.now());
+            newVersion.setSaveDate(new Date());
             User modificationAuthor = userService.getCurrentUser();
             newVersion.setAuthor(new UserSummary(modificationAuthor));
             newVersion.setVersionString(form.getVersionString());
             newVersion.setMessage(form.getMessage());
+            byte[] file = form.getFile().getBytes();
             newVersion.setCheckSum(calculateCheckSum(file));
             newVersion.setFileContent(ByteBuffer.wrap(file));
             FileMetadata fileMetadata = getFileMetadata(form.getFileId());
@@ -126,8 +132,8 @@ public class VersionServiceImpl implements VersionService {
             );
             newVersion.setDifferences(differences);
             newVersion = versionRepository.save(newVersion);
-            VersionSummary versionSummary = new VersionSummary(newVersion.getVersionString(), newVersion.getSaveDate(),
-                    modificationAuthor);
+            VersionSummary versionSummary = new VersionSummary(newVersion.getVersionString(),
+                    convert(newVersion.getSaveDate()), modificationAuthor);
             fileMetadata.setLatestVersion(versionSummary);
             fileMetadataRepository.save(fileMetadata);
 
@@ -138,9 +144,13 @@ public class VersionServiceImpl implements VersionService {
         }
     }
 
+    private Timestamp convert(Date date) {
+        return new Timestamp(date.getTime());
+    }
+
     @Override
     @Transactional(readOnly = true)
-    public DiffData buildDiffData(long fileId, OffsetDateTime versionSaveDate) throws VersionNotFoundException {
+    public DiffData buildDiffData(long fileId, Date versionSaveDate) throws VersionNotFoundException {
         List<Version> last2Versions = versionRepository
                 .findTop2ByFileIdAndSaveDateLessThanEqualOrderBySaveDateDesc(fileId, versionSaveDate);
         if (last2Versions.isEmpty()) {
@@ -151,11 +161,13 @@ public class VersionServiceImpl implements VersionService {
         FileContentDTO newContent = new FileContentDTO(getLines(version));
         FileContentDTO oldContent = null;
 
-        if (last2Versions.size() >= 1) {
+        if (last2Versions.size() > 1) {
             oldContent = new FileContentDTO(getLines(last2Versions.get(1)));
         }
 
-        return new DiffData(version.getDifferences(), newContent, oldContent);
+        List<Difference> differences = version.getDifferences() == null ?
+                Collections.emptyList() : version.getDifferences();
+        return new DiffData(differences, newContent, oldContent);
     }
 
     private List<String> getLines(Version version) {
@@ -170,7 +182,7 @@ public class VersionServiceImpl implements VersionService {
 
     @Override
     @Transactional(readOnly = true)
-    public VersionInfoDTO getVersionInfo(long fileId, OffsetDateTime versionSaveDate) throws VersionNotFoundException {
+    public VersionInfoDTO getVersionInfo(long fileId, Date versionSaveDate) throws VersionNotFoundException {
         List<Version> versions = versionRepository
                 .findTop2ByFileIdAndSaveDateLessThanEqualOrderBySaveDateDesc(fileId, versionSaveDate);
         if (versions.isEmpty()) {
@@ -194,7 +206,11 @@ public class VersionServiceImpl implements VersionService {
     }
 
     private List<DifferenceInfoDTO> getDifferencesDTOs(Version version) {
-        return version.getDifferences().stream()
+        if (version.getDifferences() == null) {
+            return Collections.emptyList();
+        }
+        return version.getDifferences()
+                .stream()
                 .map(difference -> new DifferenceInfoDTO(
                         difference.getPreviousSectionStart(),
                         difference.getPreviousSectionSize(),

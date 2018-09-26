@@ -3,7 +3,7 @@ package pl.edu.pw.ee.pyskp.documentworkflow.dtos;
 import lombok.NonNull;
 import lombok.Value;
 
-import java.time.OffsetDateTime;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -18,7 +18,7 @@ public class VersionInfoDTO {
     UserInfoDTO author;
 
     @NonNull
-    OffsetDateTime saveDate;
+    Date saveDate;
 
     @NonNull
     String versionString;
