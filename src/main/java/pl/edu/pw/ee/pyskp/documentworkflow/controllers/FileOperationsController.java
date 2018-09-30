@@ -5,7 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.FileMetadataDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.file.FileMetadataDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.file.ContentTypeDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.FileNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.FilesMetadataService;
 
@@ -41,5 +42,12 @@ public class FileOperationsController {
     public void confirm(@PathVariable Long taskId, @PathVariable Long fileId)
             throws FileNotFoundException {
         filesMetadataService.confirmFile(fileId);
+    }
+
+    @GetMapping("/contentType")
+    @PreAuthorize("@securityService.hasAccessToTask(#taskId)")
+    public ContentTypeDTO getContentType(@PathVariable Long fileId, @PathVariable Long taskId)
+            throws FileNotFoundException {
+        return filesMetadataService.getContentType(fileId);
     }
 }

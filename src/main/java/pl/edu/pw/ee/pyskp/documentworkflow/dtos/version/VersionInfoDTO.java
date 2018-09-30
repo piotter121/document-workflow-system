@@ -1,7 +1,8 @@
-package pl.edu.pw.ee.pyskp.documentworkflow.dtos;
+package pl.edu.pw.ee.pyskp.documentworkflow.dtos.version;
 
 import lombok.NonNull;
 import lombok.Value;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.user.UserInfoDTO;
 
 import java.util.Date;
 import java.util.List;

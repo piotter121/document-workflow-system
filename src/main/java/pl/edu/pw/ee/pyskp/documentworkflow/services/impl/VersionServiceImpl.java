@@ -11,7 +11,13 @@ import org.springframework.web.multipart.MultipartFile;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.*;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.FileMetadataRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.VersionRepository;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.*;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.file.FileContentDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.file.NewFileForm;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.user.UserInfoDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.version.DiffData;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.version.DifferenceInfoDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.version.NewVersionForm;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.version.VersionInfoDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.FileNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.VersionNotFoundException;
@@ -86,7 +92,10 @@ public class VersionServiceImpl implements VersionService {
             version.setCheckSum(calculateCheckSum(bytes));
             ByteBuffer content = ByteBuffer.wrap(bytes);
             version.setFileContent(content);
-            List<Difference> differences = differenceService.createDifferencesForNewFile(file.getInputStream());
+            List<Difference> differences;
+            try (InputStream fileInputStream = file.getInputStream()) {
+                differences = differenceService.createDifferencesForNewFile(fileInputStream);
+            }
             version.setDifferences(differences);
 
             versionRepository.save(version);
@@ -173,7 +182,7 @@ public class VersionServiceImpl implements VersionService {
     private List<String> getLines(Version version) {
         byte[] bytes = version.getFileContent().array();
         try {
-            return tikaService.extractLines(new ByteArrayInputStream(bytes));
+            return tikaService.extractParagraphs(new ByteArrayInputStream(bytes));
         } catch (IOException e) {
             LOGGER.error("Input/output exception occurred during extraction of lines");
             throw new RuntimeException(e);

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.ErrorMessageDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.error.ErrorMessageDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.validation.ValidationErrorDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.UnknownContentType;

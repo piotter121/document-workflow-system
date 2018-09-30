@@ -37,7 +37,7 @@ public class TikaService {
         }
     }
 
-    public List<String> extractLines(InputStream inputStream) throws IOException {
+    public List<String> extractParagraphs(InputStream inputStream) throws IOException {
         List<String> lines = new ArrayList<>();
 
         Reader parsingReader = tika.parse(inputStream);
@@ -49,6 +49,8 @@ public class TikaService {
         }
         return lines;
     }
+
+
 
     public String detectMediaType(byte[] bytes) {
         return tika.detect(bytes);

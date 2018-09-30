@@ -11,7 +11,7 @@ import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Project;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Task;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.User;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.UserRepository;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewUserDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.user.NewUserDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.UserNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
 

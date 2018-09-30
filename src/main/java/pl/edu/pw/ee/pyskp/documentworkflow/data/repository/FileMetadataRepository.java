@@ -39,4 +39,8 @@ public interface FileMetadataRepository extends JpaRepository<FileMetadata, Long
     @Modifying
     @Query("update FileMetadata f set f.confirmed = true where f.id = :fileId")
     int setConfirmedTrue(@Param("fileId") Long fileId);
+
+    @SuppressWarnings("SpringDataRepositoryMethodReturnTypeInspection")
+    @Query("select f.contentType from FileMetadata f where f.id = :fileId")
+    Optional<ContentType> findContentTypeById(@Param("fileId") Long fileId);
 }

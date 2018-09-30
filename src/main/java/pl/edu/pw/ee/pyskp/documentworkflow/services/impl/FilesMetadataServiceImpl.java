@@ -11,7 +11,14 @@ import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.*;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.FileMetadataRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.TaskRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.VersionRepository;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.*;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.file.ContentTypeDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.file.FileMetadataDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.file.FileSummaryDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.file.NewFileForm;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.user.UserInfoDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.version.DifferenceInfoDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.version.VersionInfoDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.version.VersionSummaryDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.FileNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.TaskNotFoundException;
@@ -235,5 +242,13 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
                         fileMetadata.getLatestVersion().getModificationAuthor().getFullName(),
                         fileMetadata.getTask().getName()
                 ));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ContentTypeDTO getContentType(final Long fileId) throws FileNotFoundException {
+        return fileMetadataRepository.findContentTypeById(fileId)
+                .map(contentType -> new ContentTypeDTO(contentType.getExtension(), contentType.getName()))
+                .orElseThrow(() -> new FileNotFoundException(fileId.toString()));
     }
 }

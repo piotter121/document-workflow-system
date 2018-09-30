@@ -2,10 +2,10 @@ package pl.edu.pw.ee.pyskp.documentworkflow.services;
 
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Project;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Task;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewTaskForm;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.TaskInfoDTO;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.TaskSummaryDTO;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.UserInfoDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.task.NewTaskForm;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.task.TaskInfoDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.task.TaskSummaryDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.user.UserInfoDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.TaskNotFoundException;
 

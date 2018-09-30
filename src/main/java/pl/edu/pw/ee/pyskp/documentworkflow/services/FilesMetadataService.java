@@ -3,16 +3,16 @@ package pl.edu.pw.ee.pyskp.documentworkflow.services;
 import org.springframework.validation.annotation.Validated;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Project;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Task;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.FileMetadataDTO;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.FileSummaryDTO;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewFileForm;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.file.FileMetadataDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.file.FileSummaryDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.file.NewFileForm;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.file.ContentTypeDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.FileNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.UnknownContentType;
 
 import javax.validation.Valid;
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * Created by p.pysk on 04.01.2017.
@@ -41,4 +41,6 @@ public interface FilesMetadataService {
     Optional<FileSummaryDTO> getLastModifiedFileSummary(Task task);
 
     Optional<FileSummaryDTO> getLastModifiedFileSummary(Project project);
+
+    ContentTypeDTO getContentType(Long fileId) throws FileNotFoundException;
 }

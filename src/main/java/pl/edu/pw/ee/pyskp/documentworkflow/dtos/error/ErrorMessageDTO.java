@@ -1,4 +1,4 @@
-package pl.edu.pw.ee.pyskp.documentworkflow.dtos;
+package pl.edu.pw.ee.pyskp.documentworkflow.dtos.error;
 
 import lombok.Value;
 

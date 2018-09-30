@@ -1,7 +1,8 @@
-package pl.edu.pw.ee.pyskp.documentworkflow.dtos;
+package pl.edu.pw.ee.pyskp.documentworkflow.dtos.task;
 
 import lombok.NonNull;
 import lombok.Value;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.file.FileSummaryDTO;
 
 import java.sql.Timestamp;
 

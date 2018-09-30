@@ -29,7 +29,7 @@ public class DifferenceServiceImpl implements DifferenceService {
 
     @Override
     public List<Difference> createDifferencesForNewFile(InputStream inputStream) throws IOException {
-        List<String> lines = tikaService.extractLines(inputStream);
+        List<String> lines = tikaService.extractParagraphs(inputStream);
         Patch<String> diff = DiffUtils.diff(Collections.emptyList(), lines);
         return diff.getDeltas().stream()
                 .map(this::mapDeltaToDifference)
@@ -40,7 +40,7 @@ public class DifferenceServiceImpl implements DifferenceService {
     public List<Difference> getDifferencesBetweenTwoFiles(
             InputStream inputStream, InputStream anotherInputStream) throws IOException {
         Patch<String> diff =
-                DiffUtils.diff(tikaService.extractLines(inputStream), tikaService.extractLines(anotherInputStream));
+                DiffUtils.diff(tikaService.extractParagraphs(inputStream), tikaService.extractParagraphs(anotherInputStream));
         return diff.getDeltas().stream()
                 .map(this::mapDeltaToDifference)
                 .collect(Collectors.toList());

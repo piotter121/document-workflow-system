@@ -8,7 +8,12 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Project;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.User;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.ProjectRepository;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.*;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.file.FileSummaryDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.project.NewProjectForm;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.project.ProjectInfoDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.project.ProjectSummaryDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.task.TaskSummaryDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.user.UserInfoDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ProjectNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.*;
 

@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pw.ee.pyskp.documentworkflow.authentication.WebAuthenticationService;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewUserDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.user.NewUserDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.UserNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
 
