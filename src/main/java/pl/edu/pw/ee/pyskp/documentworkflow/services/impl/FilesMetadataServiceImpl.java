@@ -248,7 +248,7 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
     @Transactional(readOnly = true)
     public ContentTypeDTO getContentType(final Long fileId) throws FileNotFoundException {
         return fileMetadataRepository.findContentTypeById(fileId)
-                .map(contentType -> new ContentTypeDTO(contentType.getExtension(), contentType.getName()))
+                .map(contentType -> new ContentTypeDTO("." + contentType.getExtension(), contentType.getName()))
                 .orElseThrow(() -> new FileNotFoundException(fileId.toString()));
     }
 }
