@@ -1,14 +1,10 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.services;
 
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.apache.tika.Tika;
-import org.apache.tika.config.TikaConfig;
-import org.apache.tika.exception.TikaException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.xml.sax.SAXException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,22 +16,11 @@ import java.util.List;
 /**
  * Created by piotr on 20.01.17.
  */
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Service
 public class TikaService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(TikaService.class);
-
+    @NonNull
     private final Tika tika;
-
-    public TikaService() {
-        try {
-            Resource resource = new ClassPathResource("tika-config.xml");
-            TikaConfig config = new TikaConfig(resource.getInputStream());
-            tika = new Tika(config);
-        } catch (TikaException | IOException | SAXException e) {
-            LOGGER.error("Exception occurred during Tika initialization", e);
-            throw new RuntimeException(e);
-        }
-    }
 
     public List<String> extractParagraphs(InputStream inputStream) throws IOException {
         List<String> lines = new ArrayList<>();
@@ -49,7 +34,6 @@ public class TikaService {
         }
         return lines;
     }
-
 
 
     public String detectMediaType(byte[] bytes) {
