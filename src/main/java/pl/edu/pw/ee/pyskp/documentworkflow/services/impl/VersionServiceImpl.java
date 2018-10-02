@@ -2,8 +2,7 @@ package pl.edu.pw.ee.pyskp.documentworkflow.services.impl;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,11 +41,10 @@ import java.util.stream.Collectors;
 /**
  * Created by piotr on 06.01.17.
  */
+@Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Service
 public class VersionServiceImpl implements VersionService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(VersionServiceImpl.class);
-
     @NonNull
     private final UserService userService;
 
@@ -68,7 +66,7 @@ public class VersionServiceImpl implements VersionService {
         try {
             return MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
-            LOGGER.error(e.getMessage(), e);
+            log.error("Not found SHA-256", e);
             throw new RuntimeException(e);
         }
     }
@@ -100,7 +98,7 @@ public class VersionServiceImpl implements VersionService {
 
             versionRepository.save(version);
         } catch (IOException e) {
-            LOGGER.error("Input/output exception during getBytes from multipartFile", e);
+            log.error("Input/output exception during getBytes from multipartFile", e);
             throw new RuntimeException(e);
         }
     }
@@ -148,7 +146,7 @@ public class VersionServiceImpl implements VersionService {
 
             return newVersion.getSaveDate();
         } catch (IOException e) {
-            LOGGER.error("Input/output exception occurred", e);
+            log.error("Input/output exception occurred", e);
             throw new RuntimeException(e);
         }
     }
@@ -184,7 +182,7 @@ public class VersionServiceImpl implements VersionService {
         try {
             return tikaService.extractParagraphs(new ByteArrayInputStream(bytes));
         } catch (IOException e) {
-            LOGGER.error("Input/output exception occurred during extraction of lines");
+            log.error("Input/output exception occurred during extraction of lines");
             throw new RuntimeException(e);
         }
     }

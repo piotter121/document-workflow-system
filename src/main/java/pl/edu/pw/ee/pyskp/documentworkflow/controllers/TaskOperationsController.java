@@ -2,8 +2,7 @@ package pl.edu.pw.ee.pyskp.documentworkflow.controllers;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -15,12 +14,11 @@ import pl.edu.pw.ee.pyskp.documentworkflow.services.TaskService;
 
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @RestController
 @RequestMapping("/api/projects/{projectId}/tasks/{taskId}")
 public class TaskOperationsController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(TaskOperationsController.class);
-
     @NonNull
     private final TaskService taskService;
 
@@ -39,8 +37,8 @@ public class TaskOperationsController {
     @DeleteMapping
     @PreAuthorize("@securityService.isCurrentUserProjectAdministrator(#projectId)")
     public void deleteTask(@PathVariable Long taskId, @PathVariable Long projectId) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Received HTTP DELETE request for deletion task of id=" + taskId);
+        if (log.isDebugEnabled()) {
+            log.debug("Received HTTP DELETE request for deletion task of id=" + taskId);
         }
         taskService.deleteTask(taskId);
     }

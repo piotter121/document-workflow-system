@@ -2,8 +2,7 @@ package pl.edu.pw.ee.pyskp.documentworkflow.services.impl;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,11 +37,10 @@ import java.util.stream.Collectors;
 /**
  * Created by piotr on 06.01.17.
  */
+@Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Service
 public class FilesMetadataServiceImpl implements FilesMetadataService {
-    private final static Logger LOGGER = LoggerFactory.getLogger(FilesMetadataServiceImpl.class);
-
     @NonNull
     private final FileMetadataRepository fileMetadataRepository;
 
@@ -87,7 +85,7 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
         try {
             fileMetadata.setContentType(getContentType(formData.getFile().getBytes()));
         } catch (IOException e) {
-            LOGGER.error("Input/output exception occurred during getBytes method", e);
+            log.error("Input/output exception occurred during getBytes method", e);
             throw new RuntimeException(e);
         }
         VersionSummary versionSummary = new VersionSummary(formData.getVersionString(), getNowTimestamp(), currentUser);
@@ -177,7 +175,7 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
             ContentType contentType = getContentType(file);
             return fileMetadataRepository.existsByIdAndContentType(fileId, contentType);
         } catch (UnknownContentType e) {
-            LOGGER.error(e.getLocalizedMessage(), e);
+            log.error(e.getLocalizedMessage(), e);
             return false;
         }
     }
