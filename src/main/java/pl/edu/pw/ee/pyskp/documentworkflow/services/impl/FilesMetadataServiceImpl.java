@@ -2,6 +2,7 @@ package pl.edu.pw.ee.pyskp.documentworkflow.services.impl;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -67,6 +68,7 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
     }
 
     @Override
+    @SneakyThrows(IOException.class)
     @Transactional(rollbackFor = {UnknownContentType.class, ResourceNotFoundException.class})
     public Long createNewFileFromForm(NewFileForm formData, Long taskId)
             throws UnknownContentType, ResourceNotFoundException {
@@ -82,12 +84,7 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
         fileMetadata.setMarkedToConfirm(false);
         fileMetadata.setCreationDate(getNowTimestamp());
         fileMetadata.setTask(task);
-        try {
-            fileMetadata.setContentType(getContentType(formData.getFile().getBytes()));
-        } catch (IOException e) {
-            log.error("Input/output exception occurred during getBytes method", e);
-            throw new RuntimeException(e);
-        }
+        fileMetadata.setContentType(getContentType(formData.getFile().getBytes()));
         VersionSummary versionSummary = new VersionSummary(formData.getVersionString(), getNowTimestamp(), currentUser);
         fileMetadata.setLatestVersion(versionSummary);
         fileMetadata = fileMetadataRepository.save(fileMetadata);

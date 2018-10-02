@@ -2,6 +2,7 @@ package pl.edu.pw.ee.pyskp.documentworkflow.services.impl;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -62,13 +63,9 @@ public class VersionServiceImpl implements VersionService {
 
     private final MessageDigest sha256 = initializeSHA256();
 
+    @SneakyThrows(NoSuchAlgorithmException.class)
     private MessageDigest initializeSHA256() {
-        try {
-            return MessageDigest.getInstance("SHA-256");
-        } catch (NoSuchAlgorithmException e) {
-            log.error("Not found SHA-256", e);
-            throw new RuntimeException(e);
-        }
+        return MessageDigest.getInstance("SHA-256");
     }
 
     private String calculateCheckSum(byte[] bytes) {
@@ -76,31 +73,27 @@ public class VersionServiceImpl implements VersionService {
     }
 
     @Override
+    @SneakyThrows(IOException.class)
     @Transactional
     public void createInitVersionOfFile(NewFileForm form, FileMetadata fileMetadata) {
-        try {
-            Version version = new Version();
-            version.setFileId(fileMetadata.getId());
-            version.setSaveDate(getNowTimestamp());
-            version.setVersionString(form.getVersionString());
-            version.setMessage(form.getVersionMessage());
-            version.setAuthor(new UserSummary(userService.getCurrentUser()));
-            MultipartFile file = form.getFile();
-            byte[] bytes = file.getBytes();
-            version.setCheckSum(calculateCheckSum(bytes));
-            ByteBuffer content = ByteBuffer.wrap(bytes);
-            version.setFileContent(content);
-            List<Difference> differences;
-            try (InputStream fileInputStream = file.getInputStream()) {
-                differences = differenceService.createDifferencesForNewFile(fileInputStream);
-            }
-            version.setDifferences(differences);
-
-            versionRepository.save(version);
-        } catch (IOException e) {
-            log.error("Input/output exception during getBytes from multipartFile", e);
-            throw new RuntimeException(e);
+        Version version = new Version();
+        version.setFileId(fileMetadata.getId());
+        version.setSaveDate(getNowTimestamp());
+        version.setVersionString(form.getVersionString());
+        version.setMessage(form.getVersionMessage());
+        version.setAuthor(new UserSummary(userService.getCurrentUser()));
+        MultipartFile file = form.getFile();
+        byte[] bytes = file.getBytes();
+        version.setCheckSum(calculateCheckSum(bytes));
+        ByteBuffer content = ByteBuffer.wrap(bytes);
+        version.setFileContent(content);
+        List<Difference> differences;
+        try (InputStream fileInputStream = file.getInputStream()) {
+            differences = differenceService.createDifferencesForNewFile(fileInputStream);
         }
+        version.setDifferences(differences);
+
+        versionRepository.save(version);
     }
 
     private Timestamp getNowTimestamp() {
@@ -117,38 +110,34 @@ public class VersionServiceImpl implements VersionService {
     }
 
     @Override
+    @SneakyThrows(IOException.class)
     @Transactional(rollbackFor = ResourceNotFoundException.class)
     public Date addNewVersionOfFile(NewVersionForm form) throws ResourceNotFoundException {
-        try {
-            Version newVersion = new Version();
-            newVersion.setSaveDate(new Date());
-            User modificationAuthor = userService.getCurrentUser();
-            newVersion.setAuthor(new UserSummary(modificationAuthor));
-            newVersion.setVersionString(form.getVersionString());
-            newVersion.setMessage(form.getMessage());
-            byte[] file = form.getFile().getBytes();
-            newVersion.setCheckSum(calculateCheckSum(file));
-            newVersion.setFileContent(ByteBuffer.wrap(file));
-            FileMetadata fileMetadata = getFileMetadata(form.getFileId());
-            newVersion.setFileId(form.getFileId());
-            byte[] oldContent = versionRepository.findTopByFileIdOrderBySaveDateDesc(form.getFileId())
-                    .map(version -> version.getFileContent().array())
-                    .orElseThrow(VersionNotFoundException::new);
-            List<Difference> differences = differenceService.getDifferencesBetweenTwoFiles(
-                    new ByteArrayInputStream(oldContent), new ByteArrayInputStream(file)
-            );
-            newVersion.setDifferences(differences);
-            newVersion = versionRepository.save(newVersion);
-            VersionSummary versionSummary = new VersionSummary(newVersion.getVersionString(),
-                    convert(newVersion.getSaveDate()), modificationAuthor);
-            fileMetadata.setLatestVersion(versionSummary);
-            fileMetadataRepository.save(fileMetadata);
+        Version newVersion = new Version();
+        newVersion.setSaveDate(new Date());
+        User modificationAuthor = userService.getCurrentUser();
+        newVersion.setAuthor(new UserSummary(modificationAuthor));
+        newVersion.setVersionString(form.getVersionString());
+        newVersion.setMessage(form.getMessage());
+        byte[] file = form.getFile().getBytes();
+        newVersion.setCheckSum(calculateCheckSum(file));
+        newVersion.setFileContent(ByteBuffer.wrap(file));
+        FileMetadata fileMetadata = getFileMetadata(form.getFileId());
+        newVersion.setFileId(form.getFileId());
+        byte[] oldContent = versionRepository.findTopByFileIdOrderBySaveDateDesc(form.getFileId())
+                .map(version -> version.getFileContent().array())
+                .orElseThrow(VersionNotFoundException::new);
+        List<Difference> differences = differenceService.getDifferencesBetweenTwoFiles(
+                new ByteArrayInputStream(oldContent), new ByteArrayInputStream(file)
+        );
+        newVersion.setDifferences(differences);
+        newVersion = versionRepository.save(newVersion);
+        VersionSummary versionSummary = new VersionSummary(newVersion.getVersionString(),
+                convert(newVersion.getSaveDate()), modificationAuthor);
+        fileMetadata.setLatestVersion(versionSummary);
+        fileMetadataRepository.save(fileMetadata);
 
-            return newVersion.getSaveDate();
-        } catch (IOException e) {
-            log.error("Input/output exception occurred", e);
-            throw new RuntimeException(e);
-        }
+        return newVersion.getSaveDate();
     }
 
     private Timestamp convert(Date date) {
@@ -177,14 +166,10 @@ public class VersionServiceImpl implements VersionService {
         return new DiffData(differences, newContent, oldContent);
     }
 
+    @SneakyThrows(IOException.class)
     private List<String> getLines(Version version) {
         byte[] bytes = version.getFileContent().array();
-        try {
-            return tikaService.extractParagraphs(new ByteArrayInputStream(bytes));
-        } catch (IOException e) {
-            log.error("Input/output exception occurred during extraction of lines");
-            throw new RuntimeException(e);
-        }
+        return tikaService.extractParagraphs(new ByteArrayInputStream(bytes));
     }
 
     @Override
