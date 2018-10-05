@@ -8,7 +8,6 @@ services:
       - "9042:9042"
     deploy:
       replicas: 1
-    restart: on-failure
 
   postgres-db:
     image: postgres:10
@@ -24,7 +23,6 @@ services:
       pg-network:
         aliases:
           - postgres
-    restart: on-failure
 
   pg-admin:
     image: dpage/pgadmin4
