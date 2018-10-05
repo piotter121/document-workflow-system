@@ -72,7 +72,7 @@ public class VersionController {
         return versionService.existsByVersionString(fileId, versionString);
     }
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("@securityService.hasAccessToTask(#taskId)")
     public Long processAddingNewVersion(@PathVariable Long taskId, @PathVariable Long fileId,
                                         @RequestPart("file") @NotNull MultipartFile file,

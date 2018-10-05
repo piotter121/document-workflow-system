@@ -107,7 +107,7 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
                 fileMetadata.getId().toString(),
                 fileMetadata.getName(),
                 fileMetadata.getDescription(),
-                fileMetadata.getContentType().getName(),
+                fileMetadata.getContentType().name(),
                 fileMetadata.getContentType().getExtension(),
                 fileMetadata.getConfirmed(),
                 fileMetadata.getMarkedToConfirm(),

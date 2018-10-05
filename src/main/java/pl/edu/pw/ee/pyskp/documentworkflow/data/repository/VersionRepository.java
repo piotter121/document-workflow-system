@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * Created by piotr on 06.01.17.
@@ -31,7 +32,5 @@ public interface VersionRepository extends CassandraRepository<Version> {
     @Query("select * from version where file_id = :file_id order by save_date desc limit 1")
     Optional<Version> findTopByFileIdOrderBySaveDateDesc(@Param("file_id") Long fileId);
 
-    int countDistinctByFileId(Long fileId);
-
-    boolean existsByFileIdAndVersionString(Long fileId, String versionString);
+    Stream<Version> findByFileId(long fileId);
 }

@@ -215,7 +215,10 @@ public class VersionServiceImpl implements VersionService {
     @Override
     @Transactional(readOnly = true)
     public boolean existsByVersionString(long fileId, String versionString) {
-        return versionRepository.existsByFileIdAndVersionString(fileId, versionString);
+        return versionRepository.findByFileId(fileId)
+                .map(Version::getVersionString)
+                .distinct()
+                .anyMatch(versionString::equals);
     }
 
     @Override
@@ -239,7 +242,7 @@ public class VersionServiceImpl implements VersionService {
     @Override
     @Transactional(readOnly = true)
     public int getNumberOfVersions(FileMetadata fileMetadata) {
-        return versionRepository.countDistinctByFileId(fileMetadata.getId());
+        return (int) versionRepository.findByFileId(fileMetadata.getId()).distinct().count();
     }
 
     private FileMetadata getFileMetadata(long fileId) throws FileNotFoundException {
