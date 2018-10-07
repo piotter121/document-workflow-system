@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.file.NewFileForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
-import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.UnknownContentType;
+import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.UnsupportedContentType;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.FilesMetadataService;
 
 /**
@@ -30,7 +30,7 @@ public class FilesMetadataController {
                                    @RequestPart(name = "file") MultipartFile file,
                                    @RequestPart(name = "versionString") String versionString,
                                    @PathVariable Long taskId)
-            throws UnknownContentType, ResourceNotFoundException {
+            throws UnsupportedContentType, ResourceNotFoundException {
         NewFileForm newFileForm = new NewFileForm(name, description, file, versionString);
         return filesMetadataService.createNewFileFromForm(newFileForm, taskId);
     }

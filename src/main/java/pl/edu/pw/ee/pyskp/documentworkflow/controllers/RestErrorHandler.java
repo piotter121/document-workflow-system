@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.error.ErrorMessageDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.validation.ValidationErrorDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
-import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.UnknownContentType;
+import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.UnsupportedContentType;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -84,10 +84,10 @@ public class RestErrorHandler {
         return errorMessage;
     }
 
-    @ExceptionHandler(UnknownContentType.class)
+    @ExceptionHandler(UnsupportedContentType.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     @ResponseBody
-    public ErrorMessageDTO handleUnknownContentType(UnknownContentType ex) {
+    public ErrorMessageDTO handleUnknownContentType(UnsupportedContentType ex) {
         log.error(ex.getLocalizedMessage(), ex);
         return new ErrorMessageDTO(ex.getClass().getSimpleName());
     }

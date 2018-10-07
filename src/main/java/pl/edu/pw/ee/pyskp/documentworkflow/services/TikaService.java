@@ -10,8 +10,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by piotr on 20.01.17.
@@ -23,20 +23,14 @@ public class TikaService {
     private final Tika tika;
 
     public List<String> extractParagraphs(InputStream inputStream) throws IOException {
-        List<String> lines = new ArrayList<>();
-
         Reader parsingReader = tika.parse(inputStream);
         try (BufferedReader contentReader = new BufferedReader(parsingReader)) {
-            String line;
-            while ((line = contentReader.readLine()) != null) {
-                lines.add(line);
-            }
+            return contentReader.lines().collect(Collectors.toList());
         }
-        return lines;
     }
 
 
-    public String detectMediaType(byte[] bytes) {
-        return tika.detect(bytes);
+    public String detectMediaType(InputStream inputStream) throws IOException {
+        return tika.detect(inputStream);
     }
 }

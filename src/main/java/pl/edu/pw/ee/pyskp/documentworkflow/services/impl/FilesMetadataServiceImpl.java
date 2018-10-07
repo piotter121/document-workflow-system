@@ -22,13 +22,14 @@ import pl.edu.pw.ee.pyskp.documentworkflow.dtos.version.VersionSummaryDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.FileNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.TaskNotFoundException;
-import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.UnknownContentType;
+import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.UnsupportedContentType;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.FilesMetadataService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.TikaService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.VersionService;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.List;
@@ -60,18 +61,18 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
     @NonNull
     private final TikaService tikaService;
 
-    private ContentType getContentType(byte[] file)
-            throws UnknownContentType {
-        String contentType = tikaService.detectMediaType(file);
+    private ContentType getContentType(InputStream inputSteam)
+            throws UnsupportedContentType, IOException {
+        String contentType = tikaService.detectMediaType(inputSteam);
         return ContentType.fromName(contentType)
-                .orElseThrow(() -> new UnknownContentType(contentType));
+                .orElseThrow(() -> new UnsupportedContentType(contentType));
     }
 
     @Override
     @SneakyThrows(IOException.class)
-    @Transactional(rollbackFor = {UnknownContentType.class, ResourceNotFoundException.class})
+    @Transactional(rollbackFor = {UnsupportedContentType.class, ResourceNotFoundException.class})
     public Long createNewFileFromForm(NewFileForm formData, Long taskId)
-            throws UnknownContentType, ResourceNotFoundException {
+            throws UnsupportedContentType, ResourceNotFoundException {
         Task task = taskRepository.findOne(taskId);
         if (task == null) {
             throw new TaskNotFoundException(taskId.toString());
@@ -84,7 +85,10 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
         fileMetadata.setMarkedToConfirm(false);
         fileMetadata.setCreationDate(getNowTimestamp());
         fileMetadata.setTask(task);
-        fileMetadata.setContentType(getContentType(formData.getFile().getBytes()));
+        try (InputStream fileInputStream = formData.getFile().getInputStream()) {
+            ContentType contentType = getContentType(fileInputStream);
+            fileMetadata.setContentType(contentType);
+        }
         VersionSummary versionSummary = new VersionSummary(formData.getVersionString(), getNowTimestamp(), currentUser);
         fileMetadata.setLatestVersion(versionSummary);
         fileMetadata = fileMetadataRepository.save(fileMetadata);
@@ -164,14 +168,14 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
 
     @Override
     @Transactional(readOnly = true)
-    public boolean hasContentTypeAs(Long fileId, byte[] file) throws FileNotFoundException {
+    public boolean hasContentTypeAs(Long fileId, InputStream inputStream) throws FileNotFoundException {
         if (!fileMetadataRepository.exists(fileId)) {
             throw new FileNotFoundException(fileId.toString());
         }
         try {
-            ContentType contentType = getContentType(file);
+            ContentType contentType = getContentType(inputStream);
             return fileMetadataRepository.existsByIdAndContentType(fileId, contentType);
-        } catch (UnknownContentType e) {
+        } catch (UnsupportedContentType | IOException e) {
             log.error(e.getLocalizedMessage(), e);
             return false;
         }
