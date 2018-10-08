@@ -89,7 +89,9 @@ public class RestErrorHandler {
     @ResponseBody
     public ErrorMessageDTO handleUnknownContentType(UnsupportedContentType ex) {
         log.error(ex.getLocalizedMessage(), ex);
-        return new ErrorMessageDTO(ex.getClass().getSimpleName());
+        ErrorMessageDTO errorMessageDTO = new ErrorMessageDTO(ex.getClass().getSimpleName());
+        errorMessageDTO.getParams().put("unsupportedContentTypeName", ex.getUnsupportedContentTypeName());
+        return errorMessageDTO;
     }
 
     @ExceptionHandler(AccessDeniedException.class)
