@@ -57,9 +57,10 @@ public class VersionController {
     public ResponseEntity<InputStreamResource> getVersionContent(@PathVariable Long versionSaveDate,
                                                                  @PathVariable Long taskId, @PathVariable Long fileId)
             throws ResourceNotFoundException {
+        MediaType mediaType = filesMetadataService.getFileMediaType(fileId);
         InputStream fileContent = versionService.getVersionFileContent(fileId, new Date(versionSaveDate));
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        httpHeaders.setContentType(mediaType);
         httpHeaders.setContentDispositionFormData("attachment", filesMetadataService.getFileName(fileId));
         return ResponseEntity.ok()
                 .headers(httpHeaders)
