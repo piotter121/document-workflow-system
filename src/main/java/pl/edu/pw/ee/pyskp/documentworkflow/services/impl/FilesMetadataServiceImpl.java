@@ -5,8 +5,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.*;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.FileMetadataRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.TaskRepository;
@@ -29,7 +31,6 @@ import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.VersionService;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.List;
@@ -61,9 +62,9 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
     @NonNull
     private final TikaService tikaService;
 
-    private ContentType getContentType(InputStream inputSteam)
-            throws UnsupportedContentType, IOException {
-        String contentType = tikaService.detectMediaType(inputSteam);
+    private ContentType getContentType(byte[] bytes)
+            throws UnsupportedContentType {
+        String contentType = tikaService.detectMediaType(bytes);
         return ContentType.fromName(contentType)
                 .orElseThrow(() -> new UnsupportedContentType(contentType));
     }
@@ -85,10 +86,9 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
         fileMetadata.setMarkedToConfirm(false);
         fileMetadata.setCreationDate(getNowTimestamp());
         fileMetadata.setTask(task);
-        try (InputStream fileInputStream = formData.getFile().getInputStream()) {
-            ContentType contentType = getContentType(fileInputStream);
-            fileMetadata.setContentType(contentType);
-        }
+        MultipartFile file = formData.getFile();
+        ContentType contentType = getContentType(file.getBytes());
+        fileMetadata.setContentType(contentType);
         VersionSummary versionSummary = new VersionSummary(formData.getVersionString(), getNowTimestamp(), currentUser);
         fileMetadata.setLatestVersion(versionSummary);
         fileMetadata = fileMetadataRepository.save(fileMetadata);
@@ -168,14 +168,14 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
 
     @Override
     @Transactional(readOnly = true)
-    public boolean hasContentTypeAs(Long fileId, InputStream inputStream) throws FileNotFoundException {
+    public boolean hasContentTypeAs(Long fileId, byte[] bytes) throws FileNotFoundException {
         if (!fileMetadataRepository.exists(fileId)) {
             throw new FileNotFoundException(fileId.toString());
         }
         try {
-            ContentType contentType = getContentType(inputStream);
+            ContentType contentType = getContentType(bytes);
             return fileMetadataRepository.existsByIdAndContentType(fileId, contentType);
-        } catch (UnsupportedContentType | IOException e) {
+        } catch (UnsupportedContentType e) {
             log.error(e.getLocalizedMessage(), e);
             return false;
         }
@@ -248,6 +248,13 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
     public ContentTypeDTO getContentType(final Long fileId) throws FileNotFoundException {
         return fileMetadataRepository.findContentTypeById(fileId)
                 .map(contentType -> new ContentTypeDTO("." + contentType.getExtension(), contentType.getName()))
+                .orElseThrow(() -> new FileNotFoundException(fileId.toString()));
+    }
+
+    @Override
+    public MediaType getFileMediaType(Long fileId) throws FileNotFoundException {
+        return fileMetadataRepository.findContentTypeById(fileId)
+                .map(contentType -> MediaType.parseMediaType(contentType.getName()))
                 .orElseThrow(() -> new FileNotFoundException(fileId.toString()));
     }
 }

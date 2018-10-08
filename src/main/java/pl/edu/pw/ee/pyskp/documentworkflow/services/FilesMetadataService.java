@@ -1,5 +1,6 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.services;
 
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Project;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Task;
@@ -12,7 +13,6 @@ import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.UnsupportedContentType;
 
 import javax.validation.Valid;
-import java.io.InputStream;
 import java.util.Optional;
 
 /**
@@ -27,7 +27,7 @@ public interface FilesMetadataService {
 
     void markFileToConfirm(Long fileId) throws FileNotFoundException;
 
-    boolean hasContentTypeAs(Long fileId, InputStream inputStream) throws FileNotFoundException;
+    boolean hasContentTypeAs(Long fileId, byte[] bytes) throws FileNotFoundException;
 
     void confirmFile(Long fileId) throws FileNotFoundException;
 
@@ -44,4 +44,6 @@ public interface FilesMetadataService {
     Optional<FileSummaryDTO> getLastModifiedFileSummary(Project project);
 
     ContentTypeDTO getContentType(Long fileId) throws FileNotFoundException;
+
+    MediaType getFileMediaType(Long fileId) throws FileNotFoundException;
 }

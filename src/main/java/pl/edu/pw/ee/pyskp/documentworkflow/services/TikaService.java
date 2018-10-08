@@ -30,7 +30,7 @@ public class TikaService {
     }
 
 
-    public String detectMediaType(InputStream inputStream) throws IOException {
-        return tika.detect(inputStream);
+    public String detectMediaType(byte[] bytes) {
+        return tika.detect(bytes);
     }
 }
