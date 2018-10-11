@@ -1,11 +1,12 @@
 version: '3.7'
 services:
-  cassandra-db:
-    image: cassandra:3.11
+  elassandra-db:
+    image: strapdata/elassandra:5.5.0.23
     volumes:
-      - cassandra-volume:/var/lib/cassandra
+      - elassandra-volume:/var/lib/cassandra
     ports:
       - "9042:9042"
+      - "9200:9200"
     deploy:
       replicas: 1
 
@@ -37,7 +38,7 @@ services:
       - pg-network
 
 volumes:
-  cassandra-volume:
+  elassandra-volume:
   postgres-volume:
 
 networks:

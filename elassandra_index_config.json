@@ -1,0 +1,16 @@
+{
+  "settings": {
+    "keyspace": "dws"
+  },
+  "mappings": {
+    "version": {
+      "discover": "^(?!message).*",
+      "properties": {
+        "message": {
+          "type": "text",
+          "cql_collection": "singleton"
+        }
+      }
+    }
+  }
+}

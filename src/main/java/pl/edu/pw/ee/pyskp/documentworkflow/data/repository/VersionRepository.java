@@ -1,5 +1,6 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.data.repository;
 
+import org.springframework.data.cassandra.core.mapping.MapId;
 import org.springframework.data.cassandra.repository.CassandraRepository;
 import org.springframework.data.cassandra.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,7 +15,7 @@ import java.util.stream.Stream;
 /**
  * Created by piotr on 06.01.17.
  */
-public interface VersionRepository extends CassandraRepository<Version> {
+public interface VersionRepository extends CassandraRepository<Version, MapId> {
     @Query("delete from version where file_id in (:files)")
     void deleteAllByFileIdIn(@Param("files") Collection<Long> filesIds);
 

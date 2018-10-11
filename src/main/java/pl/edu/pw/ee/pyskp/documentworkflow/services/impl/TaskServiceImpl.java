@@ -56,10 +56,8 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Long createTaskFromForm(NewTaskForm form, Long projectId) throws ResourceNotFoundException {
-        Project project = projectRepository.findOne(projectId);
-        if (project == null) {
-            throw new ProjectNotFoundException(projectId.toString());
-        }
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ProjectNotFoundException(projectId.toString()));
         Task task = new Task();
         task.setName(form.getName());
         task.setDescription(form.getDescription());
@@ -77,7 +75,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void deleteTask(Long taskId) {
         versionService.deleteTaskFilesVersions(taskId);
-        taskRepository.delete(taskId);
+        taskRepository.deleteById(taskId);
     }
 
     @Override
@@ -190,11 +188,8 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional(readOnly = true)
     public Task getTask(Long taskId) throws TaskNotFoundException {
-        Task task = taskRepository.findOne(taskId);
-        if (task == null) {
-            throw new TaskNotFoundException(taskId.toString());
-        }
-        return task;
+        return taskRepository.findById(taskId)
+                .orElseThrow(() -> new TaskNotFoundException(taskId.toString()));
     }
 
     @Override

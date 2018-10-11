@@ -246,11 +246,8 @@ public class VersionServiceImpl implements VersionService {
     }
 
     private FileMetadata getFileMetadata(long fileId) throws FileNotFoundException {
-        FileMetadata fileMetadata = fileMetadataRepository.findOne(fileId);
-        if (fileMetadata == null) {
-            throw new FileNotFoundException(String.valueOf(fileId));
-        }
-        return fileMetadata;
+        return fileMetadataRepository.findById(fileId)
+                .orElseThrow(() -> new FileNotFoundException(String.valueOf(fileId)));
     }
 
 

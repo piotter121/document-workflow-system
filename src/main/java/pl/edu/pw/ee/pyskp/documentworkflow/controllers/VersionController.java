@@ -2,7 +2,6 @@ package pl.edu.pw.ee.pyskp.documentworkflow.controllers;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -19,6 +18,7 @@ import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.VersionNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.FilesMetadataService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.VersionService;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.InputStream;
 import java.util.Date;

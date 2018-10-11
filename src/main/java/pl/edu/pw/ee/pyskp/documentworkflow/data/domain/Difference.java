@@ -1,8 +1,8 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.data.domain;
 
 import lombok.Data;
-import org.springframework.data.cassandra.mapping.Column;
-import org.springframework.data.cassandra.mapping.UserDefinedType;
+import org.springframework.data.cassandra.core.mapping.Column;
+import org.springframework.data.cassandra.core.mapping.UserDefinedType;
 
 /**
  * Created by piotr on 11.12.16.

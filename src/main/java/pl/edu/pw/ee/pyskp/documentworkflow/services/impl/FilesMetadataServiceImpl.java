@@ -74,10 +74,8 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
     @Transactional(rollbackFor = {UnsupportedContentType.class, ResourceNotFoundException.class})
     public Long createNewFileFromForm(NewFileForm formData, Long taskId)
             throws UnsupportedContentType, ResourceNotFoundException {
-        Task task = taskRepository.findOne(taskId);
-        if (task == null) {
-            throw new TaskNotFoundException(taskId.toString());
-        }
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new TaskNotFoundException(taskId.toString()));
         User currentUser = userService.getCurrentUser();
         FileMetadata fileMetadata = new FileMetadata();
         fileMetadata.setName(formData.getName());
@@ -124,11 +122,8 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
     }
 
     private FileMetadata getFileMetadata(Long fileId) throws FileNotFoundException {
-        FileMetadata fileMetadata = fileMetadataRepository.findOne(fileId);
-        if (fileMetadata == null) {
-            throw new FileNotFoundException(fileId.toString());
-        }
-        return fileMetadata;
+        return fileMetadataRepository.findById(fileId)
+                .orElseThrow(() -> new FileNotFoundException(fileId.toString()));
     }
 
     private List<VersionInfoDTO> mapToDTOsWithOutPreviousVersionsString(List<Version> versions) {
@@ -169,7 +164,7 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
     @Override
     @Transactional(readOnly = true)
     public boolean hasContentTypeAs(Long fileId, byte[] bytes) throws FileNotFoundException {
-        if (!fileMetadataRepository.exists(fileId)) {
+        if (!fileMetadataRepository.existsById(fileId)) {
             throw new FileNotFoundException(fileId.toString());
         }
         try {
@@ -194,17 +189,17 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
     @Transactional
     public void deleteFile(Long fileId) {
         versionRepository.deleteAllByFileId(fileId);
-        fileMetadataRepository.delete(fileId);
+        fileMetadataRepository.deleteById(fileId);
     }
 
     @Override
     @Transactional(readOnly = true)
     public String getFileName(Long fileId) throws FileNotFoundException {
-        FileMetadata fileMetadata = fileMetadataRepository.findOne(fileId);
-        if (fileMetadata == null) {
-            throw new FileNotFoundException(fileId.toString());
-        }
-        return fileMetadata.getName().concat(".").concat(fileMetadata.getContentType().getExtension());
+        return fileMetadataRepository.findById(fileId)
+                .map(fileMetadata -> fileMetadata.getName()
+                        .concat(".")
+                        .concat(fileMetadata.getContentType().getExtension()))
+                .orElseThrow(() -> new FileNotFoundException(fileId.toString()));
     }
 
     @Override

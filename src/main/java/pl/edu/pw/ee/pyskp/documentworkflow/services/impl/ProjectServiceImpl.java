@@ -48,11 +48,8 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     @Transactional(readOnly = true)
     public Project getProject(Long projectId) throws ProjectNotFoundException {
-        Project project = projectRepository.findOne(projectId);
-        if (project == null) {
-            throw new ProjectNotFoundException(projectId.toString());
-        }
-        return project;
+        return projectRepository.findById(projectId)
+                .orElseThrow(() -> new ProjectNotFoundException(projectId.toString()));
     }
 
     @Override
@@ -122,7 +119,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Transactional
     public void deleteProject(Long projectId) {
         versionService.deleteProjectFilesVersions(projectId);
-        projectRepository.delete(projectId);
+        projectRepository.deleteById(projectId);
     }
 
     @Override

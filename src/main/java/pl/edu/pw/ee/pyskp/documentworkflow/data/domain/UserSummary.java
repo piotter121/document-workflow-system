@@ -4,9 +4,9 @@ import com.datastax.driver.core.DataType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.springframework.data.cassandra.mapping.CassandraType;
-import org.springframework.data.cassandra.mapping.Column;
-import org.springframework.data.cassandra.mapping.UserDefinedType;
+import org.springframework.data.cassandra.core.mapping.CassandraType;
+import org.springframework.data.cassandra.core.mapping.Column;
+import org.springframework.data.cassandra.core.mapping.UserDefinedType;
 
 @NoArgsConstructor
 @Data
