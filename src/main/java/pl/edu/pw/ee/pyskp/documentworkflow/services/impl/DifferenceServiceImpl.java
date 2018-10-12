@@ -28,8 +28,7 @@ public class DifferenceServiceImpl implements DifferenceService {
     private final TikaService tikaService;
 
     @Override
-    public List<Difference> createDifferencesForNewFile(InputStream inputStream) throws IOException {
-        List<String> lines = tikaService.extractParagraphs(inputStream);
+    public List<Difference> createDifferencesForNewFile(List<String> lines) {
         Patch<String> diff = DiffUtils.diff(Collections.emptyList(), lines);
         return diff.getDeltas().stream()
                 .map(this::mapDeltaToDifference)
@@ -37,10 +36,9 @@ public class DifferenceServiceImpl implements DifferenceService {
     }
 
     @Override
-    public List<Difference> getDifferencesBetweenTwoFiles(
-            InputStream inputStream, InputStream anotherInputStream) throws IOException {
-        Patch<String> diff =
-                DiffUtils.diff(tikaService.extractParagraphs(inputStream), tikaService.extractParagraphs(anotherInputStream));
+    public List<Difference> getDifferencesBetweenTwoFiles(List<String> previousVersionLines,
+                                                          List<String> currentVersionLines) {
+        Patch<String> diff = DiffUtils.diff(previousVersionLines, currentVersionLines);
         return diff.getDeltas().stream()
                 .map(this::mapDeltaToDifference)
                 .collect(Collectors.toList());

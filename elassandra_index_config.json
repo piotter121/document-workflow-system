@@ -4,9 +4,13 @@
   },
   "mappings": {
     "version": {
-      "discover": "^(?!message).*",
+      "discover": "^(?!message|parsed_file_content|file_content).*",
       "properties": {
         "message": {
+          "type": "text",
+          "cql_collection": "singleton"
+        },
+        "parsed_file_content": {
           "type": "text",
           "cql_collection": "singleton"
         }

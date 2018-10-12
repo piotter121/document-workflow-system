@@ -131,7 +131,7 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
                 .map(version -> new VersionInfoDTO(
                         version.getMessage(),
                         UserInfoDTO.fromUserSummary(version.getAuthor()),
-                        version.getSaveDate(),
+                        version.getSaveDate().getTime(),
                         version.getVersionString(),
                         "",
                         mapDifferencesToDTOs(version.getDifferences())

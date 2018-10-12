@@ -4,6 +4,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tika.io.TikaInputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +35,7 @@ import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -87,11 +89,12 @@ public class VersionServiceImpl implements VersionService {
         version.setCheckSum(calculateCheckSum(bytes));
         ByteBuffer content = ByteBuffer.wrap(bytes);
         version.setFileContent(content);
-        List<Difference> differences;
         try (InputStream fileInputStream = file.getInputStream()) {
-            differences = differenceService.createDifferencesForNewFile(fileInputStream);
+            List<String> lines = tikaService.extractLines(fileInputStream);
+            version.setParsedFileContent(String.join("\r\n", lines));
+            List<Difference> differences = differenceService.createDifferencesForNewFile(lines);
+            version.setDifferences(differences);
         }
-        version.setDifferences(differences);
 
         versionRepository.save(version);
     }
@@ -119,17 +122,19 @@ public class VersionServiceImpl implements VersionService {
         newVersion.setAuthor(new UserSummary(modificationAuthor));
         newVersion.setVersionString(form.getVersionString());
         newVersion.setMessage(form.getMessage());
-        byte[] file = form.getFile().getBytes();
-        newVersion.setCheckSum(calculateCheckSum(file));
-        newVersion.setFileContent(ByteBuffer.wrap(file));
+        byte[] newContentBytes = form.getFile().getBytes();
+        newVersion.setCheckSum(calculateCheckSum(newContentBytes));
+        newVersion.setFileContent(ByteBuffer.wrap(newContentBytes));
         FileMetadata fileMetadata = getFileMetadata(form.getFileId());
         newVersion.setFileId(form.getFileId());
-        byte[] oldContent = versionRepository.findTopByFileIdOrderBySaveDateDesc(form.getFileId())
-                .map(version -> version.getFileContent().array())
+        Version previousVersion = versionRepository.findTopByFileIdOrderBySaveDateDesc(form.getFileId())
                 .orElseThrow(VersionNotFoundException::new);
-        List<Difference> differences = differenceService.getDifferencesBetweenTwoFiles(
-                new ByteArrayInputStream(oldContent), new ByteArrayInputStream(file)
-        );
+        byte[] oldContent = previousVersion.getFileContent().array();
+        List<String> previousVersionLines = tikaService.extractLines(TikaInputStream.get(oldContent));
+        List<String> currentVersionLines = tikaService.extractLines(TikaInputStream.get(newContentBytes));
+        newVersion.setParsedFileContent(String.join("\r\n", currentVersionLines));
+        List<Difference> differences =
+                differenceService.getDifferencesBetweenTwoFiles(previousVersionLines, currentVersionLines);
         newVersion.setDifferences(differences);
         newVersion = versionRepository.save(newVersion);
         VersionSummary versionSummary = new VersionSummary(newVersion.getVersionString(),
@@ -166,10 +171,8 @@ public class VersionServiceImpl implements VersionService {
         return new DiffData(differences, newContent, oldContent);
     }
 
-    @SneakyThrows(IOException.class)
     private List<String> getLines(Version version) {
-        byte[] bytes = version.getFileContent().array();
-        return tikaService.extractParagraphs(new ByteArrayInputStream(bytes));
+        return Arrays.asList(version.getParsedFileContent().split("\r\n"));
     }
 
     @Override
@@ -190,7 +193,7 @@ public class VersionServiceImpl implements VersionService {
         return new VersionInfoDTO(
                 version.getMessage(),
                 UserInfoDTO.fromUserSummary(version.getAuthor()),
-                version.getSaveDate(),
+                version.getSaveDate().getTime(),
                 version.getVersionString(),
                 previousVersionString,
                 getDifferencesDTOs(version)

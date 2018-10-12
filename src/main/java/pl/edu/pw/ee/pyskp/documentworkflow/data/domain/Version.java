@@ -45,6 +45,10 @@ public class Version {
     @CassandraType(type = DataType.Name.BLOB)
     private ByteBuffer fileContent;
 
+    @Column("parsed_file_content")
+    @CassandraType(type = DataType.Name.TEXT)
+    private String parsedFileContent;
+
     @Column("check_sum")
     @CassandraType(type = DataType.Name.TEXT)
     private String checkSum;

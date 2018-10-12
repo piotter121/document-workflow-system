@@ -22,7 +22,7 @@ public class TikaService {
     @NonNull
     private final Tika tika;
 
-    public List<String> extractParagraphs(InputStream inputStream) throws IOException {
+    public List<String> extractLines(InputStream inputStream) throws IOException {
         Reader parsingReader = tika.parse(inputStream);
         try (BufferedReader contentReader = new BufferedReader(parsingReader)) {
             return contentReader.lines().collect(Collectors.toList());

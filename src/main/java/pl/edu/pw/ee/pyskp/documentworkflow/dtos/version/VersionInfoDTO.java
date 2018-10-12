@@ -4,7 +4,6 @@ import lombok.NonNull;
 import lombok.Value;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.user.UserInfoDTO;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -18,8 +17,7 @@ public class VersionInfoDTO {
     @NonNull
     UserInfoDTO author;
 
-    @NonNull
-    Date saveDate;
+    long saveDate;
 
     @NonNull
     String versionString;
