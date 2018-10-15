@@ -6,7 +6,6 @@ import org.springframework.data.cassandra.repository.Query;
 import org.springframework.data.repository.query.Param;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Version;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -15,10 +14,8 @@ import java.util.stream.Stream;
 /**
  * Created by piotr on 06.01.17.
  */
+@SuppressWarnings("UnusedReturnValue")
 public interface VersionRepository extends CassandraRepository<Version, MapId> {
-    @Query("delete from version where file_id in (:files)")
-    void deleteAllByFileIdIn(@Param("files") Collection<Long> filesIds);
-
     @Query("delete from version where file_id = :file_id")
     void deleteAllByFileId(@Param("file_id") Long fileId);
 

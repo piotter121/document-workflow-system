@@ -6,6 +6,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tika.io.TikaInputStream;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,11 +36,11 @@ import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static org.springframework.data.cassandra.core.query.Criteria.where;
+import static org.springframework.data.cassandra.core.query.Query.query;
 
 /**
  * Created by piotr on 06.01.17.
@@ -62,6 +63,9 @@ public class VersionServiceImpl implements VersionService {
 
     @NonNull
     private final TikaService tikaService;
+
+    @NonNull
+    private final CassandraTemplate cassandraTemplate;
 
     private final MessageDigest sha256 = initializeSHA256();
 
@@ -229,7 +233,7 @@ public class VersionServiceImpl implements VersionService {
     public void deleteProjectFilesVersions(long projectId) {
         List<Long> fileIds = fileMetadataRepository.findIdByTask_Project_Id(projectId);
         if (!fileIds.isEmpty()) {
-            versionRepository.deleteAllByFileIdIn(fileIds);
+            deleteByFileIdIn(fileIds);
         }
     }
 
@@ -238,8 +242,12 @@ public class VersionServiceImpl implements VersionService {
     public void deleteTaskFilesVersions(long taskId) {
         List<Long> fileIds = fileMetadataRepository.findIdByTask_Id(taskId);
         if (!fileIds.isEmpty()) {
-            versionRepository.deleteAllByFileIdIn(fileIds);
+            deleteByFileIdIn(fileIds);
         }
+    }
+
+    private void deleteByFileIdIn(Collection<Long> fileIds) {
+        cassandraTemplate.delete(query(where("file_id").in(fileIds)), Version.class);
     }
 
     @Override
@@ -252,6 +260,5 @@ public class VersionServiceImpl implements VersionService {
         return fileMetadataRepository.findById(fileId)
                 .orElseThrow(() -> new FileNotFoundException(String.valueOf(fileId)));
     }
-
 
 }
