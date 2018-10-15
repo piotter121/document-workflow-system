@@ -92,6 +92,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @Transactional
     public TaskInfoDTO getTaskInfo(Long taskId) throws TaskNotFoundException {
         Task task = getTask(taskId);
         Project project = task.getProject();
