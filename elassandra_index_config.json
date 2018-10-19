@@ -4,7 +4,7 @@
   },
   "mappings": {
     "version": {
-      "discover": "^(?!message|parsed_file_content|file_content).*",
+      "discover": "^(?!message|parsed_file_content|file_content|differences).*",
       "properties": {
         "message": {
           "type": "text",

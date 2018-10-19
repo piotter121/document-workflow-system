@@ -1,6 +1,7 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.data.domain;
 
 import com.datastax.driver.core.DataType;
+import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -17,10 +18,12 @@ public class UserSummary {
     @CassandraType(type = DataType.Name.TEXT)
     private String email;
 
+    @SerializedName("first_name")
     @Column("first_name")
     @CassandraType(type = DataType.Name.TEXT)
     private String firstName;
 
+    @SerializedName("last_name")
     @Column("last_name")
     @CassandraType(type = DataType.Name.TEXT)
     private String lastName;

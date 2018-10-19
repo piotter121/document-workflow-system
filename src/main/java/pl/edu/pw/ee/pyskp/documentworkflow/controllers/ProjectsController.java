@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.project.NewProjectForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.project.ProjectInfoDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.project.ProjectSummaryDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.search.SearchResultEntry;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ProjectNotFoundException;
+import pl.edu.pw.ee.pyskp.documentworkflow.services.FileSearchService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.ProjectService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
 
@@ -31,6 +33,9 @@ public class ProjectsController {
     @NonNull
     private final UserService userService;
 
+    @NonNull
+    private final FileSearchService fileSearchService;
+
     @GetMapping
     public List<ProjectSummaryDTO> getUserProjects() {
         String currentUserEmail = userService.getCurrentUserEmail();
@@ -46,6 +51,13 @@ public class ProjectsController {
     @PreAuthorize("@securityService.hasAccessToProject(#projectId)")
     public ProjectInfoDTO getProjectInfo(@PathVariable Long projectId) throws ProjectNotFoundException {
         return projectService.getProjectInfo(projectId);
+    }
+
+    @GetMapping("/{projectId}/search")
+    @PreAuthorize("@securityService.hasAccessToProject(#projectId)")
+    public List<SearchResultEntry> searchInProjectFiles(@RequestParam(name = "phrase") String searchPhrase,
+                                                        @PathVariable Long projectId) {
+        return fileSearchService.searchInProject(projectId, searchPhrase);
     }
 
     @GetMapping(value = "/{projectId}/name", produces = MediaType.TEXT_PLAIN_VALUE)

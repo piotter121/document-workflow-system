@@ -9,6 +9,7 @@ import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.FileMetadata;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Project;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Task;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +30,9 @@ public interface FileMetadataRepository extends JpaRepository<FileMetadata, Long
 
     @Query("select distinct f.id from FileMetadata f join f.task t where t.id = :taskId")
     List<Long> findIdByTask_Id(@Param("taskId") Long taskId);
+
+    @Query("select distinct f.id from FileMetadata f join f.task t where t.id in (:taskIds)")
+    List<Long> findIdByTask_IdIn(@Param("taskIds") Collection<Long> taskIds);
 
     @Modifying
     @Query("update FileMetadata f set f.markedToConfirm = true where f.id = :fileId")

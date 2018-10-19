@@ -1,5 +1,6 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.services;
 
+import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Task;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ProjectNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.TaskNotFoundException;
 
@@ -12,6 +13,8 @@ public interface SecurityService {
     boolean hasAccessToProject(Long projectId);
 
     boolean isTaskParticipant(Long taskId) throws TaskNotFoundException;
+
+    boolean hasCurrentUserAccessToTask(Task task);
 
     boolean hasAccessToTask(Long taskId) throws TaskNotFoundException;
 

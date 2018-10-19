@@ -1,6 +1,7 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.data.domain;
 
 import com.datastax.driver.core.DataType;
+import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.data.cassandra.core.cql.Ordering;
@@ -21,14 +22,17 @@ import java.util.List;
 @EqualsAndHashCode(of = {"fileId", "saveDate"})
 @Table("version")
 public class Version {
+    @SerializedName("file_id")
     @CassandraType(type = DataType.Name.BIGINT)
     @PrimaryKeyColumn(name = "file_id", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
     private Long fileId;
 
+    @SerializedName("save_date")
     @CassandraType(type = DataType.Name.TIMESTAMP)
     @PrimaryKeyColumn(name = "save_date", ordinal = 1, type = PrimaryKeyType.CLUSTERED, ordering = Ordering.DESCENDING)
     private Date saveDate;
 
+    @SerializedName("version_string")
     @Column("version_string")
     @CassandraType(type = DataType.Name.TEXT)
     private String versionString;
@@ -45,10 +49,12 @@ public class Version {
     @CassandraType(type = DataType.Name.BLOB)
     private ByteBuffer fileContent;
 
+    @SerializedName("parsed_file_content")
     @Column("parsed_file_content")
     @CassandraType(type = DataType.Name.TEXT)
     private String parsedFileContent;
 
+    @SerializedName("check_sum")
     @Column("check_sum")
     @CassandraType(type = DataType.Name.TEXT)
     private String checkSum;

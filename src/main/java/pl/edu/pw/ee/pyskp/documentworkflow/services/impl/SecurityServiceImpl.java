@@ -50,8 +50,14 @@ public class SecurityServiceImpl implements SecurityService {
     @Override
     @Transactional(readOnly = true)
     public boolean isTaskParticipant(Long taskId) throws TaskNotFoundException {
-        String currentUserEmail = userService.getCurrentUserEmail();
         Task task = taskService.getTask(taskId);
+        return hasCurrentUserAccessToTask(task);
+    }
+
+    @Override
+    @Transactional
+    public boolean hasCurrentUserAccessToTask(Task task) {
+        String currentUserEmail = userService.getCurrentUserEmail();
         Project project = task.getProject();
         return project.getAdministrator().getEmail().equals(currentUserEmail) ||
                 task.getAdministrator().getEmail().equals(currentUserEmail) ||
