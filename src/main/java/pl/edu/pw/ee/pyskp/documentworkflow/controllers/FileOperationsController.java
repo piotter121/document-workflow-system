@@ -39,8 +39,7 @@ public class FileOperationsController {
 
     @PostMapping("/confirm")
     @PreAuthorize("@securityService.isTaskAdministrator(#projectId, #taskId)")
-    public void confirm(@PathVariable UUID projectId, @PathVariable UUID taskId, @PathVariable UUID fileId)
-            throws FileNotFoundException {
+    public void confirm(@PathVariable UUID projectId, @PathVariable UUID taskId, @PathVariable UUID fileId) {
         filesMetadataService.confirmFile(taskId, fileId);
     }
 
