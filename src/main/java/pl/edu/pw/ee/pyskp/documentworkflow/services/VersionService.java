@@ -1,11 +1,11 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.services;
 
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.validation.annotation.Validated;
-import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Version;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.DiffData;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewFileForm;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewVersionForm;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.VersionInfoDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.file.NewFileForm;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.version.DiffData;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.version.NewVersionForm;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.version.VersionInfoDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.VersionNotFoundException;
 
@@ -18,8 +18,8 @@ import java.util.UUID;
  * Created by piotr on 06.01.17.
  */
 @Validated
-public interface VersionService {
-    Version createUnmanagedInitVersionOfFile(NewFileForm form);
+public interface VersionService extends ApplicationEventPublisherAware {
+    void createInitVersionOfFile(NewFileForm form, UUID fileId);
 
     InputStream getVersionFileContent(UUID fileId, Date saveDate) throws VersionNotFoundException;
 

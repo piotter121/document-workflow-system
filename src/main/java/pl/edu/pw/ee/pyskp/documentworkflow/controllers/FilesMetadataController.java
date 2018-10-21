@@ -2,14 +2,13 @@ package pl.edu.pw.ee.pyskp.documentworkflow.controllers;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewFileForm;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.file.NewFileForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
-import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.UnknownContentType;
+import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.UnsupportedContentType;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.FilesMetadataService;
 
 import java.util.UUID;
@@ -17,7 +16,7 @@ import java.util.UUID;
 /**
  * Created by piotr on 04.01.17.
  */
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/projects/{projectId}/tasks/{taskId}/files")
 public class FilesMetadataController {
@@ -32,7 +31,7 @@ public class FilesMetadataController {
                                      @RequestPart(name = "versionString") String versionString,
                                      @PathVariable UUID taskId,
                                      @PathVariable UUID projectId)
-            throws UnknownContentType, ResourceNotFoundException {
+            throws UnsupportedContentType, ResourceNotFoundException {
         NewFileForm newFileForm = new NewFileForm(name, description, file, versionString);
         UUID fileId = filesMetadataService.createNewFileFromForm(newFileForm, projectId, taskId);
         return fileId.toString();

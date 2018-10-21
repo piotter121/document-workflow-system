@@ -4,7 +4,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewVersionForm;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.version.NewVersionForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.VersionService;
 
 import javax.validation.ConstraintValidator;

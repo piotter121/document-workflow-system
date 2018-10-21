@@ -8,7 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.User;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.UserRepository;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewUserDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.user.NewUserDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.UserNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
 
@@ -26,14 +26,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserByEmail(final String email) throws UserNotFoundException {
-        return userRepository.findOneByEmail(email)
+        return userRepository.findById(email)
                 .orElseThrow(() -> new UserNotFoundException(email));
     }
 
     @Override
     public User getCurrentUser() {
         String currentUserEmail = getCurrentUserEmail();
-        return userRepository.findOneByEmail(currentUserEmail)
+        return userRepository.findById(currentUserEmail)
                 .orElse(null);
     }
 
@@ -54,6 +54,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean checkIfUserExists(String email) {
-        return userRepository.findOneByEmail(email).isPresent();
+        return userRepository.findById(email).isPresent();
     }
 }

@@ -1,15 +1,13 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.dtos.validation;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Value;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@NoArgsConstructor
-public class ValidationErrorDTO {
-    @Getter
-    private List<FieldErrorDTO> fieldErrors = new ArrayList<>();
+@Value
+public final class ValidationErrorDTO {
+    List<FieldErrorDTO> fieldErrors = new ArrayList<>();
 
     public void addFieldError(String path, String message) {
         FieldErrorDTO error = new FieldErrorDTO(path, message);

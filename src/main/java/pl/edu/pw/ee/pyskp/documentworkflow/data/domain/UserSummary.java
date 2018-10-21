@@ -1,13 +1,14 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.data.domain;
 
 import com.datastax.driver.core.DataType;
+import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Transient;
-import org.springframework.data.cassandra.mapping.CassandraType;
-import org.springframework.data.cassandra.mapping.Column;
-import org.springframework.data.cassandra.mapping.UserDefinedType;
+import org.springframework.data.cassandra.core.mapping.CassandraType;
+import org.springframework.data.cassandra.core.mapping.Column;
+import org.springframework.data.cassandra.core.mapping.UserDefinedType;
 
 @NoArgsConstructor
 @Data
@@ -18,10 +19,12 @@ public class UserSummary {
     @CassandraType(type = DataType.Name.TEXT)
     private String email;
 
+    @SerializedName("first_name")
     @Column("first_name")
     @CassandraType(type = DataType.Name.TEXT)
     private String firstName;
 
+    @SerializedName("last_name")
     @Column("last_name")
     @CassandraType(type = DataType.Name.TEXT)
     private String lastName;

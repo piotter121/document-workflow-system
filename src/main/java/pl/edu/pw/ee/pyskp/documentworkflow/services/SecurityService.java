@@ -1,5 +1,7 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.services;
 
+import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Project;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Task;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ProjectNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.TaskNotFoundException;
@@ -15,6 +17,8 @@ public interface SecurityService {
     boolean hasAccessToProject(UUID projectId);
 
     boolean isTaskParticipant(UUID projectId, UUID taskId) throws ResourceNotFoundException;
+
+    boolean hasCurrentUserAccessToTask(Project project, Task task);
 
     boolean hasAccessToTask(UUID projectId, UUID taskId) throws ResourceNotFoundException;
 

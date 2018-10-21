@@ -1,11 +1,12 @@
 version: '3.7'
 services:
   cassandra-db:
-    image: cassandra:3.11
+    image: strapdata/elassandra:6.2.3.6
     volumes:
-      - db-volume:/var/lib/cassandra
+      - elassandra-volume:/var/lib/cassandra
     ports:
       - "9042:9042"
+      - "9200:9200"
 
 volumes:
-  db-volume:
+  elassandra-volume:

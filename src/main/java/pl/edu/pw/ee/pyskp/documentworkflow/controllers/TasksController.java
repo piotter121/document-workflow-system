@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewTaskForm;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.task.NewTaskForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.TaskService;
 
@@ -35,7 +35,7 @@ public class TasksController {
     public Map<String, String> processNewTaskForm(@PathVariable UUID projectId,
                                                   @RequestBody @Valid NewTaskForm newTask)
             throws ResourceNotFoundException {
-        UUID taskId = taskService.createTaskFromForm(newTask, projectId);
+        UUID taskId = taskService.createTask(newTask, projectId);
         return Collections.singletonMap("taskId", taskId.toString());
     }
 }

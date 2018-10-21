@@ -2,9 +2,7 @@ package pl.edu.pw.ee.pyskp.documentworkflow.controllers;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
@@ -16,21 +14,20 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.ErrorMessageDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.error.ErrorMessageDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.validation.ValidationErrorDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
-import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.UnknownContentType;
+import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.UnsupportedContentType;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.Locale;
 
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@Slf4j
+@RequiredArgsConstructor
 @ControllerAdvice
 public class RestErrorHandler {
-    private static final Logger LOGGER = LoggerFactory.getLogger(RestErrorHandler.class);
-
     @NonNull
     private final MessageSource messageSource;
 
@@ -38,7 +35,7 @@ public class RestErrorHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ValidationErrorDTO processValidationError(MethodArgumentNotValidException ex) {
-        LOGGER.error("Processing method argument not valid exception", ex);
+        log.error("Processing method argument not valid exception", ex);
         BindingResult bindingResult = ex.getBindingResult();
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
 
@@ -59,7 +56,9 @@ public class RestErrorHandler {
         String localizedErrorMessage = messageSource.getMessage(fieldError, currentLocale);
         if (localizedErrorMessage.equals(fieldError.getDefaultMessage())) {
             String[] fieldErrorCodes = fieldError.getCodes();
-            localizedErrorMessage = fieldErrorCodes[0];
+            if (fieldErrorCodes != null) {
+                localizedErrorMessage = fieldErrorCodes[0];
+            }
         }
         return localizedErrorMessage;
     }
@@ -68,7 +67,7 @@ public class RestErrorHandler {
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ValidationErrorDTO handleConstraintViolationException(ConstraintViolationException e) {
-        LOGGER.error("Constraint violation exception occurred", e);
+        log.error("Constraint violation exception occurred", e);
         ValidationErrorDTO dto = new ValidationErrorDTO();
         for (ConstraintViolation<?> constraintViolation : e.getConstraintViolations()) {
             dto.addFieldError(constraintViolation.getPropertyPath().toString(), constraintViolation.getMessage());
@@ -80,30 +79,27 @@ public class RestErrorHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
     public ErrorMessageDTO handleNotFoundException(ResourceNotFoundException ex) {
-        LOGGER.error("Processing resource not found exception", ex);
-        ErrorMessageDTO errorMessage = new ErrorMessageDTO();
-        errorMessage.setErrorCode(ex.getClass().getSimpleName());
-        errorMessage.setParams(ex.getMessageParams());
+        log.error("Processing resource not found exception", ex);
+        ErrorMessageDTO errorMessage = new ErrorMessageDTO(ex.getClass().getSimpleName());
+        errorMessage.getParams().putAll(ex.getMessageParams());
         return errorMessage;
     }
 
-    @ExceptionHandler(UnknownContentType.class)
+    @ExceptionHandler(UnsupportedContentType.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     @ResponseBody
-    public ErrorMessageDTO handleUnknownContentType(UnknownContentType ex) {
-        LOGGER.error(ex.getLocalizedMessage(), ex);
-        ErrorMessageDTO errorMessage = new ErrorMessageDTO();
-        errorMessage.setErrorCode(ex.getClass().getSimpleName());
-        return errorMessage;
+    public ErrorMessageDTO handleUnknownContentType(UnsupportedContentType ex) {
+        log.error(ex.getLocalizedMessage(), ex);
+        ErrorMessageDTO errorMessageDTO = new ErrorMessageDTO(ex.getClass().getSimpleName());
+        errorMessageDTO.getParams().put("unsupportedContentTypeName", ex.getUnsupportedContentTypeName());
+        return errorMessageDTO;
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
     public ErrorMessageDTO handleAccessDeniedException(AccessDeniedException ex) {
-        LOGGER.error("Processing access denied exception", ex);
-        ErrorMessageDTO errorMessage = new ErrorMessageDTO();
-        errorMessage.setErrorCode(ex.getClass().getSimpleName());
-        return errorMessage;
+        log.error("Processing access denied exception", ex);
+        return new ErrorMessageDTO(ex.getClass().getSimpleName());
     }
 }

@@ -1,10 +1,11 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.dtos.validation;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.NonNull;
+import lombok.Value;
 
-@Getter
-@AllArgsConstructor
+@SuppressWarnings("WeakerAccess")
+@Value
 public class FieldErrorDTO {
-    private String field, message;
+    @NonNull
+    String field, message;
 }

@@ -3,10 +3,10 @@ package pl.edu.pw.ee.pyskp.documentworkflow.data.domain;
 import com.datastax.driver.core.DataType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.springframework.data.cassandra.mapping.CassandraType;
-import org.springframework.data.cassandra.mapping.Column;
-import org.springframework.data.cassandra.mapping.PrimaryKey;
-import org.springframework.data.cassandra.mapping.Table;
+import org.springframework.data.cassandra.core.mapping.CassandraType;
+import org.springframework.data.cassandra.core.mapping.Column;
+import org.springframework.data.cassandra.core.mapping.PrimaryKey;
+import org.springframework.data.cassandra.core.mapping.Table;
 
 import java.util.Date;
 import java.util.UUID;
@@ -20,7 +20,7 @@ import java.util.UUID;
 public class Project {
     @PrimaryKey("id")
     @CassandraType(type = DataType.Name.UUID)
-    private UUID id = UUID.randomUUID();
+    private UUID id;
 
     @Column("name")
     private String name;

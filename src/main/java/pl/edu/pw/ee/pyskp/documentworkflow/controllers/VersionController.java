@@ -2,8 +2,6 @@ package pl.edu.pw.ee.pyskp.documentworkflow.controllers;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -11,14 +9,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.DiffData;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewVersionForm;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.VersionInfoDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.version.DiffData;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.version.NewVersionForm;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.version.VersionInfoDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.VersionNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.FilesMetadataService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.VersionService;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.InputStream;
 import java.util.Date;
@@ -27,7 +26,7 @@ import java.util.UUID;
 /**
  * Created by p.pysk on 16.01.2017.
  */
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/projects/{projectId}/tasks/{taskId}/files/{fileId}/versions")
 public class VersionController {

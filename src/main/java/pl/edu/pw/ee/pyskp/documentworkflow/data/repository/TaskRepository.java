@@ -1,5 +1,6 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.data.repository;
 
+import org.springframework.data.cassandra.core.mapping.MapId;
 import org.springframework.data.cassandra.repository.CassandraRepository;
 import org.springframework.data.cassandra.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,7 +13,7 @@ import java.util.UUID;
 /**
  * Created by piotr on 13.12.16.
  */
-public interface TaskRepository extends CassandraRepository<Task> {
+public interface TaskRepository extends CassandraRepository<Task, MapId> {
     List<Task> findAllByProjectId(UUID projectId);
 
     Optional<Task> findTaskByProjectIdAndTaskId(UUID projectId, UUID taskId);
