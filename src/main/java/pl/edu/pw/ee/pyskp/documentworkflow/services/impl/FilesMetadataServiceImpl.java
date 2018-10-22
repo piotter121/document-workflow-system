@@ -208,7 +208,7 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
         return fileMetadataRepository.findOneByTaskIdAndFileId(taskId, fileId)
                 .map(fileMetadata -> {
                     ContentType contentType = fileMetadata.getContentType();
-                    return new ContentTypeDTO(contentType.getExtension(), contentType.getName());
+                    return new ContentTypeDTO("." + contentType.getExtension(), contentType.getName());
                 })
                 .orElseThrow(() -> new FileNotFoundException(fileId.toString()));
     }
