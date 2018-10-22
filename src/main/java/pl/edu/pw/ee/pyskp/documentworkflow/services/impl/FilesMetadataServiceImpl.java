@@ -20,6 +20,7 @@ import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.TaskRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.VersionRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.FileMetadataDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewFileForm;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.file.ContentTypeDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.FileNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.TaskNotFoundException;
@@ -172,5 +173,16 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
         Integer numberOfVersions = versionRepository.countByFile(modifiedFile);
         modifiedFile.setNumberOfVersions(numberOfVersions);
         fileMetadataRepository.save(modifiedFile);
+    }
+
+    @Override
+    public ContentTypeDTO getContentType(ObjectId fileId) throws FileNotFoundException {
+        return fileMetadataRepository.findById(fileId)
+                .map(FileMetadata::getContentType)
+                .map(contentType -> new ContentTypeDTO(
+                        "." + contentType.getExtension(),
+                        contentType.getName()
+                ))
+                .orElseThrow(() -> new FileNotFoundException(fileId.toString()));
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.FileMetadataDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.file.ContentTypeDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.FileNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.FilesMetadataService;
 
@@ -42,5 +43,12 @@ public class FileOperationsController {
     @PreAuthorize("@securityService.isTaskAdministrator(#taskId)")
     public void confirm(@PathVariable ObjectId taskId, @PathVariable ObjectId fileId) throws FileNotFoundException {
         filesMetadataService.confirmFile(fileId);
+    }
+
+    @GetMapping("/contentType")
+    @PreAuthorize("@securityService.hasAccessToTask(#projectId, #taskId)")
+    public ContentTypeDTO getContentType(@PathVariable ObjectId projectId, @PathVariable ObjectId fileId,
+                                         @PathVariable ObjectId taskId) throws FileNotFoundException {
+        return filesMetadataService.getContentType(fileId);
     }
 }
