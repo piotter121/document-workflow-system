@@ -41,7 +41,8 @@ public class TaskOperationsController {
 
     @DeleteMapping
     @PreAuthorize("@securityService.isCurrentUserProjectAdministrator(#projectId)")
-    public void deleteTask(@PathVariable ObjectId taskId, @PathVariable ObjectId projectId) {
+    public void deleteTask(@PathVariable ObjectId taskId, @PathVariable ObjectId projectId)
+            throws TaskNotFoundException {
         if (LOGGER.isDebugEnabled())
             LOGGER.debug("Received HTTP DELETE request for deletion task of id=" + taskId);
         taskService.deleteTask(taskId);

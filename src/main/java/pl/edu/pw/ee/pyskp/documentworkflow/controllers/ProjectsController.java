@@ -62,7 +62,7 @@ public class ProjectsController {
 
     @DeleteMapping("/{projectId}")
     @PreAuthorize("@securityService.isCurrentUserProjectAdministrator(#projectId)")
-    public void deleteProject(@PathVariable ObjectId projectId) {
+    public void deleteProject(@PathVariable ObjectId projectId) throws ProjectNotFoundException {
         LOGGER.debug("Received HTTP DELETE request for deletion project " + projectId);
         projectService.deleteProject(projectId);
     }

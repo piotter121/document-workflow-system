@@ -27,7 +27,7 @@ public interface FilesMetadataService {
 
     void confirmFile(ObjectId fileId) throws FileNotFoundException;
 
-    void deleteFile(ObjectId fileId);
+    void deleteFile(ObjectId fileId) throws FileNotFoundException;
 
     String getFileName(ObjectId fileId) throws FileNotFoundException;
 

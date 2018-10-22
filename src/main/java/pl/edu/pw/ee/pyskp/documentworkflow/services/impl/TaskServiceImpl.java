@@ -9,7 +9,10 @@ import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.*;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.FileMetadata;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Project;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Task;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.User;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.FileMetadataRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.ProjectRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.TaskRepository;
@@ -52,20 +55,14 @@ public class TaskServiceImpl implements TaskService {
     private final ApplicationEventPublisher applicationEventPublisher;
 
     private Task getTask(ObjectId taskId) throws TaskNotFoundException {
-        Task task = taskRepository.findOne(taskId);
-        if (task == null) {
-            throw new TaskNotFoundException(taskId.toString());
-        }
-        return task;
+        return taskRepository.findById(taskId)
+                .orElseThrow(() -> new TaskNotFoundException(taskId.toString()));
     }
 
     @Override
     @Transactional(rollbackFor = ResourceNotFoundException.class)
     public ObjectId createTaskFromForm(NewTaskForm form, ObjectId projectId) throws ResourceNotFoundException {
-        Project project = projectRepository.findOne(projectId);
-        if (project == null) {
-            throw new ProjectNotFoundException(projectId.toString());
-        }
+        Project project = getProject(projectId);
 
         Task task = new Task();
         task.setName(form.getName());
@@ -87,14 +84,19 @@ public class TaskServiceImpl implements TaskService {
         return task.getId();
     }
 
+    private Project getProject(ObjectId projectId) throws ProjectNotFoundException {
+        return projectRepository.findById(projectId)
+                .orElseThrow(() -> new ProjectNotFoundException(projectId.toString()));
+    }
+
     @Override
-    @Transactional
-    public void deleteTask(ObjectId taskId) {
-        Task taskToDelete = taskRepository.findOne(taskId);
+    @Transactional(rollbackFor = TaskNotFoundException.class)
+    public void deleteTask(ObjectId taskId) throws TaskNotFoundException {
+        Task taskToDelete = getTask(taskId);
         List<FileMetadata> taskFiles = fileMetadataRepository.findByTask(taskToDelete);
         versionRepository.deleteByFileIn(taskFiles);
         fileMetadataRepository.deleteByTask_Id(taskId);
-        taskRepository.delete(taskId);
+        taskRepository.delete(taskToDelete);
 
         applicationEventPublisher.publishEvent(new TaskDeletedEvent(this, taskToDelete));
     }
@@ -121,11 +123,6 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskInfoDTO getTaskInfo(ObjectId projectId, ObjectId taskId) throws ResourceNotFoundException {
         Task task = getTask(taskId);
-        Project project = projectRepository.findOne(projectId);
-        if (project == null) {
-            throw new ProjectNotFoundException(projectId.toString());
-        }
-
         List<FileMetadata> files = fileMetadataRepository.findByTask(task);
         return TaskInfoDTO.fromTaskAndFiles(task, files);
     }
@@ -140,7 +137,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public UserInfoDTO getTaskAdministrator(ObjectId taskId) throws TaskNotFoundException {
-        return Optional.ofNullable(taskRepository.findOne(taskId))
+        return taskRepository.findById(taskId)
                 .map(task -> UserInfoDTO.fromUser(task.getAdministrator()))
                 .orElseThrow(() -> new TaskNotFoundException(taskId.toString()));
     }

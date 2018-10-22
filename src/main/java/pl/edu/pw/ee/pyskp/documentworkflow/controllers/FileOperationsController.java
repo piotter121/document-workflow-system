@@ -26,7 +26,7 @@ public class FileOperationsController {
 
     @DeleteMapping
     @PreAuthorize("@securityService.isTaskAdministrator(#taskId)")
-    public void deleteFile(@PathVariable ObjectId taskId, @PathVariable ObjectId fileId) {
+    public void deleteFile(@PathVariable ObjectId taskId, @PathVariable ObjectId fileId) throws FileNotFoundException {
         filesMetadataService.deleteFile(fileId);
     }
 

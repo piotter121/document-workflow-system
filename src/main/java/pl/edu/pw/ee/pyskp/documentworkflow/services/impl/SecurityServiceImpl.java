@@ -41,7 +41,7 @@ public class SecurityServiceImpl implements SecurityService {
     @Override
     public boolean hasAccessToProject(ObjectId projectId) {
         String currentUserEmail = userService.getCurrentUserEmail();
-        Project project = projectRepository.findOne(projectId);
+        Project project = projectRepository.findById(projectId).orElse(null);
         if (project == null) {
             return false;
         }
@@ -67,18 +67,13 @@ public class SecurityServiceImpl implements SecurityService {
     public boolean isTaskParticipant(ObjectId projectId, ObjectId taskId) throws ResourceNotFoundException {
         String currentUserEmail = userService.getCurrentUserEmail();
 
-        Project project = projectRepository.findOne(projectId);
-        if (project == null) {
-            throw new ProjectNotFoundException(projectId.toString());
-        }
+        Project project = getProject(projectId);
+
         if (currentUserEmail.equals(project.getAdministrator().getEmail())) {
             return true;
         }
 
-        Task task = taskRepository.findOne(taskId);
-        if (task == null) {
-            throw new TaskNotFoundException(taskId.toString());
-        }
+        Task task = getTask(taskId);
 
         if (currentUserEmail.equals(task.getAdministrator().getEmail())) {
             return true;
@@ -90,6 +85,16 @@ public class SecurityServiceImpl implements SecurityService {
                 .anyMatch(currentUserEmail::equals);
     }
 
+    private Task getTask(ObjectId taskId) throws TaskNotFoundException {
+        return taskRepository.findById(taskId)
+                .orElseThrow(() -> new TaskNotFoundException(taskId.toString()));
+    }
+
+    private Project getProject(ObjectId projectId) throws ProjectNotFoundException {
+        return projectRepository.findById(projectId)
+                .orElseThrow(() -> new ProjectNotFoundException(projectId.toString()));
+    }
+
     @Override
     public boolean hasAccessToTask(ObjectId projectId, ObjectId taskId) throws ResourceNotFoundException {
         return isTaskParticipant(projectId, taskId);
@@ -97,20 +102,14 @@ public class SecurityServiceImpl implements SecurityService {
 
     @Override
     public boolean isCurrentUserProjectAdministrator(ObjectId projectId) throws ProjectNotFoundException {
-        Project project = projectRepository.findOne(projectId);
-        if (project == null) {
-            throw new ProjectNotFoundException(projectId.toString());
-        }
+        Project project = getProject(projectId);
         String currentUserEmail = userService.getCurrentUserEmail();
         return currentUserEmail.equals(project.getAdministrator().getEmail());
     }
 
     @Override
     public boolean isTaskAdministrator(ObjectId taskId) throws TaskNotFoundException {
-        Task task = taskRepository.findOne(taskId);
-        if (task == null) {
-            throw new TaskNotFoundException(taskId.toString());
-        }
+        Task task = getTask(taskId);
         String currentUserLogin = userService.getCurrentUserEmail();
         return currentUserLogin.equals(task.getAdministrator().getEmail());
     }

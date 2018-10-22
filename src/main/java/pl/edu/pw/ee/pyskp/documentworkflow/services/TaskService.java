@@ -18,7 +18,7 @@ import java.util.List;
 public interface TaskService {
     ObjectId createTaskFromForm(NewTaskForm formDTO, ObjectId projectId) throws ResourceNotFoundException;
 
-    void deleteTask(ObjectId taskId);
+    void deleteTask(ObjectId taskId) throws TaskNotFoundException;
 
     List<UserInfoDTO> addParticipantToTask(String userEmail, ObjectId projectId, ObjectId taskId)
             throws ResourceNotFoundException;

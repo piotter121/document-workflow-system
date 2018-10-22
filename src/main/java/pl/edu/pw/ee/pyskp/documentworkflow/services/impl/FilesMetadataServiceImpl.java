@@ -25,16 +25,15 @@ import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.TaskNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.UnknownContentType;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.FilesMetadataService;
+import pl.edu.pw.ee.pyskp.documentworkflow.services.TikaService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.VersionService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.events.FileCreatedEvent;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.events.FileDeletedEvent;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.events.VersionCreatedEvent;
-import pl.edu.pw.ee.pyskp.documentworkflow.services.TikaService;
 
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Created by piotr on 06.01.17.
@@ -73,10 +72,8 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
     @Transactional(rollbackFor = {UnknownContentType.class, ResourceNotFoundException.class})
     public ObjectId createNewFileFromForm(NewFileForm formData, ObjectId projectId, ObjectId taskId)
             throws UnknownContentType, ResourceNotFoundException {
-        Task task = taskRepository.findOne(taskId);
-        if (task == null) {
-            throw new TaskNotFoundException(taskId.toString());
-        }
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new TaskNotFoundException(taskId.toString()));
 
         FileMetadata newFile = new FileMetadata();
         newFile.setTask(task);
@@ -115,11 +112,8 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
     }
 
     private FileMetadata getFileMetadata(ObjectId fileId) throws FileNotFoundException {
-        FileMetadata fileMetadata = fileMetadataRepository.findOne(fileId);
-        if (fileMetadata == null) {
-            throw new FileNotFoundException(fileId.toString());
-        }
-        return fileMetadata;
+        return fileMetadataRepository.findById(fileId)
+                .orElseThrow(() -> new FileNotFoundException(fileId.toString()));
     }
 
     @Override
@@ -151,8 +145,9 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
 
     @Override
     @Transactional(rollbackFor = ResourceNotFoundException.class)
-    public void deleteFile(ObjectId fileId) {
-        FileMetadata fileToDelete = fileMetadataRepository.findOne(fileId);
+    public void deleteFile(ObjectId fileId) throws FileNotFoundException {
+        FileMetadata fileToDelete = fileMetadataRepository.findById(fileId)
+                .orElseThrow(() -> new FileNotFoundException(fileId.toString()));
         versionRepository.deleteByFile(fileToDelete);
         fileMetadataRepository.delete(fileToDelete);
 
@@ -161,7 +156,7 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
 
     @Override
     public String getFileName(ObjectId fileId) throws FileNotFoundException {
-        return Optional.ofNullable(fileMetadataRepository.findOne(fileId))
+        return fileMetadataRepository.findById(fileId)
                 .map(metadata -> metadata.getName() + "." + metadata.getContentType().getExtension())
                 .orElseThrow(() -> new FileNotFoundException(fileId.toString()));
     }

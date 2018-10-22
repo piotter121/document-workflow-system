@@ -1,10 +1,11 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.dtos;
 
 import lombok.Data;
-import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotBlank;
 import pl.edu.pw.ee.pyskp.documentworkflow.validators.NonExistingEmail;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 
 /**
  * Created by piotr on 14.12.16.

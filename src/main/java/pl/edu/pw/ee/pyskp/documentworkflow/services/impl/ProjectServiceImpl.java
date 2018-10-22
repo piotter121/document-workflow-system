@@ -87,28 +87,22 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     private Project getProject(ObjectId projectId) throws ProjectNotFoundException {
-        Project project = projectRepository.findOne(projectId);
-        if (project == null) {
-            throw new ProjectNotFoundException(projectId.toString());
-        }
-        return project;
+        return projectRepository.findById(projectId)
+                .orElseThrow(() -> new ProjectNotFoundException(projectId.toString()));
     }
 
     @Override
     @Transactional
-    public void deleteProject(ObjectId projectId) {
-        Project project = projectRepository.findOne(projectId);
-        if (project == null) {
-            return;
-        }
+    public void deleteProject(ObjectId projectId) throws ProjectNotFoundException {
+        Project project = getProject(projectId);
 
         List<Task> tasks = taskRepository.findByProject(project);
 
         List<FileMetadata> files = fileMetadataRepository.findByTaskIn(tasks);
 
         versionRepository.deleteByFileIn(files);
-        fileMetadataRepository.delete(files);
-        taskRepository.delete(tasks);
+        fileMetadataRepository.deleteAll(files);
+        taskRepository.deleteAll(tasks);
         projectRepository.delete(project);
     }
 
