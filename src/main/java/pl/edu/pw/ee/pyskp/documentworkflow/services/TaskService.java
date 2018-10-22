@@ -1,9 +1,9 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.services;
 
 import org.bson.types.ObjectId;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewTaskForm;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.TaskInfoDTO;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.UserInfoDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.task.NewTaskForm;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.task.TaskInfoDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.user.UserInfoDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.TaskNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.events.FileCreatedEvent;

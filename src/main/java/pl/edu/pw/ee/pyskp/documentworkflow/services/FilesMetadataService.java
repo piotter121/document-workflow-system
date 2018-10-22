@@ -2,9 +2,9 @@ package pl.edu.pw.ee.pyskp.documentworkflow.services;
 
 import org.bson.types.ObjectId;
 import org.springframework.validation.annotation.Validated;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.FileMetadataDTO;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewFileForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.file.ContentTypeDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.file.FileMetadataDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.file.NewFileForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.FileNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.UnknownContentType;

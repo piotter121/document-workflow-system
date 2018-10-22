@@ -1,9 +1,9 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.services;
 
 import org.bson.types.ObjectId;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewProjectForm;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.ProjectInfoDTO;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.ProjectSummaryDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.project.NewProjectForm;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.project.ProjectInfoDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.project.ProjectSummaryDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ProjectNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.UserNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.events.*;

@@ -1,15 +1,15 @@
-package pl.edu.pw.ee.pyskp.documentworkflow.dtos;
+package pl.edu.pw.ee.pyskp.documentworkflow.dtos.file;
 
-import lombok.Data;
 import lombok.NonNull;
+import lombok.Value;
 
 import java.util.List;
 
 /**
  * Created by piotr on 20.01.17.
  */
-@Data
+@Value
 public class FileContentDTO {
     @NonNull
-    private final List<String> lines;
+    List<String> lines;
 }

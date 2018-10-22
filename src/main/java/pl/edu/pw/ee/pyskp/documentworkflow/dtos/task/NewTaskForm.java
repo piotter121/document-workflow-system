@@ -1,4 +1,4 @@
-package pl.edu.pw.ee.pyskp.documentworkflow.dtos;
+package pl.edu.pw.ee.pyskp.documentworkflow.dtos.task;
 
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;

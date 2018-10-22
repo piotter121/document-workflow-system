@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.ErrorMessageDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.error.ErrorMessageDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.validation.ValidationErrorDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.UnknownContentType;
@@ -59,7 +59,9 @@ public class RestErrorHandler {
         String localizedErrorMessage = messageSource.getMessage(fieldError, currentLocale);
         if (localizedErrorMessage.equals(fieldError.getDefaultMessage())) {
             String[] fieldErrorCodes = fieldError.getCodes();
-            localizedErrorMessage = fieldErrorCodes[0];
+            if (fieldErrorCodes != null) {
+                localizedErrorMessage = fieldErrorCodes[0];
+            }
         }
         return localizedErrorMessage;
     }
@@ -82,7 +84,7 @@ public class RestErrorHandler {
     public ErrorMessageDTO handleNotFoundException(ResourceNotFoundException ex) {
         LOGGER.error("Processing resource not found exception", ex);
         ErrorMessageDTO errorMessage = new ErrorMessageDTO(ex.getClass().getSimpleName());
-        errorMessage.setParams(ex.getMessageParams());
+        errorMessage.getParams().putAll(ex.getMessageParams());
         return errorMessage;
     }
 

@@ -8,7 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewFileForm;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.file.NewFileForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.UnknownContentType;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.FilesMetadataService;

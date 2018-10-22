@@ -17,9 +17,9 @@ import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.FileMetadataRepositor
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.ProjectRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.TaskRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.VersionRepository;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewTaskForm;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.TaskInfoDTO;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.UserInfoDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.task.NewTaskForm;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.task.TaskInfoDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.user.UserInfoDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ProjectNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.TaskNotFoundException;

@@ -1,10 +1,12 @@
-package pl.edu.pw.ee.pyskp.documentworkflow.dtos;
+package pl.edu.pw.ee.pyskp.documentworkflow.dtos.project;
 
-import lombok.Data;
 import lombok.NonNull;
+import lombok.Value;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.FileMetadata;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Project;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Task;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.task.TaskSummaryDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.user.UserInfoDTO;
 
 import java.util.Collection;
 import java.util.Date;
@@ -14,25 +16,25 @@ import java.util.stream.Collectors;
 /**
  * Created by piotr on 29.12.16.
  */
-@Data
+@Value
 public class ProjectInfoDTO {
     @NonNull
-    private final String id;
+    String id;
 
     @NonNull
-    private final String name;
+    String name;
 
-    private final String description;
-
-    @NonNull
-    private final UserInfoDTO administrator;
+    String description;
 
     @NonNull
-    private final Date creationDate;
+    UserInfoDTO administrator;
 
-    private final Date lastModified;
+    @NonNull
+    Date creationDate;
 
-    private final List<TaskSummaryDTO> tasks;
+    Date lastModified;
+
+    List<TaskSummaryDTO> tasks;
 
     public static ProjectInfoDTO fromProjectAndTasks(Project project, Collection<Task> tasks) {
         Date lastModified = null;

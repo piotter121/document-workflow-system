@@ -6,7 +6,7 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.NewTaskForm;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.task.NewTaskForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.TaskService;
 

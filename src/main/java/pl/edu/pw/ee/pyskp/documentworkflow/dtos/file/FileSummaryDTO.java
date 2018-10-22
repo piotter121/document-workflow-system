@@ -1,26 +1,26 @@
-package pl.edu.pw.ee.pyskp.documentworkflow.dtos;
+package pl.edu.pw.ee.pyskp.documentworkflow.dtos.file;
 
-import lombok.Data;
 import lombok.NonNull;
+import lombok.Value;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.FileMetadata;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Version;
 
 import java.util.Date;
 
 @SuppressWarnings("WeakerAccess")
-@Data
+@Value
 public class FileSummaryDTO {
     @NonNull
-    private final String name;
+    String name;
 
     @NonNull
-    private final Date saveDate;
+    Date saveDate;
 
     @NonNull
-    private final String author;
+    String author;
 
     @NonNull
-    private final String taskName;
+    String taskName;
 
     public static FileSummaryDTO fromFileMetadata(FileMetadata fileMetadata) {
         Version latestVersion = fileMetadata.getLatestVersion();

@@ -15,7 +15,11 @@ import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.FileMetadata;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Version;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.FileMetadataRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.repository.VersionRepository;
-import pl.edu.pw.ee.pyskp.documentworkflow.dtos.*;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.file.FileContentDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.file.NewFileForm;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.version.DiffData;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.version.NewVersionForm;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.version.VersionInfoDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.FileNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ResourceNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.VersionNotFoundException;
@@ -142,17 +146,17 @@ public class VersionServiceImpl implements VersionService {
                 .findByFile_IdAndSaveDateLessThanEqualOrderBySaveDateDesc(fileId, new Date(versionSaveDateMillis));
         if (last2Versions.isEmpty())
             throw new VersionNotFoundException(String.valueOf(versionSaveDateMillis));
-        Version version = last2Versions.get(0);
-        DiffData diffData = new DiffData(
-                new FileContentDTO(getLines(version)),
-                version.getDifferences()
-        );
-
+        Version currentVersion = last2Versions.get(0);
+        FileContentDTO oldContent = null;
         if (last2Versions.size() != 1) {
-            diffData.setOldContent(new FileContentDTO(getLines(last2Versions.get(1))));
+            Version previousVersion = last2Versions.get(1);
+            oldContent = new FileContentDTO(getLines(previousVersion));
         }
-
-        return diffData;
+        return new DiffData(
+                currentVersion.getDifferences(),
+                new FileContentDTO(getLines(currentVersion)),
+                oldContent
+        );
     }
 
     private List<String> getLines(Version version) {
@@ -171,11 +175,13 @@ public class VersionServiceImpl implements VersionService {
                 .findByFile_IdAndSaveDateLessThanEqualOrderBySaveDateDesc(fileId, new Date(versionSaveDateMillis));
         if (versions.isEmpty())
             throw new VersionNotFoundException(String.valueOf(versionSaveDateMillis));
-        VersionInfoDTO versionInfoDTO = VersionInfoDTO.fromVersion(versions.get(0));
+        String previousVersionString = null;
         if (versions.size() >= 2) {
-            versionInfoDTO.setPreviousVersionString(versions.get(1).getVersionString());
+            Version previousVersion = versions.get(1);
+            previousVersionString = previousVersion.getVersionString();
         }
-        return versionInfoDTO;
+        Version currentVersion = versions.get(0);
+        return VersionInfoDTO.fromVersion(currentVersion, previousVersionString);
     }
 
     @Override
@@ -191,6 +197,5 @@ public class VersionServiceImpl implements VersionService {
         return fileMetadataRepository.findById(fileId)
                 .orElseThrow(() -> new FileNotFoundException(fileId.toString()));
     }
-
 
 }
