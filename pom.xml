@@ -80,6 +80,12 @@
             <groupId>org.apache.tika</groupId>
             <artifactId>tika-parsers</artifactId>
             <version>${tika.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.tallison</groupId>
+                    <artifactId>jmatio</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
