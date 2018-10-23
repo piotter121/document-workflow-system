@@ -1,10 +1,9 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.tika.Tika;
 import org.apache.tika.config.TikaConfig;
 import org.apache.tika.exception.TikaException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -20,10 +19,9 @@ import java.util.List;
 /**
  * Created by piotr on 20.01.17.
  */
+@Slf4j
 @Service
 public class TikaService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(TikaService.class);
-
     private final Tika tika;
 
     public TikaService() {
@@ -32,7 +30,7 @@ public class TikaService {
             TikaConfig config = new TikaConfig(resource.getInputStream());
             tika = new Tika(config);
         } catch (TikaException | IOException | SAXException e) {
-            LOGGER.error("Exception occurred during Tika initialization", e);
+            log.error("Exception occurred during Tika initialization", e);
             throw new RuntimeException(e);
         }
     }

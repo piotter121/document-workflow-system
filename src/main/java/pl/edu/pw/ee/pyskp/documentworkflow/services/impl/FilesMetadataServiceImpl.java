@@ -2,10 +2,8 @@ package pl.edu.pw.ee.pyskp.documentworkflow.services.impl;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
@@ -39,11 +37,10 @@ import java.util.List;
 /**
  * Created by piotr on 06.01.17.
  */
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@Slf4j
+@RequiredArgsConstructor
 @Service
 public class FilesMetadataServiceImpl implements FilesMetadataService {
-    private final static Logger LOGGER = LoggerFactory.getLogger(FilesMetadataServiceImpl.class);
-
     @NonNull
     private final FileMetadataRepository fileMetadataRepository;
 
@@ -62,8 +59,7 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
     @NonNull
     private final TikaService tikaService;
 
-    private ContentType getContentType(byte[] file)
-            throws UnknownContentType {
+    private ContentType getContentType(byte[] file) throws UnknownContentType {
         String contentType = tikaService.detectMediaType(file);
         return ContentType.fromName(contentType)
                 .orElseThrow(() -> new UnknownContentType(contentType));
@@ -86,7 +82,7 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
         try {
             newFile.setContentType(getContentType(formData.getFile().getBytes()));
         } catch (IOException e) {
-            LOGGER.error("Input/output exception occurred during getBytes method", e);
+            log.error("Input/output exception occurred during getBytes method", e);
             throw new RuntimeException(e);
         }
         newFile = fileMetadataRepository.save(newFile);
@@ -126,12 +122,13 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean hasContentTypeAs(ObjectId fileId, byte[] file) throws FileNotFoundException {
         try {
             FileMetadata fileMetadata = getFileMetadata(fileId);
             return getContentType(file).equals(fileMetadata.getContentType());
         } catch (UnknownContentType e) {
-            LOGGER.error(e.getLocalizedMessage(), e);
+            log.error(e.getLocalizedMessage(), e);
             return false;
         }
     }
@@ -145,7 +142,7 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
     }
 
     @Override
-    @Transactional(rollbackFor = ResourceNotFoundException.class)
+    @Transactional(rollbackFor = FileNotFoundException.class)
     public void deleteFile(ObjectId fileId) throws FileNotFoundException {
         FileMetadata fileToDelete = fileMetadataRepository.findById(fileId)
                 .orElseThrow(() -> new FileNotFoundException(fileId.toString()));
@@ -156,6 +153,7 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public String getFileName(ObjectId fileId) throws FileNotFoundException {
         return fileMetadataRepository.findById(fileId)
                 .map(metadata -> metadata.getName() + "." + metadata.getContentType().getExtension())
@@ -176,6 +174,7 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ContentTypeDTO getContentType(ObjectId fileId) throws FileNotFoundException {
         return fileMetadataRepository.findById(fileId)
                 .map(FileMetadata::getContentType)

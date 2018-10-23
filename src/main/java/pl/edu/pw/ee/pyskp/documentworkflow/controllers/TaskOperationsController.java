@@ -2,10 +2,8 @@ package pl.edu.pw.ee.pyskp.documentworkflow.controllers;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.task.TaskInfoDTO;
@@ -16,12 +14,11 @@ import pl.edu.pw.ee.pyskp.documentworkflow.services.TaskService;
 
 import java.util.List;
 
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@Slf4j
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/projects/{projectId}/tasks/{taskId}")
 public class TaskOperationsController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(TaskOperationsController.class);
-
     @NonNull
     private final TaskService taskService;
 
@@ -43,8 +40,9 @@ public class TaskOperationsController {
     @PreAuthorize("@securityService.isCurrentUserProjectAdministrator(#projectId)")
     public void deleteTask(@PathVariable ObjectId taskId, @PathVariable ObjectId projectId)
             throws TaskNotFoundException {
-        if (LOGGER.isDebugEnabled())
-            LOGGER.debug("Received HTTP DELETE request for deletion task of id=" + taskId);
+        if (log.isDebugEnabled()) {
+            log.debug("Received HTTP DELETE request for deletion task of id=" + taskId);
+        }
         taskService.deleteTask(taskId);
     }
 

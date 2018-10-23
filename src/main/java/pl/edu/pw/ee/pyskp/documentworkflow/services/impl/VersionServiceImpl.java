@@ -2,10 +2,8 @@ package pl.edu.pw.ee.pyskp.documentworkflow.services.impl;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,16 +35,15 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.List;
-import java.util.function.Predicate;
 
 /**
  * Created by piotr on 06.01.17.
  */
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@Slf4j
+@RequiredArgsConstructor
 @Service
 public class VersionServiceImpl implements VersionService {
     private static final String DEFAULT_MESSAGE = "Dodanie pliku";
-    private static final Logger LOGGER = LoggerFactory.getLogger(VersionServiceImpl.class);
 
     @NonNull
     private final UserService userService;
@@ -72,7 +69,7 @@ public class VersionServiceImpl implements VersionService {
         try {
             return MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
-            LOGGER.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
     }
@@ -82,6 +79,7 @@ public class VersionServiceImpl implements VersionService {
     }
 
     @Override
+    @Transactional
     public Version createInitVersionOfFile(NewFileForm form) {
         try {
             Version version = new Version();
@@ -97,12 +95,13 @@ public class VersionServiceImpl implements VersionService {
             version.setDifferences(differences);
             return version;
         } catch (IOException e) {
-            LOGGER.error("Input/output exception during getBytes from multipartFile", e);
+            log.error("Input/output exception during getBytes from multipartFile", e);
             throw new RuntimeException(e);
         }
     }
 
     @Override
+    @Transactional(readOnly = true)
     public InputStream getVersionFileContent(ObjectId fileId, Date saveDate) throws VersionNotFoundException {
         Version version = versionRepository.findOneByFile_IdAndSaveDate(fileId, saveDate)
                 .orElseThrow(() -> new VersionNotFoundException(String.valueOf(saveDate.getTime())));
@@ -110,7 +109,7 @@ public class VersionServiceImpl implements VersionService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = ResourceNotFoundException.class)
     public long addNewVersionOfFile(NewVersionForm form) throws ResourceNotFoundException {
         try {
             Version newVersion = new Version();
@@ -135,12 +134,13 @@ public class VersionServiceImpl implements VersionService {
 
             return newVersion.getSaveDate().getTime();
         } catch (IOException e) {
-            LOGGER.error("Input/output exception occurred", e);
+            log.error("Input/output exception occurred", e);
             throw new RuntimeException(e);
         }
     }
 
     @Override
+    @Transactional(readOnly = true)
     public DiffData buildDiffData(ObjectId fileId, long versionSaveDateMillis) throws VersionNotFoundException {
         List<Version> last2Versions = versionRepository
                 .findByFile_IdAndSaveDateLessThanEqualOrderBySaveDateDesc(fileId, new Date(versionSaveDateMillis));
@@ -164,12 +164,13 @@ public class VersionServiceImpl implements VersionService {
         try {
             return tikaService.extractLines(new ByteArrayInputStream(bytes));
         } catch (IOException e) {
-            LOGGER.error("Input/output exception occurred during extraction of lines");
+            log.error("Input/output exception occurred during extraction of lines");
             throw new RuntimeException(e);
         }
     }
 
     @Override
+    @Transactional(readOnly = true)
     public VersionInfoDTO getVersionInfo(ObjectId fileId, long versionSaveDateMillis) throws VersionNotFoundException {
         List<Version> versions = versionRepository
                 .findByFile_IdAndSaveDateLessThanEqualOrderBySaveDateDesc(fileId, new Date(versionSaveDateMillis));
@@ -185,12 +186,10 @@ public class VersionServiceImpl implements VersionService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean existsByVersionString(ObjectId fileId, String versionString) {
-        return this.anyVersionMatch(fileId, version -> versionString.equals(version.getVersionString()));
-    }
-
-    private boolean anyVersionMatch(ObjectId fileId, Predicate<Version> versionPredicate) {
-        return versionRepository.findByFile_Id(fileId).stream().anyMatch(versionPredicate);
+        return versionRepository.findByFile_Id(fileId).stream()
+                .anyMatch(version -> versionString.equals(version.getVersionString()));
     }
 
     private FileMetadata getFileMetadata(ObjectId fileId) throws FileNotFoundException {

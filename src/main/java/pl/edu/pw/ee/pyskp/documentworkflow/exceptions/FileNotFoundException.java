@@ -1,7 +1,5 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.exceptions;
 
-import org.bson.types.ObjectId;
-
 import java.util.Collections;
 import java.util.Map;
 

@@ -2,10 +2,8 @@ package pl.edu.pw.ee.pyskp.documentworkflow.controllers;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -24,12 +22,11 @@ import java.util.List;
 /**
  * Created by piotr on 16.12.16.
  */
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@Slf4j
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/projects")
 public class ProjectsController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProjectsController.class);
-
     @NonNull
     private final ProjectService projectService;
 
@@ -63,7 +60,9 @@ public class ProjectsController {
     @DeleteMapping("/{projectId}")
     @PreAuthorize("@securityService.isCurrentUserProjectAdministrator(#projectId)")
     public void deleteProject(@PathVariable ObjectId projectId) throws ProjectNotFoundException {
-        LOGGER.debug("Received HTTP DELETE request for deletion project " + projectId);
+        if (log.isDebugEnabled()) {
+            log.debug("Received HTTP DELETE request for deletion project " + projectId);
+        }
         projectService.deleteProject(projectId);
     }
 }

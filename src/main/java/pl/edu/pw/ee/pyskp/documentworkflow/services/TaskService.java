@@ -29,8 +29,7 @@ public interface TaskService {
 
     UserInfoDTO getTaskAdministrator(ObjectId taskId) throws TaskNotFoundException;
 
-    List<UserInfoDTO> removeParticipantFromTask(String email, ObjectId taskId)
-            throws ResourceNotFoundException;
+    List<UserInfoDTO> removeParticipantFromTask(String email, ObjectId taskId) throws ResourceNotFoundException;
 
     @SuppressWarnings("unused")
     void processFileCreatedEvent(FileCreatedEvent event);

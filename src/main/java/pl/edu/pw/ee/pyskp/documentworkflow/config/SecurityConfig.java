@@ -2,7 +2,6 @@ package pl.edu.pw.ee.pyskp.documentworkflow.config;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,10 +13,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 /**
  * Created by piotr on 16.12.16.
  */
+@RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @NonNull

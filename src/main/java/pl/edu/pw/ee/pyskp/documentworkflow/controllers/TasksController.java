@@ -3,7 +3,6 @@ package pl.edu.pw.ee.pyskp.documentworkflow.controllers;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.task.NewTaskForm;
@@ -17,7 +16,7 @@ import java.util.Map;
 /**
  * Created by p.pysk on 02.01.2017.
  */
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/projects/{projectId}/tasks")
 public class TasksController {

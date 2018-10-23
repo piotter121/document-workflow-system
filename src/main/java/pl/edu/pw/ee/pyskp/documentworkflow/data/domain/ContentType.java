@@ -11,8 +11,7 @@ import java.util.stream.Stream;
 /**
  * Created by piotr on 11.12.16.
  */
-@SuppressWarnings("unused")
-@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public enum ContentType {
     WORD_2003_DOCUMENT("application/msword", "doc"),
     WORD_2007_DOCUMENT("application/vnd.openxmlformats-officedocument.wordprocessingml.document", "docx"),

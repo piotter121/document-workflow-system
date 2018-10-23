@@ -3,8 +3,8 @@ package pl.edu.pw.ee.pyskp.documentworkflow.services.impl;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Project;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Task;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.User;
@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Created by piotr on 06.01.17.
  */
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 @Service("securityService")
 public class SecurityServiceImpl implements SecurityService {
     @NonNull
@@ -34,11 +34,13 @@ public class SecurityServiceImpl implements SecurityService {
     private final TaskRepository taskRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public boolean canAddTask(ObjectId projectId) throws ProjectNotFoundException {
         return isCurrentUserProjectAdministrator(projectId);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean hasAccessToProject(ObjectId projectId) {
         String currentUserEmail = userService.getCurrentUserEmail();
         Project project = projectRepository.findById(projectId).orElse(null);
@@ -64,6 +66,7 @@ public class SecurityServiceImpl implements SecurityService {
 
 
     @Override
+    @Transactional(readOnly = true)
     public boolean isTaskParticipant(ObjectId projectId, ObjectId taskId) throws ResourceNotFoundException {
         String currentUserEmail = userService.getCurrentUserEmail();
 
@@ -96,11 +99,13 @@ public class SecurityServiceImpl implements SecurityService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean hasAccessToTask(ObjectId projectId, ObjectId taskId) throws ResourceNotFoundException {
         return isTaskParticipant(projectId, taskId);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean isCurrentUserProjectAdministrator(ObjectId projectId) throws ProjectNotFoundException {
         Project project = getProject(projectId);
         String currentUserEmail = userService.getCurrentUserEmail();
@@ -108,6 +113,7 @@ public class SecurityServiceImpl implements SecurityService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean isTaskAdministrator(ObjectId taskId) throws TaskNotFoundException {
         Task task = getTask(taskId);
         String currentUserLogin = userService.getCurrentUserEmail();

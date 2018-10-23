@@ -3,7 +3,6 @@ package pl.edu.pw.ee.pyskp.documentworkflow.controllers;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -27,11 +26,10 @@ import java.util.Date;
 /**
  * Created by p.pysk on 16.01.2017.
  */
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/projects/{projectId}/tasks/{taskId}/files/{fileId}/versions")
 public class VersionController {
-
     @NonNull
     private final VersionService versionService;
 
@@ -95,7 +93,6 @@ public class VersionController {
         versionForm.setMessage(message);
         return versionService.addNewVersionOfFile(versionForm);
     }
-
 }
 
 

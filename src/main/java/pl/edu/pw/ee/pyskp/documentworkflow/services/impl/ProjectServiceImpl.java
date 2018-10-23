@@ -3,7 +3,6 @@ package pl.edu.pw.ee.pyskp.documentworkflow.services.impl;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
@@ -29,7 +28,7 @@ import java.util.stream.Stream;
 /**
  * Created by piotr on 29.12.16.
  */
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 @Service
 public class ProjectServiceImpl implements ProjectService {
     @NonNull
@@ -51,6 +50,7 @@ public class ProjectServiceImpl implements ProjectService {
     private final UserRepository userRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<ProjectSummaryDTO> getUserParticipatedProjects(String userEmail) throws UserNotFoundException {
         User user = userRepository.findOneByEmail(userEmail)
                 .orElseThrow(() -> new UserNotFoundException(userEmail));
@@ -92,7 +92,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = ProjectNotFoundException.class)
     public void deleteProject(ObjectId projectId) throws ProjectNotFoundException {
         Project project = getProject(projectId);
 
@@ -107,6 +107,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ProjectInfoDTO getProjectInfo(ObjectId projectId) throws ProjectNotFoundException {
         Project project = this.getProject(projectId);
         List<Task> projectTasks = taskRepository.findByProject(project);
@@ -122,6 +123,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public String getProjectName(ObjectId projectId) throws ProjectNotFoundException {
         return getProject(projectId).getName();
     }

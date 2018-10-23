@@ -3,7 +3,6 @@ package pl.edu.pw.ee.pyskp.documentworkflow.services.impl;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
@@ -33,8 +32,8 @@ import java.util.stream.Collectors;
 /**
  * Created by p.pysk on 02.01.2017.
  */
+@RequiredArgsConstructor
 @Service
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class TaskServiceImpl implements TaskService {
     @NonNull
     private final TaskRepository taskRepository;
@@ -102,7 +101,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = ResourceNotFoundException.class)
     public List<UserInfoDTO> addParticipantToTask(String userEmail, ObjectId projectId, ObjectId taskId)
             throws ResourceNotFoundException {
         User newParticipant = userService.getUserByEmail(userEmail);
@@ -121,6 +120,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TaskInfoDTO getTaskInfo(ObjectId projectId, ObjectId taskId) throws ResourceNotFoundException {
         Task task = getTask(taskId);
         List<FileMetadata> files = fileMetadataRepository.findByTask(task);
@@ -128,6 +128,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean existsByName(ObjectId projectId, String taskName) {
         List<Task> tasks = taskRepository.findByProject_Id(projectId);
         return tasks.stream()
@@ -136,6 +137,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserInfoDTO getTaskAdministrator(ObjectId taskId) throws TaskNotFoundException {
         return taskRepository.findById(taskId)
                 .map(task -> UserInfoDTO.fromUser(task.getAdministrator()))
