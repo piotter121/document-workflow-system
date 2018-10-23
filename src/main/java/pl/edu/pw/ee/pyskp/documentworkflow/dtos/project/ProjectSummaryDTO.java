@@ -20,7 +20,7 @@ public class ProjectSummaryDTO {
     @NonNull
     Date creationDate;
 
-    int numberOfParticipants, numberOfTasks, numberOfFiles;
+    long numberOfParticipants, numberOfTasks, numberOfFiles;
 
     FileSummaryDTO lastModifiedFile;
 

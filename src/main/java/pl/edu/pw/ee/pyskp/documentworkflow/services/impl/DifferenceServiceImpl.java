@@ -36,10 +36,10 @@ public class DifferenceServiceImpl implements DifferenceService {
         Chunk<String> original = delta.getOriginal();
         Chunk<String> revised = delta.getRevised();
         Difference difference = new Difference();
-        difference.setPreviousSectionStart((long) original.getPosition());
-        difference.setPreviousSectionSize((long) original.size());
-        difference.setNewSectionStart((long) revised.getPosition());
-        difference.setNewSectionSize((long) revised.size());
+        difference.setPreviousSectionStart(original.getPosition());
+        difference.setPreviousSectionSize(original.size());
+        difference.setNewSectionStart(revised.getPosition());
+        difference.setNewSectionSize(revised.size());
         DifferenceType differenceType = DifferenceType.fromDeltaType(delta.getType())
                 .orElseThrow(() -> new IllegalArgumentException("Delta type is null"));
         difference.setDifferenceType(differenceType);

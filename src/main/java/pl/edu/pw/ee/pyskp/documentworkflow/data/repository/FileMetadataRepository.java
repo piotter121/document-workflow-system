@@ -7,16 +7,19 @@ import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Task;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Created by piotr on 06.01.17.
  */
 public interface FileMetadataRepository extends MongoRepository<FileMetadata, ObjectId> {
-    Integer countByTaskIn(Collection<Task> tasks);
+    long countByTaskIn(Collection<Task> tasks);
 
     void deleteByTask_Id(ObjectId taskId);
 
-    List<FileMetadata> findByTask(Task task);
+    Stream<FileMetadata> findByTask(Task task);
+
+    long countByTask(Task task);
 
     List<FileMetadata> findByTaskIn(List<Task> tasks);
 

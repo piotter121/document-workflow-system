@@ -29,5 +29,5 @@ public class Project {
     @DBRef
     private User administrator;
 
-    private Integer numberOfTasks, numberOfFiles, numberOfParticipants;
+    private long numberOfTasks, numberOfFiles, numberOfParticipants;
 }

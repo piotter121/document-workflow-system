@@ -33,5 +33,5 @@ public class FileMetadata {
     @DBRef(lazy = true)
     private Version latestVersion;
 
-    private Integer numberOfVersions;
+    private long numberOfVersions;
 }

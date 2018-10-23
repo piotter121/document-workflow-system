@@ -166,7 +166,7 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
         Version createdVersion = event.getCreatedVersion();
         FileMetadata modifiedFile = event.getModifiedFile();
         modifiedFile.setLatestVersion(createdVersion);
-        Integer numberOfVersions = versionRepository.countByFile(modifiedFile);
+        long numberOfVersions = versionRepository.countByFile(modifiedFile);
         modifiedFile.setNumberOfVersions(numberOfVersions);
         fileMetadataRepository.save(modifiedFile);
     }

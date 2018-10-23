@@ -38,5 +38,5 @@ public class Task {
     @DBRef
     private FileMetadata lastModifiedFile;
 
-    private Integer numberOfFiles;
+    private long numberOfFiles;
 }

@@ -20,7 +20,7 @@ public class TaskSummaryDTO {
 
     private FileSummaryDTO lastModifiedFile;
 
-    private int numberOfFiles, numberOfParticipants;
+    private long numberOfFiles, numberOfParticipants;
 
     public static TaskSummaryDTO fromTask(Task task) {
         FileSummaryDTO lastModifiedFile = null;

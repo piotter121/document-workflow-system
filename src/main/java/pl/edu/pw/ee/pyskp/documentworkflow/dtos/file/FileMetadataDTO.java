@@ -34,7 +34,7 @@ public class FileMetadataDTO {
     @NonNull
     VersionSummaryDTO latestVersion;
 
-    int numberOfVersions;
+    long numberOfVersions;
 
     List<VersionInfoDTO> versions;
 

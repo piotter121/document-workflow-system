@@ -5,8 +5,8 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Project;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.User;
 
-import java.util.List;
+import java.util.stream.Stream;
 
 public interface ProjectRepository extends MongoRepository<Project, ObjectId> {
-    List<Project> findByAdministrator(User administrator);
+    Stream<Project> findByAdministrator(User administrator);
 }

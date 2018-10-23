@@ -20,7 +20,7 @@ public interface VersionRepository extends MongoRepository<Version, ObjectId> {
 
     List<Version> findByFile(FileMetadata file);
 
-    Integer countByFile(FileMetadata file);
+    long countByFile(FileMetadata file);
 
     List<Version> findByFile_IdAndSaveDateLessThanEqualOrderBySaveDateDesc(ObjectId fileId, Date saveDate);
 

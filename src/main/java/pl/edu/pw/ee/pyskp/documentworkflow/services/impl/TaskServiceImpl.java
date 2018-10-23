@@ -28,6 +28,7 @@ import pl.edu.pw.ee.pyskp.documentworkflow.services.events.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by p.pysk on 02.01.2017.
@@ -92,7 +93,7 @@ public class TaskServiceImpl implements TaskService {
     @Transactional(rollbackFor = TaskNotFoundException.class)
     public void deleteTask(ObjectId taskId) throws TaskNotFoundException {
         Task taskToDelete = getTask(taskId);
-        List<FileMetadata> taskFiles = fileMetadataRepository.findByTask(taskToDelete);
+        List<FileMetadata> taskFiles = fileMetadataRepository.findByTask(taskToDelete).collect(Collectors.toList());
         versionRepository.deleteByFileIn(taskFiles);
         fileMetadataRepository.deleteByTask_Id(taskId);
         taskRepository.delete(taskToDelete);
@@ -123,7 +124,7 @@ public class TaskServiceImpl implements TaskService {
     @Transactional(readOnly = true)
     public TaskInfoDTO getTaskInfo(ObjectId projectId, ObjectId taskId) throws ResourceNotFoundException {
         Task task = getTask(taskId);
-        List<FileMetadata> files = fileMetadataRepository.findByTask(task);
+        List<FileMetadata> files = fileMetadataRepository.findByTask(task).collect(Collectors.toList());
         return TaskInfoDTO.fromTaskAndFiles(task, files);
     }
 
@@ -180,10 +181,10 @@ public class TaskServiceImpl implements TaskService {
     @Order(1)
     public void processFileDeletedEvent(FileDeletedEvent event) {
         Task task = event.getDeletedFile().getTask();
-        List<FileMetadata> files = fileMetadataRepository.findByTask(task);
-        task.setNumberOfFiles(files.size());
-        FileMetadata lastModifiedFile = files.stream()
-                .max(Comparator.comparing(file -> file.getLatestVersion().getSaveDate()))
+        long numberOfFiles = fileMetadataRepository.countByTask(task);
+        task.setNumberOfFiles(numberOfFiles);
+        Stream<FileMetadata> files = fileMetadataRepository.findByTask(task);
+        FileMetadata lastModifiedFile = files.max(Comparator.comparing(file -> file.getLatestVersion().getSaveDate()))
                 .orElse(null);
         task.setLastModifiedFile(lastModifiedFile);
         taskRepository.save(task);

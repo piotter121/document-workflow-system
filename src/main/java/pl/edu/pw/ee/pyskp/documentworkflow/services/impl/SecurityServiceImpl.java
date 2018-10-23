@@ -17,6 +17,7 @@ import pl.edu.pw.ee.pyskp.documentworkflow.services.SecurityService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by piotr on 06.01.17.
@@ -50,7 +51,7 @@ public class SecurityServiceImpl implements SecurityService {
         if (currentUserEmail.equals(project.getAdministrator().getEmail())) {
             return true;
         }
-        List<Task> tasks = taskRepository.findByProject(project);
+        List<Task> tasks = taskRepository.findByProject(project).collect(Collectors.toList());
         if (tasks.stream()
                 .flatMap(task -> task.getParticipants().stream())
                 .map(User::getEmail)

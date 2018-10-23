@@ -21,9 +21,15 @@ import pl.edu.pw.ee.pyskp.documentworkflow.services.ProjectService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.events.*;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static java.util.Comparator.comparing;
+import static java.util.stream.Stream.concat;
+import static java.util.stream.Stream.of;
 
 /**
  * Created by piotr on 29.12.16.
@@ -54,18 +60,13 @@ public class ProjectServiceImpl implements ProjectService {
     public List<ProjectSummaryDTO> getUserParticipatedProjects(String userEmail) throws UserNotFoundException {
         User user = userRepository.findOneByEmail(userEmail)
                 .orElseThrow(() -> new UserNotFoundException(userEmail));
-        List<Project> administratedProjects = projectRepository.findByAdministrator(user);
-        Set<Project> userProjects = new HashSet<>(administratedProjects);
+        Stream<Project> administratedProjects = projectRepository.findByAdministrator(user);
 
-        List<Task> participatedTasks =
-                taskRepository.findByParticipantsContainingOrAdministrator(user, user);
-        List<Project> participatedProjects = participatedTasks.stream()
-                .map(Task::getProject)
+        Stream<Task> participatedTasks = taskRepository.findByParticipantsContainingOrAdministrator(user, user);
+        Stream<Project> participatedProjects = participatedTasks.map(Task::getProject).distinct();
+
+        return concat(administratedProjects, participatedProjects)
                 .distinct()
-                .collect(Collectors.toList());
-        userProjects.addAll(participatedProjects);
-
-        return userProjects.stream()
                 .map(ProjectSummaryDTO::fromProject)
                 .collect(Collectors.toList());
     }
@@ -96,7 +97,7 @@ public class ProjectServiceImpl implements ProjectService {
     public void deleteProject(ObjectId projectId) throws ProjectNotFoundException {
         Project project = getProject(projectId);
 
-        List<Task> tasks = taskRepository.findByProject(project);
+        List<Task> tasks = taskRepository.findByProject(project).collect(Collectors.toList());
 
         List<FileMetadata> files = fileMetadataRepository.findByTaskIn(tasks);
 
@@ -110,15 +111,16 @@ public class ProjectServiceImpl implements ProjectService {
     @Transactional(readOnly = true)
     public ProjectInfoDTO getProjectInfo(ObjectId projectId) throws ProjectNotFoundException {
         Project project = this.getProject(projectId);
-        List<Task> projectTasks = taskRepository.findByProject(project);
-        projectTasks.sort(Comparator.comparing((Task task) -> {
-            FileMetadata lastModifiedFile = task.getLastModifiedFile();
-            if (lastModifiedFile != null) {
-                return lastModifiedFile.getLatestVersion().getSaveDate();
-            } else {
-                return task.getCreationDate();
-            }
-        }).reversed());
+        List<Task> projectTasks = taskRepository.findByProject(project)
+                .sorted(comparing((Task task) -> {
+                    FileMetadata lastModifiedFile = task.getLastModifiedFile();
+                    if (lastModifiedFile != null) {
+                        return lastModifiedFile.getLatestVersion().getSaveDate();
+                    } else {
+                        return task.getCreationDate();
+                    }
+                }).reversed())
+                .collect(Collectors.toList());
         return ProjectInfoDTO.fromProjectAndTasks(project, projectTasks);
     }
 
@@ -146,13 +148,13 @@ public class ProjectServiceImpl implements ProjectService {
     @Order(2)
     public void processFileDeletedEvent(FileDeletedEvent event) {
         Project project = event.getDeletedFile().getTask().getProject();
-        List<Task> projectTasks = taskRepository.findByProject(project);
-        Integer numberOfProjectFiles = fileMetadataRepository.countByTaskIn(projectTasks);
+        List<Task> projectTasks = taskRepository.findByProject(project).collect(Collectors.toList());
+        long numberOfProjectFiles = fileMetadataRepository.countByTaskIn(projectTasks);
         project.setNumberOfFiles(numberOfProjectFiles);
         FileMetadata lastModifiedFile = projectTasks.stream()
                 .map(Task::getLastModifiedFile)
                 .filter(Objects::nonNull)
-                .max(Comparator.comparing(file -> file.getLatestVersion().getSaveDate()))
+                .max(comparing(file -> file.getLatestVersion().getSaveDate()))
                 .orElse(null);
         project.setLastModifiedFile(lastModifiedFile);
         projectRepository.save(project);
@@ -165,8 +167,8 @@ public class ProjectServiceImpl implements ProjectService {
         Task createdTask = event.getCreatedTask();
         Project project = createdTask.getProject();
         project.setNumberOfTasks(project.getNumberOfTasks() + 1);
-        List<Task> projectTasks = taskRepository.findByProject(project);
-        int numberOfProjectParticipants = getNumberOfProjectParticipants(projectTasks, project);
+        Stream<Task> projectTasks = taskRepository.findByProject(project);
+        long numberOfProjectParticipants = getNumberOfProjectParticipants(projectTasks, project);
         project.setNumberOfParticipants(numberOfProjectParticipants);
         projectRepository.save(project);
     }
@@ -178,13 +180,13 @@ public class ProjectServiceImpl implements ProjectService {
         Task deletedTask = event.getDeletedTask();
         Project project = deletedTask.getProject();
         project.setNumberOfTasks(project.getNumberOfTasks() - 1);
-        List<Task> projectTasks = taskRepository.findByProject(project);
-        int numberOfProjectParticipants = getNumberOfProjectParticipants(projectTasks, project);
+        List<Task> projectTasks = taskRepository.findByProject(project).collect(Collectors.toList());
+        long numberOfProjectParticipants = getNumberOfProjectParticipants(projectTasks.stream(), project);
         project.setNumberOfParticipants(numberOfProjectParticipants);
         project.setNumberOfFiles(project.getNumberOfFiles() - deletedTask.getNumberOfFiles());
         FileMetadata lastModifiedFile = projectTasks.stream()
                 .map(Task::getLastModifiedFile)
-                .max(Comparator.comparing((FileMetadata file) -> file.getLatestVersion().getSaveDate()).reversed())
+                .max(comparing((FileMetadata file) -> file.getLatestVersion().getSaveDate()).reversed())
                 .orElse(null);
         project.setLastModifiedFile(lastModifiedFile);
         projectRepository.save(project);
@@ -220,17 +222,15 @@ public class ProjectServiceImpl implements ProjectService {
 
     private void updateProjectNumberOfParticipants(Task modifiedTask) {
         Project project = modifiedTask.getProject();
-        List<Task> projectTasks = taskRepository.findByProject(project);
-        int numberOfProjectParticipants = getNumberOfProjectParticipants(projectTasks, project);
+        Stream<Task> projectTasks = taskRepository.findByProject(project);
+        long numberOfProjectParticipants = getNumberOfProjectParticipants(projectTasks, project);
         project.setNumberOfParticipants(numberOfProjectParticipants);
         projectRepository.save(project);
     }
 
-    private int getNumberOfProjectParticipants(Collection<Task> projectTasks, Project project) {
-        Set<User> projectParticipants = projectTasks.stream()
-                .flatMap(task -> Stream.concat(task.getParticipants().stream(), Stream.of(task.getAdministrator())))
-                .collect(Collectors.toSet());
-        projectParticipants.add(project.getAdministrator());
-        return projectParticipants.size();
+    private long getNumberOfProjectParticipants(Stream<Task> projectTasks, Project project) {
+        Stream<User> projectParticipants = projectTasks
+                .flatMap(task -> concat(task.getParticipants().stream(), of(task.getAdministrator())));
+        return concat(projectParticipants, of(project.getAdministrator())).distinct().count();
     }
 }
