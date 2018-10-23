@@ -1,6 +1,7 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.data.repository;
 
 import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.FileMetadata;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Version;
@@ -9,6 +10,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * Created by piotr on 06.01.17.
@@ -28,5 +30,8 @@ public interface VersionRepository extends MongoRepository<Version, ObjectId> {
 
     Optional<Version> findTopByFileOrderBySaveDateDesc(FileMetadata fileMetadata);
 
-    Collection<Version> findByFile_Id(ObjectId fileId);
+    boolean existsByFile_IdAndVersionString(ObjectId fileId, String versionString);
+
+    @SuppressWarnings("SpringDataRepositoryMethodParametersInspection")
+    Stream<Version> findByFileInOrderByScoreDesc(Collection<FileMetadata> files, TextCriteria criteria);
 }

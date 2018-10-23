@@ -2,6 +2,7 @@ package pl.edu.pw.ee.pyskp.documentworkflow.services;
 
 import org.bson.types.ObjectId;
 import org.springframework.validation.annotation.Validated;
+import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.FileMetadata;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Version;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.file.NewFileForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.version.DiffData;
@@ -19,7 +20,7 @@ import java.util.Date;
  */
 @Validated
 public interface VersionService {
-    Version createInitVersionOfFile(NewFileForm form);
+    Version createInitVersionOfFile(NewFileForm form, FileMetadata fileMetadata);
 
     InputStream getVersionFileContent(ObjectId fileId, Date saveDate) throws VersionNotFoundException;
 

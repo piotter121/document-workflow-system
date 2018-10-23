@@ -130,10 +130,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional(readOnly = true)
     public boolean existsByName(ObjectId projectId, String taskName) {
-        List<Task> tasks = taskRepository.findByProject_Id(projectId);
-        return tasks.stream()
-                .map(Task::getName)
-                .anyMatch(taskName::equals);
+        return taskRepository.existsByProject_IdAndName(projectId, taskName);
     }
 
     @Override

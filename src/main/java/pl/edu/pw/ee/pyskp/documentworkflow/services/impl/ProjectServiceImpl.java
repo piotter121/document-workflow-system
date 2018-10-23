@@ -137,6 +137,7 @@ public class ProjectServiceImpl implements ProjectService {
         Project project = createdFile.getTask().getProject();
         project.setLastModifiedFile(createdFile);
         project.setNumberOfFiles(project.getNumberOfFiles() + 1);
+        projectRepository.save(project);
     }
 
     @Override

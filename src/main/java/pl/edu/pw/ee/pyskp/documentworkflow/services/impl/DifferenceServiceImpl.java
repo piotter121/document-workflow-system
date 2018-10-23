@@ -4,16 +4,11 @@ import difflib.Chunk;
 import difflib.Delta;
 import difflib.DiffUtils;
 import difflib.Patch;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Difference;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.DifferenceType;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.DifferenceService;
-import pl.edu.pw.ee.pyskp.documentworkflow.services.TikaService;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,11 +16,21 @@ import java.util.stream.Collectors;
 /**
  * Created by piotr on 06.01.17.
  */
-@RequiredArgsConstructor
 @Service
 public class DifferenceServiceImpl implements DifferenceService {
-    @NonNull
-    private final TikaService tikaService;
+    @Override
+    public List<Difference> createDifferencesForNewFile(List<String> lines) {
+        return getDifferencesBetweenTwoFiles(Collections.emptyList(), lines);
+    }
+
+    @Override
+    public List<Difference> getDifferencesBetweenTwoFiles(List<String> previousVersionLines,
+                                                          List<String> currentVersionLines) {
+        Patch<String> diff = DiffUtils.diff(previousVersionLines, currentVersionLines);
+        return diff.getDeltas().stream()
+                .map(this::mapDeltaToDifference)
+                .collect(Collectors.toList());
+    }
 
     private Difference mapDeltaToDifference(Delta<String> delta) {
         Chunk<String> original = delta.getOriginal();
@@ -39,24 +44,5 @@ public class DifferenceServiceImpl implements DifferenceService {
                 .orElseThrow(() -> new IllegalArgumentException("Delta type is null"));
         difference.setDifferenceType(differenceType);
         return difference;
-    }
-
-    @Override
-    public List<Difference> createDifferencesForNewFile(InputStream inputStream) throws IOException {
-        List<String> lines = tikaService.extractLines(inputStream);
-        Patch<String> diff = DiffUtils.diff(Collections.emptyList(), lines);
-        return diff.getDeltas().stream()
-                .map(this::mapDeltaToDifference)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<Difference> getDifferencesBetweenTwoFiles(InputStream inputStream, InputStream anotherInputStream)
-            throws IOException {
-        Patch<String> diff =
-                DiffUtils.diff(tikaService.extractLines(inputStream), tikaService.extractLines(anotherInputStream));
-        return diff.getDeltas().stream()
-                .map(this::mapDeltaToDifference)
-                .collect(Collectors.toList());
     }
 }

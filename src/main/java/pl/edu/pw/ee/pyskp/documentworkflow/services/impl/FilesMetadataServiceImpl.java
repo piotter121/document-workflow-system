@@ -87,9 +87,7 @@ public class FilesMetadataServiceImpl implements FilesMetadataService {
         }
         newFile = fileMetadataRepository.save(newFile);
 
-        Version initVersion = versionService.createInitVersionOfFile(formData);
-        initVersion.setFile(newFile);
-        initVersion = versionRepository.save(initVersion);
+        Version initVersion = versionService.createInitVersionOfFile(formData, newFile);
 
         newFile.setLatestVersion(initVersion);
         newFile.setNumberOfVersions(1);

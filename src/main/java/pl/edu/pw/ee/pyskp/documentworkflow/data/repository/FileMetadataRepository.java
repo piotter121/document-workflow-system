@@ -19,4 +19,6 @@ public interface FileMetadataRepository extends MongoRepository<FileMetadata, Ob
     List<FileMetadata> findByTask(Task task);
 
     List<FileMetadata> findByTaskIn(List<Task> tasks);
+
+    List<FileMetadata> findByTask_Id(ObjectId taskId);
 }

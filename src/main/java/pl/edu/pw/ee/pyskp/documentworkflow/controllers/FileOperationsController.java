@@ -10,6 +10,7 @@ import pl.edu.pw.ee.pyskp.documentworkflow.dtos.file.FileMetadataDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.FileNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.FilesMetadataService;
 
+@SuppressWarnings("MVCPathVariableInspection")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/projects/{projectId}/tasks/{taskId}/files/{fileId}")
@@ -18,9 +19,9 @@ public class FileOperationsController {
     private final FilesMetadataService filesMetadataService;
 
     @GetMapping
-    @PreAuthorize("@securityService.hasAccessToTask(#projectId, #taskId)")
-    public FileMetadataDTO getFileInfo(@PathVariable ObjectId projectId, @PathVariable ObjectId fileId,
-                                       @PathVariable ObjectId taskId) throws FileNotFoundException {
+    @PreAuthorize("@securityService.hasAccessToTask(#taskId)")
+    public FileMetadataDTO getFileInfo(@PathVariable ObjectId fileId, @PathVariable ObjectId taskId)
+            throws FileNotFoundException {
         return filesMetadataService.getFileMetadataDTO(fileId);
     }
 
@@ -31,9 +32,8 @@ public class FileOperationsController {
     }
 
     @PostMapping("/markToConfirm")
-    @PreAuthorize("@securityService.hasAccessToTask(#projectId, #taskId)")
-    public void markFileToConfirm(@PathVariable ObjectId fileId, @PathVariable ObjectId projectId,
-                                  @PathVariable ObjectId taskId)
+    @PreAuthorize("@securityService.hasAccessToTask(#taskId)")
+    public void markFileToConfirm(@PathVariable ObjectId fileId, @PathVariable ObjectId taskId)
             throws FileNotFoundException {
         filesMetadataService.markFileToConfirm(fileId);
     }
@@ -45,9 +45,9 @@ public class FileOperationsController {
     }
 
     @GetMapping("/contentType")
-    @PreAuthorize("@securityService.hasAccessToTask(#projectId, #taskId)")
-    public ContentTypeDTO getContentType(@PathVariable ObjectId projectId, @PathVariable ObjectId fileId,
-                                         @PathVariable ObjectId taskId) throws FileNotFoundException {
+    @PreAuthorize("@securityService.hasAccessToTask(#taskId)")
+    public ContentTypeDTO getContentType(@PathVariable ObjectId fileId, @PathVariable ObjectId taskId)
+            throws FileNotFoundException {
         return filesMetadataService.getContentType(fileId);
     }
 }

@@ -3,6 +3,7 @@ package pl.edu.pw.ee.pyskp.documentworkflow.services.impl;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tika.io.TikaInputStream;
 import org.bson.types.ObjectId;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -80,20 +81,26 @@ public class VersionServiceImpl implements VersionService {
 
     @Override
     @Transactional
-    public Version createInitVersionOfFile(NewFileForm form) {
+    public Version createInitVersionOfFile(NewFileForm form, FileMetadata fileMetadata) {
         try {
             Version version = new Version();
+            version.setFile(fileMetadata);
+            version.setSaveDate(new Date());
             version.setVersionString(form.getVersionString());
             version.setMessage(DEFAULT_MESSAGE);
             version.setAuthor(userService.getCurrentUser());
             MultipartFile file = form.getFile();
             byte[] bytes = file.getBytes();
-            version.setCheckSum(calculateCheckSum(bytes));
-            version.setSaveDate(new Date());
             version.setFileContent(bytes);
-            List<Difference> differences = differenceService.createDifferencesForNewFile(file.getInputStream());
+
+            List<String> parsedContentLines = tikaService.extractLines(TikaInputStream.get(bytes));
+            version.setParsedFileContent(parsedContentLines);
+
+            version.setCheckSum(calculateCheckSum(bytes));
+
+            List<Difference> differences = differenceService.createDifferencesForNewFile(parsedContentLines);
             version.setDifferences(differences);
-            return version;
+            return versionRepository.save(version);
         } catch (IOException e) {
             log.error("Input/output exception during getBytes from multipartFile", e);
             throw new RuntimeException(e);
@@ -112,22 +119,29 @@ public class VersionServiceImpl implements VersionService {
     @Transactional(rollbackFor = ResourceNotFoundException.class)
     public long addNewVersionOfFile(NewVersionForm form) throws ResourceNotFoundException {
         try {
+            FileMetadata fileMetadata = getFileMetadata(form.getFileId());
             Version newVersion = new Version();
-            byte[] file = form.getFile().getBytes();
+            newVersion.setFile(fileMetadata);
             newVersion.setSaveDate(new Date());
-            newVersion.setAuthor(userService.getCurrentUser());
             newVersion.setVersionString(form.getVersionString());
             newVersion.setMessage(form.getMessage());
-            newVersion.setCheckSum(calculateCheckSum(file));
+            newVersion.setAuthor(userService.getCurrentUser());
+
+            byte[] file = form.getFile().getBytes();
             newVersion.setFileContent(file);
-            FileMetadata fileMetadata = getFileMetadata(form.getFileId());
-            newVersion.setFile(fileMetadata);
-            byte[] oldContent = versionRepository.findTopByFileOrderBySaveDateDesc(fileMetadata)
-                    .map(Version::getFileContent)
+
+            List<String> newVersionLines = tikaService.extractLines(TikaInputStream.get(file));
+            newVersion.setParsedFileContent(newVersionLines);
+
+            newVersion.setCheckSum(calculateCheckSum(file));
+
+            List<String> previousVersionLines = versionRepository.findTopByFileOrderBySaveDateDesc(fileMetadata)
+                    .map(Version::getParsedFileContent)
                     .orElseThrow(VersionNotFoundException::new);
-            List<Difference> differences = differenceService.getDifferencesBetweenTwoFiles(
-                    new ByteArrayInputStream(oldContent), new ByteArrayInputStream(file));
+            List<Difference> differences =
+                    differenceService.getDifferencesBetweenTwoFiles(previousVersionLines, newVersionLines);
             newVersion.setDifferences(differences);
+
             newVersion = versionRepository.save(newVersion);
 
             applicationEventPublisher.publishEvent(new VersionCreatedEvent(this, newVersion, fileMetadata));
@@ -150,23 +164,13 @@ public class VersionServiceImpl implements VersionService {
         FileContentDTO oldContent = null;
         if (last2Versions.size() != 1) {
             Version previousVersion = last2Versions.get(1);
-            oldContent = new FileContentDTO(getLines(previousVersion));
+            oldContent = new FileContentDTO(previousVersion.getParsedFileContent());
         }
         return new DiffData(
                 currentVersion.getDifferences(),
-                new FileContentDTO(getLines(currentVersion)),
+                new FileContentDTO(currentVersion.getParsedFileContent()),
                 oldContent
         );
-    }
-
-    private List<String> getLines(Version version) {
-        byte[] bytes = version.getFileContent();
-        try {
-            return tikaService.extractLines(new ByteArrayInputStream(bytes));
-        } catch (IOException e) {
-            log.error("Input/output exception occurred during extraction of lines");
-            throw new RuntimeException(e);
-        }
     }
 
     @Override
@@ -188,8 +192,7 @@ public class VersionServiceImpl implements VersionService {
     @Override
     @Transactional(readOnly = true)
     public boolean existsByVersionString(ObjectId fileId, String versionString) {
-        return versionRepository.findByFile_Id(fileId).stream()
-                .anyMatch(version -> versionString.equals(version.getVersionString()));
+        return versionRepository.existsByFile_IdAndVersionString(fileId, versionString);
     }
 
     private FileMetadata getFileMetadata(ObjectId fileId) throws FileNotFoundException {

@@ -11,8 +11,10 @@ import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.User;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.project.NewProjectForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.project.ProjectInfoDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.project.ProjectSummaryDTO;
+import pl.edu.pw.ee.pyskp.documentworkflow.dtos.search.SearchResultEntry;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.ProjectNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.UserNotFoundException;
+import pl.edu.pw.ee.pyskp.documentworkflow.services.FileSearchService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.ProjectService;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
 
@@ -32,6 +34,9 @@ public class ProjectsController {
 
     @NonNull
     private final UserService userService;
+
+    @NonNull
+    private final FileSearchService fileSearchService;
 
     @GetMapping
     public List<ProjectSummaryDTO> getUserProjects() throws UserNotFoundException {
@@ -64,5 +69,12 @@ public class ProjectsController {
             log.debug("Received HTTP DELETE request for deletion project " + projectId);
         }
         projectService.deleteProject(projectId);
+    }
+
+    @GetMapping("/{projectId}/search")
+    @PreAuthorize("@securityService.hasAccessToProject(#projectId)")
+    public List<SearchResultEntry> searchInProjectFiles(@RequestParam(name = "phrase") String searchPhrase,
+                                                        @PathVariable ObjectId projectId) {
+        return fileSearchService.searchInProject(projectId, searchPhrase);
     }
 }

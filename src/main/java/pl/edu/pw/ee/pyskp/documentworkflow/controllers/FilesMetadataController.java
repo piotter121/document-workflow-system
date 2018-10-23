@@ -23,7 +23,7 @@ public class FilesMetadataController {
     private final FilesMetadataService filesMetadataService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
-    @PreAuthorize("@securityService.isTaskParticipant(#projectId, #taskId)")
+    @PreAuthorize("@securityService.isTaskParticipant(#taskId)")
     public String processNewFileForm(@RequestPart(name = "name") String name,
                                      @RequestPart(name = "description", required = false) String description,
                                      @RequestPart(name = "file") MultipartFile file,

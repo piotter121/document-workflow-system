@@ -37,28 +37,26 @@ public class VersionController {
     private final FilesMetadataService filesMetadataService;
 
     @GetMapping("/{versionSaveDateMillis}")
-    @PreAuthorize("@securityService.hasAccessToTask(#projectId, #taskId)")
+    @PreAuthorize("@securityService.hasAccessToTask(#taskId)")
     public VersionInfoDTO getVersionInfo(@PathVariable long versionSaveDateMillis,
                                          @PathVariable ObjectId fileId,
-                                         @PathVariable ObjectId taskId,
-                                         @PathVariable ObjectId projectId) throws VersionNotFoundException {
+                                         @PathVariable ObjectId taskId) throws VersionNotFoundException {
         return versionService.getVersionInfo(fileId, versionSaveDateMillis);
     }
 
     @GetMapping("/{versionSaveDateMillis}/diffData")
-    @PreAuthorize("@securityService.hasAccessToTask(#projectId, #taskId)")
-    public DiffData getDiffData(@PathVariable ObjectId projectId, @PathVariable ObjectId taskId,
-                                @PathVariable ObjectId fileId, @PathVariable long versionSaveDateMillis)
-            throws VersionNotFoundException {
+    @PreAuthorize("@securityService.hasAccessToTask(#taskId)")
+    public DiffData getDiffData(@PathVariable ObjectId taskId, @PathVariable ObjectId fileId,
+                                @PathVariable long versionSaveDateMillis) throws VersionNotFoundException {
         return versionService.buildDiffData(fileId, versionSaveDateMillis);
     }
 
     @GetMapping("/{versionSaveDate}/content")
-    @PreAuthorize("@securityService.hasAccessToTask(#projectId, #taskId)")
-    public ResponseEntity<InputStreamResource> getVersionContent(
-            @PathVariable long versionSaveDate, @PathVariable ObjectId projectId,
-            @PathVariable ObjectId taskId, @PathVariable ObjectId fileId
-    ) throws ResourceNotFoundException {
+    @PreAuthorize("@securityService.hasAccessToTask(#taskId)")
+    public ResponseEntity<InputStreamResource> getVersionContent(@PathVariable long versionSaveDate,
+                                                                 @PathVariable ObjectId taskId,
+                                                                 @PathVariable ObjectId fileId)
+            throws ResourceNotFoundException {
         InputStream fileContent = versionService.getVersionFileContent(fileId, new Date(versionSaveDate));
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
@@ -69,14 +67,14 @@ public class VersionController {
     }
 
     @GetMapping("/exists")
-    @PreAuthorize("@securityService.hasAccessToTask(#projectId, #taskId)")
-    public boolean exists(@PathVariable ObjectId projectId, @PathVariable ObjectId taskId,
-                          @PathVariable ObjectId fileId, @RequestParam String versionString) {
+    @PreAuthorize("@securityService.hasAccessToTask(#taskId)")
+    public boolean exists(@PathVariable ObjectId taskId, @PathVariable ObjectId fileId,
+                          @RequestParam String versionString) {
         return versionService.existsByVersionString(fileId, versionString);
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("@securityService.hasAccessToTask(#projectId, #taskId)")
+    @PreAuthorize("@securityService.hasAccessToTask(#taskId)")
     public long processAddingNewVersion(@PathVariable ObjectId taskId,
                                         @PathVariable ObjectId projectId,
                                         @PathVariable ObjectId fileId,

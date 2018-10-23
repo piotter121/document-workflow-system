@@ -7,6 +7,7 @@ import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Task;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.User;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Created by piotr on 13.12.16.
@@ -16,5 +17,7 @@ public interface TaskRepository extends MongoRepository<Task, ObjectId> {
 
     List<Task> findByParticipantsContainingOrAdministrator(User participant, User admin);
 
-    List<Task> findByProject_Id(ObjectId projectId);
+    Stream<Task> findByProject_Id(ObjectId projectId);
+
+    boolean existsByProject_IdAndName(ObjectId projectId, String name);
 }

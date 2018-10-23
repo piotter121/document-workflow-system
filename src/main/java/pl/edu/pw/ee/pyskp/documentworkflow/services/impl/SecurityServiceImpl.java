@@ -67,25 +67,31 @@ public class SecurityServiceImpl implements SecurityService {
 
     @Override
     @Transactional(readOnly = true)
-    public boolean isTaskParticipant(ObjectId projectId, ObjectId taskId) throws ResourceNotFoundException {
+    public boolean isTaskParticipant(ObjectId taskId) throws ResourceNotFoundException {
+        Task task = getTask(taskId);
+        return hasCurrentUserAccessToTask(task);
+    }
+
+    @Override
+    public boolean hasCurrentUserAccessToTask(Task task) {
         String currentUserEmail = userService.getCurrentUserEmail();
+        Project project = task.getProject();
+        return doCheckHasAccessToTask(currentUserEmail, project, task);
+    }
 
-        Project project = getProject(projectId);
-
-        if (currentUserEmail.equals(project.getAdministrator().getEmail())) {
+    private boolean doCheckHasAccessToTask(String userEmail, Project project, Task task) {
+        if (userEmail.equals(project.getAdministrator().getEmail())) {
             return true;
         }
 
-        Task task = getTask(taskId);
-
-        if (currentUserEmail.equals(task.getAdministrator().getEmail())) {
+        if (userEmail.equals(task.getAdministrator().getEmail())) {
             return true;
         }
 
         return task.getParticipants()
                 .stream()
                 .map(User::getEmail)
-                .anyMatch(currentUserEmail::equals);
+                .anyMatch(userEmail::equals);
     }
 
     private Task getTask(ObjectId taskId) throws TaskNotFoundException {
@@ -100,8 +106,8 @@ public class SecurityServiceImpl implements SecurityService {
 
     @Override
     @Transactional(readOnly = true)
-    public boolean hasAccessToTask(ObjectId projectId, ObjectId taskId) throws ResourceNotFoundException {
-        return isTaskParticipant(projectId, taskId);
+    public boolean hasAccessToTask(ObjectId taskId) throws ResourceNotFoundException {
+        return isTaskParticipant(taskId);
     }
 
     @Override
