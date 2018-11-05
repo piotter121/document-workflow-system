@@ -7,7 +7,6 @@ import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Version;
 
 import java.util.Date;
 
-@SuppressWarnings("WeakerAccess")
 @Value
 public class FileSummaryDTO {
     @NonNull

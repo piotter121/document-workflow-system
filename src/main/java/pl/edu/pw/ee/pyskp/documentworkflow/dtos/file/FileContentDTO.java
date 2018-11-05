@@ -1,6 +1,7 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.dtos.file;
 
 import lombok.NonNull;
+import lombok.ToString;
 import lombok.Value;
 
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
  */
 @Value
 public class FileContentDTO {
+    @ToString.Exclude
     @NonNull
     List<String> lines;
 }

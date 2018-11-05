@@ -2,6 +2,7 @@ package pl.edu.pw.ee.pyskp.documentworkflow.data.domain;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.IndexDirection;
@@ -18,12 +19,14 @@ import java.util.List;
  * Created by piotr on 11.12.16.
  */
 @Data
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Document
 public class Version {
+    @EqualsAndHashCode.Include
     @Id
     private ObjectId id;
 
+    @ToString.Exclude
     @DBRef(lazy = true)
     private FileMetadata file;
 
@@ -38,8 +41,10 @@ public class Version {
     @DBRef
     private User author;
 
+    @ToString.Exclude
     private byte[] fileContent;
 
+    @ToString.Exclude
     @TextIndexed(weight = 2)
     private List<String> parsedFileContent;
 
@@ -47,6 +52,7 @@ public class Version {
 
     private List<Difference> differences;
 
+    @ToString.Exclude
     @TextScore
     private Float score;
 }

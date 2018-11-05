@@ -1,6 +1,8 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.dtos.project;
 
+import lombok.EqualsAndHashCode;
 import lombok.NonNull;
+import lombok.ToString;
 import lombok.Value;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.FileMetadata;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Project;
@@ -17,13 +19,16 @@ import java.util.stream.Collectors;
  * Created by piotr on 29.12.16.
  */
 @Value
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class ProjectInfoDTO {
     @NonNull
+    @EqualsAndHashCode.Include
     String id;
 
     @NonNull
     String name;
 
+    @ToString.Exclude
     String description;
 
     @NonNull
@@ -34,6 +39,7 @@ public class ProjectInfoDTO {
 
     Date lastModified;
 
+    @ToString.Exclude
     List<TaskSummaryDTO> tasks;
 
     public static ProjectInfoDTO fromProjectAndTasks(Project project, Collection<Task> tasks) {

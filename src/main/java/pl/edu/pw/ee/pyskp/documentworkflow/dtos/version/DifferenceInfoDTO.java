@@ -18,7 +18,7 @@ public class DifferenceInfoDTO {
     @NonNull
     DifferenceType differenceType;
 
-    public static DifferenceInfoDTO fromDifference(Difference difference) {
+    static DifferenceInfoDTO fromDifference(Difference difference) {
         return new DifferenceInfoDTO(
                 difference.getPreviousSectionStart(), difference.getPreviousSectionSize(),
                 difference.getNewSectionStart(), difference.getNewSectionSize(),

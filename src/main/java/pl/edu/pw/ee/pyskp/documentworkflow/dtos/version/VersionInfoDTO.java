@@ -1,6 +1,7 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.dtos.version;
 
 import lombok.NonNull;
+import lombok.ToString;
 import lombok.Value;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Version;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.user.UserInfoDTO;
@@ -26,6 +27,7 @@ public class VersionInfoDTO {
 
     String previousVersionString;
 
+    @ToString.Exclude
     List<DifferenceInfoDTO> differences;
 
     public static VersionInfoDTO fromVersion(Version version) {

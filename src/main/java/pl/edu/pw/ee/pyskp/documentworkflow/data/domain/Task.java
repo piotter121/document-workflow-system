@@ -2,6 +2,7 @@ package pl.edu.pw.ee.pyskp.documentworkflow.data.domain;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -15,12 +16,14 @@ import java.util.List;
  * Created by piotr on 11.12.16.
  */
 @Data
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Document
 public class Task {
+    @EqualsAndHashCode.Include
     @Id
     private ObjectId id;
 
+    @ToString.Exclude
     @DBRef(lazy = true)
     @Indexed
     private Project project;
@@ -35,6 +38,7 @@ public class Task {
     @DBRef
     private List<User> participants;
 
+    @ToString.Exclude
     @DBRef
     private FileMetadata lastModifiedFile;
 

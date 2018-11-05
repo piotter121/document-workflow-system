@@ -2,6 +2,7 @@ package pl.edu.pw.ee.pyskp.documentworkflow.data.domain;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -13,9 +14,10 @@ import java.util.Date;
  * Created by piotr on 11.12.16.
  */
 @Data
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Document
 public class Project {
+    @EqualsAndHashCode.Include
     @Id
     private ObjectId id;
 
@@ -23,6 +25,7 @@ public class Project {
 
     private Date creationDate;
 
+    @ToString.Exclude
     @DBRef
     private FileMetadata lastModifiedFile;
 
