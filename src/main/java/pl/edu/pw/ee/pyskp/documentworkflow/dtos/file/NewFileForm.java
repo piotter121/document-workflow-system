@@ -2,6 +2,7 @@ package pl.edu.pw.ee.pyskp.documentworkflow.dtos.file;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,6 +22,7 @@ public class NewFileForm {
     @Length(max = 1024)
     private String description;
 
+    @ToString.Exclude
     @NotNull
     private MultipartFile file;
 

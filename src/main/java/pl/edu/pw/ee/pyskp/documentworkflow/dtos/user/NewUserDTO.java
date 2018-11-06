@@ -1,7 +1,9 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.dtos.user;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
 import pl.edu.pw.ee.pyskp.documentworkflow.validators.NonExistingEmail;
 
@@ -13,8 +15,12 @@ import javax.validation.constraints.NotBlank;
  */
 @Data
 @NoArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public class NewUserDTO {
 
+    @EqualsAndHashCode.Include
+    @ToString.Include
     @NotBlank
     @Email
     @NonExistingEmail

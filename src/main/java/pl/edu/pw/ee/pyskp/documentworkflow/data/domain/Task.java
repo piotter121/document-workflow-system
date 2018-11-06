@@ -16,13 +16,15 @@ import java.util.*;
  * Created by piotr on 11.12.16.
  */
 @Data
-@EqualsAndHashCode(of = {"projectId", "taskId"})
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table("task")
 public class Task {
+    @EqualsAndHashCode.Include
     @CassandraType(type = DataType.Name.UUID)
     @PrimaryKeyColumn(name = "project_id", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
     private UUID projectId;
 
+    @EqualsAndHashCode.Include
     @CassandraType(type = DataType.Name.UUID)
     @PrimaryKeyColumn(name = "task_id", ordinal = 1)
     private UUID taskId;

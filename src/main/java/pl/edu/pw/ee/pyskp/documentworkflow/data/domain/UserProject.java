@@ -13,14 +13,16 @@ import org.springframework.data.cassandra.core.mapping.Table;
 import java.util.Date;
 import java.util.UUID;
 
-@NoArgsConstructor
 @Data
-@EqualsAndHashCode(of = {"userEmail", "projectId"})
+@NoArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table("user_project")
 public class UserProject {
+    @EqualsAndHashCode.Include
     @PrimaryKeyColumn(name = "user_email", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
     private String userEmail;
 
+    @EqualsAndHashCode.Include
     @CassandraType(type = DataType.Name.UUID)
     @PrimaryKeyColumn(name = "project_id", ordinal = 1)
     private UUID projectId;

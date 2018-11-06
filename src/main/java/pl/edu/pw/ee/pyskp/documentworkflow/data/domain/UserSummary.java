@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.cassandra.core.mapping.CassandraType;
 import org.springframework.data.cassandra.core.mapping.Column;
@@ -12,9 +13,12 @@ import org.springframework.data.cassandra.core.mapping.UserDefinedType;
 
 @NoArgsConstructor
 @Data
-@EqualsAndHashCode(of = "email")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 @UserDefinedType("user_summary")
 public class UserSummary {
+    @EqualsAndHashCode.Include
+    @ToString.Include
     @Column("email")
     @CassandraType(type = DataType.Name.TEXT)
     private String email;

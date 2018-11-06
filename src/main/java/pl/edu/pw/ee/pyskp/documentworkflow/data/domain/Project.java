@@ -15,9 +15,10 @@ import java.util.UUID;
  * Created by piotr on 11.12.16.
  */
 @Data
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table("project")
 public class Project {
+    @EqualsAndHashCode.Include
     @PrimaryKey("id")
     @CassandraType(type = DataType.Name.UUID)
     private UUID id;

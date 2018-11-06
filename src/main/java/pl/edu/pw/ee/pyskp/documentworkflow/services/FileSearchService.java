@@ -14,6 +14,7 @@ import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.edu.pw.ee.pyskp.documentworkflow.config.ElasticsearchQueryConfiguration;
+import pl.edu.pw.ee.pyskp.documentworkflow.config.ElasticsearchQueryConfiguration.HighlightConfig;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.FileMetadata;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Project;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Task;
@@ -89,8 +90,8 @@ public class FileSearchService {
     private List<SearchResultEntry> doSearch(String searchPhrase, Map<UUID, UUID> fileIdToTaskId) throws IOException {
         Set<UUID> fileIds = fileIdToTaskId.keySet();
         BoolQueryBuilder query = QueryBuilders.boolQuery()
-                .must(QueryBuilders.matchPhraseQuery(queryConfiguration.getParsedTextFieldName(), searchPhrase))
-                .filter(QueryBuilders.termsQuery(queryConfiguration.getFileIdFieldName(), fileIds));
+                .must(QueryBuilders.matchPhraseQuery(Version.Fields.PARSED_FILE_CONTENT_FIELD, searchPhrase))
+                .filter(QueryBuilders.termsQuery(Version.Fields.FILE_ID_FIELD, fileIds));
 
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder()
                 .query(query)
@@ -119,10 +120,11 @@ public class FileSearchService {
     }
 
     private HighlightBuilder getNewHighlighter() {
+        HighlightConfig highlightConfig = queryConfiguration.getHighlight();
         return new HighlightBuilder()
-                .encoder(queryConfiguration.getHighlight().getEncoder())
-                .tagsSchema(queryConfiguration.getHighlight().getTagsSchema())
-                .field(queryConfiguration.getParsedTextFieldName());
+                .encoder(highlightConfig.getEncoder())
+                .tagsSchema(highlightConfig.getTagsSchema())
+                .field(Version.Fields.PARSED_FILE_CONTENT_FIELD);
     }
 
     @SneakyThrows(FileNotFoundException.class)
@@ -138,7 +140,7 @@ public class FileSearchService {
                 String.valueOf(fileId),
                 fileMetadata.getName().concat(".").concat(fileMetadata.getContentType().getExtension()),
                 version.getVersionString(),
-                hit.highlight.get(queryConfiguration.getParsedTextFieldName())
+                hit.highlight.get(Version.Fields.PARSED_FILE_CONTENT_FIELD)
         );
     }
 }

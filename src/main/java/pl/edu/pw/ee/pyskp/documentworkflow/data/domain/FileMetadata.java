@@ -17,13 +17,15 @@ import java.util.UUID;
  * Created by piotr on 11.12.16.
  */
 @Data
-@EqualsAndHashCode(of = {"taskId", "fileId"})
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table("file_metadata")
 public class FileMetadata {
+    @EqualsAndHashCode.Include
     @CassandraType(type = DataType.Name.UUID)
     @PrimaryKeyColumn(name = "task_id", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
     private UUID taskId;
 
+    @EqualsAndHashCode.Include
     @CassandraType(type = DataType.Name.UUID)
     @PrimaryKeyColumn(name = "file_id", ordinal = 1)
     private UUID fileId;
