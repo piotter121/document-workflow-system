@@ -1,6 +1,8 @@
 package pl.edu.pw.ee.pyskp.documentworkflow.dtos.file;
 
+import lombok.EqualsAndHashCode;
 import lombok.NonNull;
+import lombok.ToString;
 import lombok.Value;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.version.VersionInfoDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.version.VersionSummaryDTO;
@@ -12,9 +14,14 @@ import java.util.List;
  * Created by piotr on 31.12.16.
  */
 @Value
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class FileMetadataDTO {
     @NonNull
-    String id, name;
+    @EqualsAndHashCode.Include
+    String id;
+
+    @NonNull
+    String name;
 
     String description;
 
@@ -27,9 +34,11 @@ public class FileMetadataDTO {
     Timestamp creationDate, modificationDate;
 
     @NonNull
+    @ToString.Exclude
     VersionSummaryDTO latestVersion;
 
     int numberOfVersions;
 
+    @ToString.Exclude
     List<VersionInfoDTO> versions;
 }

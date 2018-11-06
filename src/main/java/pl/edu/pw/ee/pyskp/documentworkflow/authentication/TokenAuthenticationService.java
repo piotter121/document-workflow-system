@@ -2,13 +2,12 @@ package pl.edu.pw.ee.pyskp.documentworkflow.authentication;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 @Service
 public class TokenAuthenticationService {
     private static final String AUTH_HEADER_NAME = "X-AUTH-TOKEN";

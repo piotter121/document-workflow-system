@@ -4,7 +4,6 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,7 +40,7 @@ import java.util.stream.Collectors;
  * Created by piotr on 06.01.17.
  */
 @Slf4j
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 @Service
 public class FilesMetadataServiceImpl implements FilesMetadataService {
     @NonNull

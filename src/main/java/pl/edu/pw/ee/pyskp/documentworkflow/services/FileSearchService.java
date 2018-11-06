@@ -14,6 +14,7 @@ import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.edu.pw.ee.pyskp.documentworkflow.config.ElasticsearchQueryConfiguration;
+import pl.edu.pw.ee.pyskp.documentworkflow.config.ElasticsearchQueryConfiguration.HighlightConfig;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.FileMetadata;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Task;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Version;
@@ -68,8 +69,8 @@ public class FileSearchService {
 
     private List<SearchResultEntry> doSearch(String searchPhrase, Collection<Long> fileIds) throws IOException {
         BoolQueryBuilder query = QueryBuilders.boolQuery()
-                .must(QueryBuilders.matchPhraseQuery(queryConfiguration.getParsedTextFieldName(), searchPhrase))
-                .filter(QueryBuilders.termsQuery(queryConfiguration.getFileIdFieldName(), fileIds));
+                .must(QueryBuilders.matchPhraseQuery(Version.SerializedFields.PARSED_FILE_CONTENT_FIELD, searchPhrase))
+                .filter(QueryBuilders.termsQuery(Version.SerializedFields.FILE_ID_FIELD, fileIds));
 
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder()
                 .query(query)
@@ -93,10 +94,11 @@ public class FileSearchService {
     }
 
     private HighlightBuilder getNewHighlighter() {
+        HighlightConfig highlight = queryConfiguration.getHighlight();
         return new HighlightBuilder()
-                    .encoder(queryConfiguration.getHighlight().getEncoder())
-                    .tagsSchema(queryConfiguration.getHighlight().getTagsSchema())
-                    .field(queryConfiguration.getParsedTextFieldName());
+                .encoder(highlight.getEncoder())
+                .tagsSchema(highlight.getTagsSchema())
+                .field(Version.SerializedFields.PARSED_FILE_CONTENT_FIELD);
     }
 
     private SearchResultEntry readSearchResultEntry(SearchResult.Hit<Version, Void> hit) {
@@ -110,7 +112,7 @@ public class FileSearchService {
                 String.valueOf(fileId),
                 fileMetadata.getName().concat(".").concat(fileMetadata.getContentType().getExtension()),
                 version.getVersionString(),
-                hit.highlight.get(queryConfiguration.getParsedTextFieldName())
+                hit.highlight.get(Version.SerializedFields.PARSED_FILE_CONTENT_FIELD)
         );
     }
 }

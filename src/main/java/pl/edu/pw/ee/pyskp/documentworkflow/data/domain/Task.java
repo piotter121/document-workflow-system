@@ -2,6 +2,7 @@ package pl.edu.pw.ee.pyskp.documentworkflow.data.domain;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -12,14 +13,16 @@ import java.util.List;
  * Created by piotr on 11.12.16.
  */
 @Data
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "task")
 public class Task {
+    @EqualsAndHashCode.Include
     @Id
     @GeneratedValue
     private Long id;
 
+    @ToString.Exclude
     @ManyToOne(optional = false)
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
@@ -33,10 +36,12 @@ public class Task {
     @Column(name = "creation_date", nullable = false, updatable = false)
     private Timestamp creationDate;
 
+    @ToString.Exclude
     @ManyToOne(optional = false)
     @JoinColumn(name = "administrator_id", nullable = false)
     private User administrator;
 
+    @ToString.Exclude
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(
             name = "task_participant",
@@ -47,6 +52,7 @@ public class Task {
     @OrderBy("firstName ASC, lastName ASC")
     private List<User> participants = new ArrayList<>();
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "task", cascade = CascadeType.REMOVE)
     @OrderBy("latestVersion.saveDate DESC")
     private List<FileMetadata> files = new ArrayList<>();

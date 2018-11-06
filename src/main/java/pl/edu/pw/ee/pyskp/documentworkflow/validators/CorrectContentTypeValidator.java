@@ -3,7 +3,6 @@ package pl.edu.pw.ee.pyskp.documentworkflow.validators;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 import pl.edu.pw.ee.pyskp.documentworkflow.dtos.version.NewVersionForm;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.FileNotFoundException;
@@ -14,7 +13,7 @@ import javax.validation.ConstraintValidatorContext;
 import java.io.IOException;
 
 @Slf4j
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 public class CorrectContentTypeValidator implements ConstraintValidator<CorrectContentType, NewVersionForm> {
 
     @NonNull

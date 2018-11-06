@@ -5,13 +5,12 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.User;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
 
 @Slf4j
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 @Service
 public class TokenHandler {
     private static final int DEFAULT_EXPIRATION_HOURS = 12;

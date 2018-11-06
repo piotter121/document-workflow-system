@@ -3,7 +3,6 @@ package pl.edu.pw.ee.pyskp.documentworkflow.controllers;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
@@ -26,7 +25,7 @@ import java.util.List;
 import java.util.Locale;
 
 @Slf4j
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 @ControllerAdvice
 public class RestErrorHandler {
     @NonNull

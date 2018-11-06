@@ -2,7 +2,6 @@ package pl.edu.pw.ee.pyskp.documentworkflow.services.impl;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Project;
@@ -19,7 +18,7 @@ import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
 /**
  * Created by piotr on 06.01.17.
  */
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 @Service("securityService")
 public class SecurityServiceImpl implements SecurityService {
     @NonNull

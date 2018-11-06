@@ -2,7 +2,6 @@ package pl.edu.pw.ee.pyskp.documentworkflow.services.impl;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Project;
@@ -27,7 +26,7 @@ import java.util.stream.Collectors;
 /**
  * Created by piotr on 29.12.16.
  */
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 @Service
 public class ProjectServiceImpl implements ProjectService {
     @NonNull

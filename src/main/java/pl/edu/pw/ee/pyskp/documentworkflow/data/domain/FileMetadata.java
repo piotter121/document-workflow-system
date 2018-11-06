@@ -2,6 +2,7 @@ package pl.edu.pw.ee.pyskp.documentworkflow.data.domain;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -10,14 +11,16 @@ import java.sql.Timestamp;
  * Created by piotr on 11.12.16.
  */
 @Data
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "file_metadata")
 public class FileMetadata {
+    @EqualsAndHashCode.Include
     @Id
     @GeneratedValue
     private Long id;
 
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "task_id")
     private Task task;

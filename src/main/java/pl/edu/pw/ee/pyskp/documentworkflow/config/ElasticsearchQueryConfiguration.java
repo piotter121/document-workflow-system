@@ -17,9 +17,8 @@ public class ElasticsearchQueryConfiguration {
     private final HighlightConfig highlight = new HighlightConfig();
 
     @NotBlank
-    private String indexName, typeName, parsedTextFieldName, fileIdFieldName;
+    private String indexName, typeName;
 
-    @SuppressWarnings("WeakerAccess")
     @Data
     public static class HighlightConfig {
         @NotBlank

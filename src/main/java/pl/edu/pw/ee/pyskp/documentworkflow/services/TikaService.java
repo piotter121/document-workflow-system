@@ -3,7 +3,6 @@ package pl.edu.pw.ee.pyskp.documentworkflow.services;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.tika.Tika;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -16,7 +15,7 @@ import java.util.stream.Collectors;
 /**
  * Created by piotr on 20.01.17.
  */
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 @Service
 public class TikaService {
     @NonNull

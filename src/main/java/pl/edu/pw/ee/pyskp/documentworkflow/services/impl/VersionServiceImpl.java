@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tika.io.TikaInputStream;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,7 +45,7 @@ import static org.springframework.data.cassandra.core.query.Query.query;
  * Created by piotr on 06.01.17.
  */
 @Slf4j
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 @Service
 public class VersionServiceImpl implements VersionService {
     @NonNull

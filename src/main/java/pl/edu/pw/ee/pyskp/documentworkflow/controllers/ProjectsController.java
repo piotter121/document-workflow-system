@@ -3,7 +3,6 @@ package pl.edu.pw.ee.pyskp.documentworkflow.controllers;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +22,7 @@ import java.util.List;
  * Created by piotr on 16.12.16.
  */
 @Slf4j
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/projects")
 public class ProjectsController {
