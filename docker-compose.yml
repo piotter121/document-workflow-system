@@ -1,19 +1,19 @@
 version: '3.7'
 services:
-  elassandra-db:
+  elassandra:
     image: strapdata/elassandra:6.2.3.6
     volumes:
       - elassandra-volume:/var/lib/cassandra
     ports:
       - "9042:9042"
       - "9200:9200"
+    networks:
+    - backend
     deploy:
       replicas: 1
 
-  postgres-db:
+  postgres:
     image: postgres:10
-    deploy:
-      replicas: 1
     volumes:
       - postgres-volume:/var/lib/postgresql/data
     ports:
@@ -21,7 +21,7 @@ services:
     environment:
       POSTGRES_PASSWORD: postgres
     networks:
-      pg-network:
+      backend:
         aliases:
           - postgres
 
@@ -35,11 +35,13 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin@admin.pl
       PGADMIN_DEFAULT_PASSWORD: admin
     networks:
-      - pg-network
+    - backend
 
 volumes:
   elassandra-volume:
+    external: true
   postgres-volume:
+    external: true
 
 networks:
-  pg-network:
+  backend:
