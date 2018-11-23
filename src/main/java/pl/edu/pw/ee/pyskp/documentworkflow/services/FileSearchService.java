@@ -58,10 +58,10 @@ public class FileSearchService {
                     Task task = fileMetadata.getTask();
                     return new SearchResultEntry(
                             task.getId().toString(),
-                            task.getName(),
                             fileMetadata.getId().toString(),
-                            fileMetadata.getName(),
-                            version.getVersionString()
+                            version.getVersionString(),
+                            task.getName(),
+                            fileMetadata.getName()
                     );
                 }).collect(Collectors.toList());
     }
