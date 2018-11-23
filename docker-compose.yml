@@ -1,17 +1,25 @@
 version: '3.7'
 services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+    - "8080:8080"
+    networks:
+    - backend
+    depends_on:
+    - elassandra
   elassandra:
     image: strapdata/elassandra:6.2.3.6
     volumes:
       - elassandra-volume:/var/lib/cassandra
-    ports:
-      - "9042:9042"
-      - "9200:9200"
     networks:
     - backend
 
 volumes:
   elassandra-volume:
+    external: true
 
 networks:
   backend:
