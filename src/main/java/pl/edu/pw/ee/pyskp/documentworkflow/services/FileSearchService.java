@@ -24,6 +24,7 @@ import pl.edu.pw.ee.pyskp.documentworkflow.dtos.search.SearchResultEntry;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -78,7 +79,7 @@ public class FileSearchService {
 
         String queryString = searchSourceBuilder.toString();
         if (log.isDebugEnabled()) {
-            log.debug("Searching with query: " + queryString);
+            log.debug("Searching with query: {}", queryString);
         }
 
         Search search = new Search.Builder(queryString)
@@ -86,11 +87,17 @@ public class FileSearchService {
                 .addType(queryConfiguration.getTypeName())
                 .build();
 
-        return jestClient.execute(search)
-                .getHits(Version.class)
-                .stream()
-                .map(this::readSearchResultEntry)
-                .collect(Collectors.toList());
+        SearchResult searchResult = jestClient.execute(search);
+        if (searchResult.isSucceeded()) {
+            return searchResult
+                    .getHits(Version.class)
+                    .stream()
+                    .map(this::readSearchResultEntry)
+                    .collect(Collectors.toList());
+        } else {
+            log.error("Search not accomplished properly: {}", searchResult.getErrorMessage());
+            return Collections.emptyList();
+        }
     }
 
     private HighlightBuilder getNewHighlighter() {
