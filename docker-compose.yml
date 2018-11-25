@@ -1,4 +1,4 @@
-version: '3.7'
+version: '3'
 services:
   server:
     build:
@@ -13,12 +13,12 @@ services:
   elassandra:
     image: strapdata/elassandra:6.2.3.6
     volumes:
-      - elassandra-volume:/var/lib/cassandra
+    - elassandra-data:/var/lib/cassandra
     networks:
     - backend
 
 volumes:
-  elassandra-volume:
+  elassandra-data:
     external: true
 
 networks:
