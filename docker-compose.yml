@@ -10,6 +10,7 @@ services:
     - backend
     depends_on:
     - elassandra
+    restart: on-failure
   elassandra:
     image: strapdata/elassandra:6.2.3.6
     volumes:
