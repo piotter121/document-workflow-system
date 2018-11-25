@@ -1,46 +1,39 @@
-version: '3.7'
+version: '3'
+
 services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+    - "8080:8080"
+    networks:
+    - backend
+    depends_on:
+    - elassandra
+    - postgres
+    restart: on-failure
+
   elassandra:
     image: strapdata/elassandra:6.2.3.6
     volumes:
-      - elassandra-volume:/var/lib/cassandra
-    ports:
-      - "9042:9042"
-      - "9200:9200"
+    - elassandra-data:/var/lib/cassandra
     networks:
     - backend
-    deploy:
-      replicas: 1
 
   postgres:
     image: postgres:10
     volumes:
-      - postgres-volume:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
+    - postgres-data:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: postgres
-    networks:
-      backend:
-        aliases:
-          - postgres
-
-  pg-admin:
-    image: dpage/pgadmin4
-    deploy:
-      replicas: 1
-    ports:
-      - "80:80"
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.pl
-      PGADMIN_DEFAULT_PASSWORD: admin
     networks:
     - backend
 
 volumes:
-  elassandra-volume:
+  elassandra-data:
     external: true
-  postgres-volume:
+  postgres-data:
     external: true
 
 networks:
