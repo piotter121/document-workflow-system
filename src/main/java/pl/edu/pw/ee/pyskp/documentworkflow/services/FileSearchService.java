@@ -88,7 +88,10 @@ public class FileSearchService {
     }
 
     private List<SearchResultEntry> doSearch(String searchPhrase, Map<UUID, UUID> fileIdToTaskId) throws IOException {
-        Set<UUID> fileIds = fileIdToTaskId.keySet();
+        Set<String> fileIds = fileIdToTaskId.keySet()
+                .stream()
+                .map(Object::toString)
+                .collect(Collectors.toSet());
         BoolQueryBuilder query = QueryBuilders.boolQuery()
                 .must(QueryBuilders.matchPhraseQuery(Version.Fields.PARSED_FILE_CONTENT_FIELD, searchPhrase))
                 .filter(QueryBuilders.termsQuery(Version.Fields.FILE_ID_FIELD, fileIds));
@@ -115,6 +118,7 @@ public class FileSearchService {
                     .map((SearchResult.Hit<Version, Void> hit) -> readSearchResultEntry(hit, fileIdToTaskId))
                     .collect(Collectors.toList());
         } else {
+            log.error("Search not accomplished properly: {}", searchResult.getErrorMessage());
             return Collections.emptyList();
         }
     }
