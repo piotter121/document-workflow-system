@@ -62,7 +62,7 @@ public class ElassandraIndexManager {
             if (createIndexResult.isSucceeded()) {
                 log.info("Successfully created index \"{}\"", indexName);
             } else {
-                log.error("Couldn't create index \"\"!", indexName);
+                log.error("Couldn't create index \"{}\"!", indexName);
             }
         } else {
             log.info("Index \"{}\" already exists", indexName);
