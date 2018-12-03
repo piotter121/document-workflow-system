@@ -1,4 +1,4 @@
-version: '3'
+version: '3.2'
 services:
   server:
     build:
@@ -11,6 +11,7 @@ services:
     depends_on:
     - elassandra
     restart: on-failure
+
   elassandra:
     image: strapdata/elassandra:6.2.3.6
     volumes:
@@ -18,9 +19,33 @@ services:
     networks:
     - backend
 
+  prometheus:
+    image: prom/prometheus:latest
+    command: --config.file=/etc/prometheus/prometheus.yml
+    ports:
+    - "9090:9090"
+    depends_on:
+    - server
+    networks:
+    - backend
+    volumes:
+    - ${PWD}/prometheus.yml:/etc/prometheus/prometheus.yml
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+    - "3000:3000"
+    depends_on:
+    - prometheus
+    networks:
+    - backend
+    volumes:
+    - grafana-storage:/var/lib/grafana
+
 volumes:
   elassandra-data:
     external: true
+  grafana-storage:
 
 networks:
   backend:
