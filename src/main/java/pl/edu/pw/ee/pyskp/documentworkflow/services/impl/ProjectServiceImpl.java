@@ -2,6 +2,7 @@ package pl.edu.pw.ee.pyskp.documentworkflow.services.impl;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
@@ -82,8 +83,8 @@ public class ProjectServiceImpl implements ProjectService {
         User currentUser = userService.getCurrentUser();
         Project project = new Project();
         project.setId(UUID.randomUUID());
-        project.setName(formDTO.getName().trim());
-        project.setDescription(formDTO.getDescription().trim());
+        project.setName(StringUtils.trim(formDTO.getName()));
+        project.setDescription(StringUtils.trim(formDTO.getDescription()));
         project.setAdministrator(new UserSummary(currentUser));
         project.setCreationDate(new Date());
         Project createdProject = projectRepository.save(project);
