@@ -174,24 +174,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <id>local-dev</id>
-            <properties>
-                <spring.data.cassandra.contact-points>localhost</spring.data.cassandra.contact-points>
-                <spring.elasticsearch.jest.uris>http://localhost:9200</spring.elasticsearch.jest.uris>
-            </properties>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-        </profile>
-        <profile>
-            <id>docker-build</id>
-            <properties>
-                <spring.data.cassandra.contact-points>elassandra</spring.data.cassandra.contact-points>
-                <spring.elasticsearch.jest.uris>http://elassandra:9200</spring.elasticsearch.jest.uris>
-            </properties>
-        </profile>
-    </profiles>
 </project>

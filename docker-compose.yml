@@ -9,15 +9,30 @@ services:
     networks:
     - backend
     depends_on:
-    - elassandra
+    - elassandra-seed
     restart: on-failure
+    environment:
+      CASSANDRA_CONTACT_POINTS: "elassandra-seed,elassandra-node"
+      ELASTICSEARCH_JEST_URIS: "http://elassandra-seed:9200,http://elassandra-node:9200"
 
-  elassandra:
+  elassandra-seed:
     image: strapdata/elassandra:6.2.3.6
     volumes:
     - elassandra-data:/var/lib/cassandra
     networks:
     - backend
+
+  elassandra-node:
+    image: strapdata/elassandra:6.2.3.6
+    volumes:
+    - elassandra-node-storage:/var/lib/cassandra
+    networks:
+    - backend
+    depends_on:
+    - elassandra-seed
+    environment:
+    - "CASSANDRA_SEEDS=elassandra-seed"
+    restart: on-failure
 
   prometheus:
     image: prom/prometheus:latest
@@ -45,6 +60,7 @@ services:
 volumes:
   elassandra-data:
     external: true
+  elassandra-node-storage:
   grafana-storage:
 
 networks:
