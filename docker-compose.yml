@@ -47,7 +47,6 @@ services:
 
 volumes:
   elassandra-data:
-    external: true
   grafana-storage:
 
 networks:
