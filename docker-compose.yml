@@ -21,6 +21,9 @@ services:
     - elassandra-data:/var/lib/cassandra
     networks:
     - backend
+    ports:
+    - "9042:9042"
+    - "9200:9200"
 
   prometheus:
     image: prom/prometheus:latest
