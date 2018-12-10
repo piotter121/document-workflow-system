@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -23,6 +24,7 @@ public class FileMetadata {
 
     @ToString.Exclude
     @DBRef(lazy = true)
+    @Indexed
     private Task task;
 
     private String name, description;

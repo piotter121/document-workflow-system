@@ -28,6 +28,7 @@ public class Version {
 
     @ToString.Exclude
     @DBRef(lazy = true)
+    @Indexed
     private FileMetadata file;
 
     @Indexed(direction = IndexDirection.DESCENDING)

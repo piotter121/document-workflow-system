@@ -33,9 +33,11 @@ public class Task {
     private Date creationDate;
 
     @DBRef
+    @Indexed
     private User administrator;
 
     @DBRef
+    @Indexed
     private List<User> participants;
 
     @ToString.Exclude

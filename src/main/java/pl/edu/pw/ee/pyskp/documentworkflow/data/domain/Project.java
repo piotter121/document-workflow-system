@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -30,6 +31,7 @@ public class Project {
     private FileMetadata lastModifiedFile;
 
     @DBRef
+    @Indexed
     private User administrator;
 
     private long numberOfTasks, numberOfFiles, numberOfParticipants;
