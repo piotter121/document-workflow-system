@@ -5,3 +5,7 @@ out/
 ### IntelliJ IDEA ###
 .idea
 *.iml
+.classpath
+.factorypath
+.project
+.settings
