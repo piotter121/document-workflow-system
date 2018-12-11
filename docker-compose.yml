@@ -70,9 +70,7 @@ services:
 
 volumes:
   elassandra-data:
-    external: true
   postgres-data:
-    external: true
   grafana-storage:
   pgadmin-storage:
 
