@@ -4,3 +4,7 @@ target/
 ### IntelliJ IDEA ###
 .idea
 *.iml
+.classpath
+.factorypath
+.project
+.settings/
