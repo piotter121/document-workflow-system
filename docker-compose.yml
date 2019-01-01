@@ -18,7 +18,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: root
     ports:
-    - 27017:27017
+      - "27017:27017"
     volumes:
     - mongo-data:/data/db
     networks:
@@ -38,32 +38,8 @@ services:
     networks:
     - mongo-network
 
-  prometheus:
-    image: prom/prometheus:latest
-    command: --config.file=/etc/prometheus/prometheus.yml
-    ports:
-    - "9090:9090"
-    depends_on:
-    - server
-    networks:
-    - backend
-    volumes:
-    - ${PWD}/prometheus.yml:/etc/prometheus/prometheus.yml
-
-  grafana:
-    image: grafana/grafana:latest
-    ports:
-    - "3000:3000"
-    depends_on:
-    - prometheus
-    networks:
-    - backend
-    volumes:
-    - grafana-storage:/var/lib/grafana
-
 volumes:
   mongo-data:
-  grafana-storage:
 
 networks:
   backend:
