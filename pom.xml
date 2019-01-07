@@ -147,22 +147,7 @@
 
     <profiles>
         <profile>
-            <id>local-dev</id>
-            <properties>
-                <spring.data.mongodb.host>localhost</spring.data.mongodb.host>
-            </properties>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-        </profile>
-        <profile>
-            <id>docker-build</id>
-            <properties>
-                <spring.data.mongodb.host>mongodb</spring.data.mongodb.host>
-            </properties>
-        </profile>
-        <profile>
-            <id>prometheus</id>
+            <id>docker</id>
             <dependencies>
                 <dependency>
                     <groupId>io.micrometer</groupId>
