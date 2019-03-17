@@ -8,3 +8,6 @@ target/
 .factorypath
 .project
 .settings/
+
+### VS Code ###
+.vscode/
