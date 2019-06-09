@@ -16,7 +16,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  */
 @Documented
 @Retention(RUNTIME)
-@SuppressWarnings("unused")
 @Target({METHOD, FIELD, ANNOTATION_TYPE})
 @Constraint(validatedBy = ExistingUserEmailValidator.class)
 public @interface ExistingUserEmail {

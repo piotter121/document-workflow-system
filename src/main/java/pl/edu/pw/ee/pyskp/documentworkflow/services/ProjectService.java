@@ -24,24 +24,17 @@ public interface ProjectService {
 
     String getProjectName(ObjectId projectId) throws ProjectNotFoundException;
 
-    @SuppressWarnings("unused")
     void processFileCreatedEvent(FileCreatedEvent event);
 
-    @SuppressWarnings("unused")
     void processFileDeletedEvent(FileDeletedEvent event);
 
-    @SuppressWarnings("unused")
     void processTaskCreatedEvent(TaskCreatedEvent event);
 
-    @SuppressWarnings("unused")
     void processTaskDeletedEvent(TaskDeletedEvent event);
 
-    @SuppressWarnings("unused")
     void processParticipantAddedToTaskEvent(ParticipantAddedToTaskEvent event);
 
-    @SuppressWarnings("unused")
     void processParticipantRemovedFromTaskEvent(ParticipantRemovedFromTaskEvent event);
 
-    @SuppressWarnings("unused")
     void processVersionCreatedEvent(VersionCreatedEvent event);
 }

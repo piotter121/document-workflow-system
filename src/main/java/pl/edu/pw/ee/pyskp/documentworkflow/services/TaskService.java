@@ -31,12 +31,9 @@ public interface TaskService {
 
     List<UserInfoDTO> removeParticipantFromTask(String email, ObjectId taskId) throws ResourceNotFoundException;
 
-    @SuppressWarnings("unused")
     void processFileCreatedEvent(FileCreatedEvent event);
 
-    @SuppressWarnings("unused")
     void processFileDeletedEvent(FileDeletedEvent event);
 
-    @SuppressWarnings("unused")
     void processVersionCreatedEvent(VersionCreatedEvent event);
 }

@@ -7,6 +7,8 @@ import java.util.Map;
  * Created by p.pysk on 02.01.2017.
  */
 public class TaskNotFoundException extends ResourceNotFoundException {
+    private static final long serialVersionUID = -5307230170055804535L;
+
     private final String taskId;
 
     public TaskNotFoundException(String taskId) {

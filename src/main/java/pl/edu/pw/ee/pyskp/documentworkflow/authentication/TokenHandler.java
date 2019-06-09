@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.User;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.UserService;
 
-@SuppressWarnings("WeakerAccess")
+
 @Slf4j
 @RequiredArgsConstructor
 @Service

@@ -6,6 +6,8 @@ import java.util.Map;
 
 @NoArgsConstructor
 public abstract class ResourceNotFoundException extends Exception {
+    private static final long serialVersionUID = -8703888708664647796L;
+
     protected ResourceNotFoundException(String message) {
         super(message);
     }

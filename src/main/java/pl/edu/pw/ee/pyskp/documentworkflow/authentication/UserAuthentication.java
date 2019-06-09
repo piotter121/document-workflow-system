@@ -9,6 +9,8 @@ import java.util.Collection;
 import java.util.Collections;
 
 public class UserAuthentication implements Authentication {
+    private static final long serialVersionUID = 1376123750331772332L;
+
     private final User user;
     private boolean authenticated = true;
 

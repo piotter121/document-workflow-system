@@ -7,6 +7,8 @@ import pl.edu.pw.ee.pyskp.documentworkflow.data.domain.Version;
 
 @Getter
 public class VersionCreatedEvent extends ApplicationEvent {
+    private static final long serialVersionUID = -7750757515820936130L;
+
     private final Version createdVersion;
     private final FileMetadata modifiedFile;
 

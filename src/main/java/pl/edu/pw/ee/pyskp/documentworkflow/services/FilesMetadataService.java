@@ -32,7 +32,6 @@ public interface FilesMetadataService {
 
     String getFileName(ObjectId fileId) throws FileNotFoundException;
 
-    @SuppressWarnings("unused")
     void processVersionCreatedEvent(VersionCreatedEvent event);
 
     ContentTypeDTO getContentType(ObjectId fileId) throws FileNotFoundException;

@@ -32,6 +32,5 @@ public interface VersionRepository extends MongoRepository<Version, ObjectId> {
 
     boolean existsByFile_IdAndVersionString(ObjectId fileId, String versionString);
 
-    @SuppressWarnings("SpringDataRepositoryMethodParametersInspection")
     Stream<Version> findByFileInOrderByScoreDesc(Collection<FileMetadata> files, TextCriteria criteria);
 }

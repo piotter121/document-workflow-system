@@ -10,7 +10,7 @@ import pl.edu.pw.ee.pyskp.documentworkflow.dtos.file.FileMetadataDTO;
 import pl.edu.pw.ee.pyskp.documentworkflow.exceptions.FileNotFoundException;
 import pl.edu.pw.ee.pyskp.documentworkflow.services.FilesMetadataService;
 
-@SuppressWarnings("MVCPathVariableInspection")
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/projects/{projectId}/tasks/{taskId}/files/{fileId}")

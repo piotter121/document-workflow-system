@@ -28,7 +28,6 @@ public class UserInfoDTO {
         return new UserInfoDTO(user.getFirstName(), user.getLastName(), user.getEmail());
     }
 
-    @SuppressWarnings("unused")
     public String getFullName() {
         return firstName + " " + lastName;
     }

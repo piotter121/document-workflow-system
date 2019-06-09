@@ -7,6 +7,8 @@ import java.util.Map;
  * Created by piotr on 06.01.17.
  */
 public class FileNotFoundException extends ResourceNotFoundException {
+    private static final long serialVersionUID = 7247836807130585435L;
+
     private final String fileId;
 
     public FileNotFoundException(String fileId) {

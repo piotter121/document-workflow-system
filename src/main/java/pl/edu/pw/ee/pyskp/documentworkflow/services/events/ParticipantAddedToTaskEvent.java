@@ -9,6 +9,8 @@ import java.util.Objects;
 
 @Getter
 public class ParticipantAddedToTaskEvent extends ApplicationEvent {
+    private static final long serialVersionUID = 6634551896849816412L;
+
     private final User newParticipant;
     private final Task modifiedTask;
 

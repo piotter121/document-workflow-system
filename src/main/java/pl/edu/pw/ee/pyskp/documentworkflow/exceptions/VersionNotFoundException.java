@@ -10,6 +10,8 @@ import java.util.Map;
  */
 @NoArgsConstructor
 public class VersionNotFoundException extends ResourceNotFoundException {
+    private static final long serialVersionUID = -4940133288144804200L;
+
     private String versionId = "";
 
     public VersionNotFoundException(String versionId) {
