@@ -22,7 +22,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>11</java.version>
-        <tika.version>1.19</tika.version>
+        <tika.version>1.22</tika.version>
     </properties>
 
     <dependencies>
